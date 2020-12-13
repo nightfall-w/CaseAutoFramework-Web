@@ -13,7 +13,7 @@ export default function axios(option) {
   return new Promise((resolve, reject) => {
     // 1.创建axios的实例
     const instance = originAxios.create({
-      baseURL: 'http://0.0.0.0:8000',
+      baseURL: 'http://127.0.0.1:8000',
       timeout: 5000
     });
 
@@ -25,8 +25,8 @@ export default function axios(option) {
       // 2.某些请求要求用户必须登录, 判断用户是否有token, 如果没有token跳转到login页面
 
       // 3.对请求的参数进行序列化(看服务器是否需要序列化)
-      // config.data = qs.stringify(config.data)
-      // console.log(config);
+      config.data = qs.stringify(config.data)
+      console.log(config);
 
       // 4.等等
       return config

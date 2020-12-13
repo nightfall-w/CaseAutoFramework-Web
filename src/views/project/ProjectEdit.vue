@@ -8,7 +8,7 @@
  -->
 <template>
   <div>
-    <el-row style="margin-top:30px" type="flex" justify="center">
+    <el-row style="margin-top: 30px" type="flex" justify="center">
       <h3>编辑项目</h3>
     </el-row>
     <detail :fatherProject="project" :fatherEnvDict="env_dict"></detail>
@@ -16,47 +16,57 @@
 </template>
 
 <script>
-  import Detail from 'content/project/detail'
-  export default {
-    data() {
-      return {
-        project: {
-          name: "波司登料箱",
-          desc: "暂无描述"
-        },
-        env_dict: [
+import Detail from "content/project/detail";
+import { getProjectDetail } from "network/project";
+export default {
+  data() {
+    return {
+      project: {
+        name: "",
+        desc: "",
+      },
+      env_dict: [
         {
           key: "host",
           value: "192.168.21.203",
-          required: true
+          required: true,
         },
         {
           key: "db_address",
           value: "192.168.21.203",
-          required: true
+          required: true,
         },
         {
           key: "db_port",
           value: "3306",
-          required: true
+          required: true,
         },
         {
           key: "db_password",
           value: "root123",
-          required: true
-        }]
-      };
+          required: true,
+        },
+      ],
+    };
+  },
+  components: {
+    Detail,
+  },
+  mounted() {
+    getProjectDetail(this.$route.query.itemId).then((res) => {
+      console.log(res);
+      this.project.name = res.name;
+      this.project.desc = res.desc;
+      this.env_dict = res.env_variable;
+    });
+  },
+  methods: {
+    saveProject() {
+      console.log(this.project);
     },
-    components: {
-      Detail
+    updateProject() {
+      console.log(this.project);
     },
-    methods: {
-      saveProject() {
-        console.log(this.project);
-      },
-      updateProject() {
-        console.log(this.project)
-      }
-    }
-  };
+  },
+};
 </script>

@@ -9,7 +9,6 @@
 <template>
   <div>
     <el-row style="margin-top:30px" type="flex" justify="center">
-      <h3>接口创建</h3>
     </el-row>
     <detail :fatherRuleForm="ruleForm"></detail>
   </div>

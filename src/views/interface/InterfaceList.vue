@@ -9,9 +9,9 @@
 <template>
   <div>
     <el-table :data="tableData" border style="width: 100%">
-      <el-table-column fixed prop="name" label="接口名称" width="150">
+      <el-table-column fixed prop="name" label="接口名称" width="200">
       </el-table-column>
-      <el-table-column prop="desc" label="接口描述" width="210">
+      <el-table-column prop="desc" label="接口描述" width="500">
       </el-table-column>
       <el-table-column label="协议" width="100">
         <template slot-scope="scope">
@@ -27,7 +27,7 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="addr" label="地址" width="370">
+      <el-table-column prop="addr" label="地址" width="600">
       </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
