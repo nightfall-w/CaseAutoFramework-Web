@@ -17,3 +17,11 @@ export function getProjectDetail(id) {
         method: "get"
     })
 }
+
+export function updateProject(id, data){
+    return axios({
+        url: '/api/project/'+id+'/',
+        method: "put",
+        data: data
+    })
+}

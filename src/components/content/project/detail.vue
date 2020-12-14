@@ -28,13 +28,14 @@
       <el-button type="primary" style="width:50%; margin-left:15%" @click="add_env">添加一条</el-button>
     </el-form-item>
     <el-form-item>
-      <el-button style="margin-left:30%" type="primary">提交</el-button>
+      <el-button style="margin-left:30%" type="primary" @click="update_project">提交</el-button>
       <el-button>取消</el-button>
     </el-form-item>
   </el-form>
 </template>
 
 <script>
+import {updateProject} from 'network/project'
   export default {
     name: 'projectDetail',
     props: {
@@ -66,6 +67,17 @@
         if (!required) {
           this.env_dict.splice(index, 1);
         }
+      }, 
+      update_project(){
+        let env_variable = {};
+        console.log(env_variable);
+        for (this.item in this.env_dict){
+          console.log(this.env_dict[this.item].key);
+          env_variable[this.env_dict[this.item].key] = this.env_dict[this.item].value
+        }
+        console.log(env_variable);
+        const data = {"name": this.project.name, "desc": this.project.desc, "update_by": "wangbaojun", "env_variable":JSON.stringify(env_variable)}
+        updateProject(this.project.id, data)
       }
     },
   }

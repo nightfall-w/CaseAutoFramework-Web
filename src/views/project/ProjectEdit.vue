@@ -21,32 +21,13 @@ import { getProjectDetail } from "network/project";
 export default {
   data() {
     return {
+      required_fields: ["host", "db_address", "db_port", "db_password"],
       project: {
+        id: null,
         name: "",
         desc: "",
       },
-      env_dict: [
-        {
-          key: "host",
-          value: "192.168.21.203",
-          required: true,
-        },
-        {
-          key: "db_address",
-          value: "192.168.21.203",
-          required: true,
-        },
-        {
-          key: "db_port",
-          value: "3306",
-          required: true,
-        },
-        {
-          key: "db_password",
-          value: "root123",
-          required: true,
-        },
-      ],
+      env_dict: [],
     };
   },
   components: {
@@ -55,18 +36,19 @@ export default {
   mounted() {
     getProjectDetail(this.$route.query.itemId).then((res) => {
       console.log(res);
+      this.project.id = res.id;
       this.project.name = res.name;
       this.project.desc = res.desc;
-      this.env_dict = res.env_variable;
+      // this.env_dict = res.env_variable;
+      for (this.item in res.env_dict){ 
+        console.log(this.item);
+        if (this.required_fields.indexOf(this.item)<0){
+        this.env_dict.push({"key": this.item, "value": res.env_dict[this.item]})
+        }else{
+          this.env_dict.push({"key": this.item, "value": res.env_dict[this.item], "required":true})
+        }}
+      console.log(this.env_dict)
     });
-  },
-  methods: {
-    saveProject() {
-      console.log(this.project);
-    },
-    updateProject() {
-      console.log(this.project);
-    },
-  },
+  }
 };
 </script>
