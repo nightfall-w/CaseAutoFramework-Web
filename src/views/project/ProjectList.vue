@@ -11,7 +11,7 @@
     <el-table
       :data="
         tableData.filter(
-          (data) =>
+          data =>
             !search || data.name.toLowerCase().includes(search.toLowerCase())
         )
       "
@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { getProject } from "network/project";
+import { getProject, deleteProject } from "network/project";
 export default {
   data() {
     return {
@@ -69,11 +69,11 @@ export default {
       search: "",
       defaultPageSize: 10,
       currentPage: 1,
-      totalItems: 0,
+      totalItems: 0
     };
   },
   mounted() {
-    getProject(this.defaultPageSize, 0).then((res) => {
+    getProject(this.defaultPageSize, 0).then(res => {
       this.tableData = res.results;
       this.totalItems = res.count;
     });
@@ -83,8 +83,8 @@ export default {
       this.$router.push({
         path: "edit",
         query: {
-          itemId: row.id,
-        },
+          itemId: row.id
+        }
       });
     },
     handleDelete(index, row) {
@@ -92,26 +92,28 @@ export default {
       this.$confirm("此操作将永久删除该项目, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(() => {
-          this.tableData.splice(index, 1);
-          this.$message({
-            type: "success",
-            message: "删除成功!",
-          });
+          deleteProject(row.id).then(
+            this.tableData.splice(index, 1),
+            this.$message({
+              type: "success",
+              message: "删除成功!"
+            })
+          );
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "已取消删除"
           });
         });
     },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.defaultPageSize = val;
-      getProject(this.defaultPageSize, 0).then((res) => {
+      getProject(this.defaultPageSize, 0).then(res => {
         this.tableData = res.results;
         this.totalItems = res.count;
       });
@@ -119,12 +121,12 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       getProject(this.defaultPageSize, (val - 1) * this.defaultPageSize).then(
-        (res) => {
+        res => {
           this.tableData = res.results;
           this.totalItems = res.count;
         }
       );
-    },
-  },
+    }
+  }
 };
 </script>

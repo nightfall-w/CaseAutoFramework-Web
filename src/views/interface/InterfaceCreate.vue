@@ -8,41 +8,40 @@
  -->
 <template>
   <div>
-    <el-row style="margin-top:30px" type="flex" justify="center">
-    </el-row>
+    <el-row style="margin-top:30px" type="flex" justify="center"> </el-row>
     <detail :fatherRuleForm="ruleForm"></detail>
   </div>
 </template>
 
 <script>
-  import Detail from 'content/interface/detail'
-  export default {
-    data() {
-      return {
-        ruleForm: {
-          name: "",
-          mode: "GET",
-          addr: "",
-          headers: [{ key: "", value: "" }],
-          formData: [{ key: "", value: "" }],
-          urlEncoded: [{ key: "", value: "" }],
-          raw: "",
-          params: [{ key: "", value: "" }],
-          asserts: [{ key: "", assertType: "", examineValue: "" }],
-          desc: ""
-        },
-      };
-    },
-    components: {
-      Detail
-    },
-    methods: {
-      saveProject() {
-        console.log(this.project);
-      },
-      updateProject() {
-        console.log(this.project)
+import Detail from "content/interface/detail";
+export default {
+  data() {
+    return {
+      ruleForm: {
+        name: "",
+        mode: "GET",
+        addr: "",
+        headers: [{ key: "", value: "" }],
+        formData: [{ key: "", value: "" }],
+        urlEncoded: [{ key: "", value: "" }],
+        raw: "",
+        params: [{ key: "", value: "" }],
+        asserts: [{ key: "", assertType: "", examineValue: "" }],
+        desc: ""
       }
+    };
+  },
+  components: {
+    Detail
+  },
+  methods: {
+    saveProject() {
+      console.log(this.project);
+    },
+    updateProject() {
+      console.log(this.project);
     }
-  };
+  }
+};
 </script>

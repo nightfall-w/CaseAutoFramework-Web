@@ -11,7 +11,12 @@
     <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
       <div class="topbar-logo topbar-btn">
         <a href="/">
-          <img src="~assets/images/logo.svg" width="100%" height="60px" style="background:#000;" />
+          <img
+            src="~assets/images/logo.svg"
+            width="100%"
+            height="60px"
+            style="background:#000;"
+          />
         </a>
       </div>
       <el-menu router :default-active="$route.path">
@@ -53,7 +58,9 @@
     </el-aside>
 
     <el-container>
-      <el-header style="text-align: right; font-size: 12px; background:#000; color:#FFF">
+      <el-header
+        style="text-align: right; font-size: 12px; background:#000; color:#FFF"
+      >
         <i class="el-icon-user-solid" style="margin-right: 20px;"></i>
         <el-dropdown split-button type="primary" style="margin-right: 20px;">
           <span style="color:#FFF">admin</span>
@@ -71,22 +78,22 @@
 </template>
 
 <style>
-  @import "assets/css/base.css";
-  @import "assets/css/normalize.css";
+@import "assets/css/base.css";
+@import "assets/css/normalize.css";
 
-  body,
-  html {
-    margin: 0;
-    padding: 0;
-  }
+body,
+html {
+  margin: 0;
+  padding: 0;
+}
 
-  .el-header {
-    background-color: #b3c0d1;
-    color: #333;
-    line-height: 60px;
-  }
+.el-header {
+  background-color: #b3c0d1;
+  color: #333;
+  line-height: 60px;
+}
 
-  .el-aside {
-    color: #333;
-  }
+.el-aside {
+  color: #333;
+}
 </style>

@@ -25,29 +25,36 @@ export default {
       project: {
         id: null,
         name: "",
-        desc: "",
+        desc: ""
       },
-      env_dict: [],
+      env_dict: []
     };
   },
   components: {
-    Detail,
+    Detail
   },
   mounted() {
-    getProjectDetail(this.$route.query.itemId).then((res) => {
+    getProjectDetail(this.$route.query.itemId).then(res => {
       console.log(res);
       this.project.id = res.id;
       this.project.name = res.name;
       this.project.desc = res.desc;
-      // this.env_dict = res.env_variable;
-      for (this.item in res.env_dict){ 
+      for (this.item in res.env_variable) {
         console.log(this.item);
-        if (this.required_fields.indexOf(this.item)<0){
-        this.env_dict.push({"key": this.item, "value": res.env_dict[this.item]})
-        }else{
-          this.env_dict.push({"key": this.item, "value": res.env_dict[this.item], "required":true})
-        }}
-      console.log(this.env_dict)
+        if (this.required_fields.indexOf(this.item) < 0) {
+          this.env_dict.push({
+            key: this.item,
+            value: res.env_variable[this.item]
+          });
+        } else {
+          this.env_dict.push({
+            key: this.item,
+            value: res.env_variable[this.item],
+            required: true
+          });
+        }
+      }
+      console.log(this.env_dict);
     });
   }
 };

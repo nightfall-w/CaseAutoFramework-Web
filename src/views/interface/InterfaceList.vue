@@ -27,62 +27,71 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="addr" label="地址" width="600">
-      </el-table-column>
+      <el-table-column prop="addr" label="地址" width="600"> </el-table-column>
       <el-table-column fixed="right" label="操作" width="100">
         <template slot-scope="scope">
-          <el-button @click="handleEdit(scope.row)" type="text" size="small">编辑</el-button>
-          <el-button @click="handleDelete(scope.row)" type="text" size="small">删除</el-button>
+          <el-button @click="handleEdit(scope.row)" type="text" size="small"
+            >编辑</el-button
+          >
+          <el-button @click="handleDelete(scope.row)" type="text" size="small"
+            >删除</el-button
+          >
         </template>
       </el-table-column>
     </el-table>
     <el-row style="margin-top:30px" type="flex" justify="end">
-      <el-pagination hide-on-single-page background layout="prev, pager, next" :total=100>
+      <el-pagination
+        hide-on-single-page
+        background
+        layout="prev, pager, next"
+        :total="100"
+      >
       </el-pagination>
     </el-row>
   </div>
 </template>
 
-
 <script>
-  export default {
-    methods: {
-      handleEdit(index, row) {
-        this.$router.push('edit')
-      },
-      handleDelete(index, row) {
-        console.log(index, row);
-        this.$confirm('此操作将永久删除该接口, 是否继续?', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
+export default {
+  methods: {
+    handleEdit(index, row) {
+      this.$router.push("edit");
+    },
+    handleDelete(index, row) {
+      console.log(index, row);
+      this.$confirm("此操作将永久删除该接口, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
           this.tableData.splice(index, 1);
           this.$message({
-            type: 'success',
-            message: '删除成功!'
+            type: "success",
+            message: "删除成功!"
           });
-        }).catch(() => {
+        })
+        .catch(() => {
           this.$message({
-            type: 'info',
-            message: '已取消删除'
+            type: "info",
+            message: "已取消删除"
           });
         });
-      }
-    },
+    }
+  },
 
-    data() {
-      const item = {
-        id: 0,
-        name: '测试接口',
-        desc: '暂无描述',
-        agree: 'http',
-        mode: 'GET',
-        addr: '192.168.21.203',
-      };
-      return {
-        tableData: Array(11).fill(item),
-      }
-    },
+  data() {
+    const item = {
+      id: 0,
+      name: "测试接口",
+      desc: "暂无描述",
+      agree: "http",
+      mode: "GET",
+      addr: "192.168.21.203"
+    };
+    return {
+      tableData: Array(11).fill(item)
+    };
   }
+};
 </script>

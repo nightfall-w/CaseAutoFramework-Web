@@ -58,37 +58,52 @@
       </div>
       <el-button
         type="primary"
-        style="width: 50%; margin-left: 15%"
+        style="width: 10%; margin-left: 35%"
         @click="add_env"
         >添加一条</el-button
       >
-    </el-form-item>
-    <el-form-item>
-      <el-button style="margin-left: 30%" type="primary" @click="update_project"
+      <el-button
+        v-if="currentPage == '/project/edit'"
+        style="margin-left: 3%"
+        type="primary"
+        @click="update_project"
         >提交</el-button
       >
-      <el-button>取消</el-button>
+      <el-button
+        v-else
+        style="margin-left: 30%"
+        type="primary"
+        @click="save_project"
+        >提交</el-button
+      >
     </el-form-item>
+    <!-- <el-form-item>
+
+    </el-form-item> -->
   </el-form>
 </template>
 
 <script>
-import { updateProject } from "network/project";
+import { updateProject, saveProject } from "network/project";
 export default {
   name: "projectDetail",
   props: {
     fatherProject: {
-      type: Object,
+      type: Object
     },
     fatherEnvDict: {
-      type: Array,
-    },
+      type: Array
+    }
   },
   data() {
     return {
+      currentPage: this.$route.path,
       project: this.fatherProject,
-      env_dict: this.fatherEnvDict,
+      env_dict: this.fatherEnvDict
     };
+  },
+  mounted() {
+    console.log(this.currentPage);
   },
   methods: {
     add_env() {
@@ -98,7 +113,7 @@ export default {
       this.env_dict.push({
         key: "",
         value: "",
-        required: false,
+        required: false
       });
     },
     minus_env(index, required) {
@@ -108,31 +123,72 @@ export default {
     },
     update_project() {
       let env_variable = {};
-      console.log(env_variable);
       for (this.item in this.env_dict) {
-        console.log(this.env_dict[this.item].key);
         if (!this.env_dict[this.item].key & !this.env_dict[this.item].value) {
-          continue
+          continue;
         } else {
           env_variable[this.env_dict[this.item].key] = this.env_dict[
             this.item
           ].value;
         }
       }
-      console.log(env_variable);
       const data = {
         name: this.project.name,
         desc: this.project.desc,
         update_by: "wangbaojun",
-        env_variable: JSON.stringify(env_variable),
+        env_variable: JSON.stringify(env_variable)
       };
-      updateProject(this.project.id, data).then((res) => {
-        this.$message({
-          type: "success",
-          message: "更新成功!",
+      updateProject(this.project.id, data)
+        .then(res => {
+          if (res.id) {
+            this.$message({
+              type: "success",
+              message: "更新成功!"
+            });
+          }
+        })
+        .catch(err => {
+          this.$message({
+            type: "error",
+            message: "更新失败!"
+          });
         });
-      });
     },
-  },
+    save_project() {
+      let env_variable = {};
+      for (this.item in this.env_dict) {
+        if (!this.env_dict[this.item].key & !this.env_dict[this.item].value) {
+          continue;
+        } else {
+          env_variable[this.env_dict[this.item].key] = this.env_dict[
+            this.item
+          ].value;
+        }
+      }
+      const data = {
+        name: this.project.name,
+        desc: this.project.desc,
+        update_by: "wangbaojun",
+        create_by: "wangbaojun",
+        env_variable: JSON.stringify(env_variable)
+      };
+      saveProject(data)
+        .then(res => {
+          if (res.id) {
+            this.$message({
+              type: "success",
+              message: "创建成功!"
+            });
+          }
+        })
+        .catch(err => {
+          console.log(err.message),
+            this.$message({
+              type: "error",
+              message: "创建失败!"
+            });
+        });
+    }
+  }
 };
 </script>
