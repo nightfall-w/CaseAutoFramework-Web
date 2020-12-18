@@ -71,7 +71,7 @@
       >
       <el-button
         v-else
-        style="margin-left: 30%"
+        style="margin-left: 3%"
         type="primary"
         @click="save_project"
         >提交</el-button

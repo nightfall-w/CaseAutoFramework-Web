@@ -9,6 +9,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+const Login = () => import("views/home/Login");
+const Index = () => import("views/container");
 const ProjectList = () => import("views/project/ProjectList");
 const ProjectCreate = () => import("views/project/ProjectCreate");
 const ProjectEdit = () => import("views/project/ProjectEdit");
@@ -27,74 +29,124 @@ Vue.use(VueRouter);
 
 const routes = [
   {
+    path: "/login",
+    name: "login",
+    component: Login
+  },
+  {
     path: "/",
     name: "home",
-    redirect: "/project/index"
-  },
-  {
-    path: "/project/create",
-    name: "project-create",
-    component: ProjectCreate
-  },
-  {
-    path: "/project/index",
-    name: "project-list",
-    component: ProjectList
-  },
-  {
-    path: "/project/edit",
-    name: "project-edit",
-    component: ProjectEdit
-  },
-  {
-    path: "/case/create",
-    name: "case-create",
-    component: CaseCreate
-  },
-  {
-    path: "/case/list",
-    name: "case-list",
-    component: CaseList
-  },
-  {
-    path: "/interface/list",
-    name: "interface-list",
-    component: InterfaceList
-  },
-  {
-    path: "/interface/edit",
-    name: "interface-edit",
-    component: InterfaceEdit
-  },
-  {
-    path: "/interface/create",
-    name: "interface-create",
-    component: InterfaceCreate
-  },
-  {
-    path: "/report/list",
-    name: "report-list",
-    component: ReportList
-  },
-  {
-    path: "/report/detail",
-    name: "report-detail",
-    component: ReportDetail
-  },
-  {
-    path: "/testplan/detail",
-    name: "testplan-detail",
-    component: TestPlanDetail
-  },
-  {
-    path: "/testplan/list",
-    name: "testplan-list",
-    component: TestPlanList
-  },
-  {
-    path: "/testplan/create",
-    name: "testplan-create",
-    component: TestPlanCreate
+    component: Index,
+    redirect: "/project/index",
+    meta: {
+      requireAuth: true // 表示此接口必须登录才能访问
+    },
+    children: [
+      {
+        path: "/project/create",
+        name: "project-create",
+        component: ProjectCreate,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/project/index",
+        name: "project-list",
+        component: ProjectList,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/project/edit",
+        name: "project-edit",
+        component: ProjectEdit,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/case/create",
+        name: "case-create",
+        component: CaseCreate,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/case/list",
+        name: "case-list",
+        component: CaseList,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/interface/list",
+        name: "interface-list",
+        component: InterfaceList,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/interface/edit",
+        name: "interface-edit",
+        component: InterfaceEdit,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/interface/create",
+        name: "interface-create",
+        component: InterfaceCreate,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/report/list",
+        name: "report-list",
+        component: ReportList,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/report/detail",
+        name: "report-detail",
+        component: ReportDetail,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/testplan/detail",
+        name: "testplan-detail",
+        component: TestPlanDetail,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/testplan/list",
+        name: "testplan-list",
+        component: TestPlanList,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/testplan/create",
+        name: "testplan-create",
+        component: TestPlanCreate,
+        meta: {
+          requireAuth: true
+        }
+      }
+    ]
   }
 ];
 
