@@ -1,10 +1,11 @@
 import axios from "./axios";
 
-export function getProject(limit, offset) {
+export function getProject(limit, offset, projectName=null) {
   return axios({
     url: "/api/project/",
     method: "get",
     params: {
+      projectName: projectName,
       limit: limit,
       offset: offset
     }

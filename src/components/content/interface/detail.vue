@@ -45,13 +45,13 @@
       <el-form-item v-show="paramsShow">
         <el-row v-for="(param, index) in ruleForm.params" :key="index">
           <el-input
-            style="width:45%; margin-right:15px"
+            style="width: 45%; margin-right: 15px"
             size="small"
             v-model="param.key"
             placeholder="key"
           ></el-input>
           <el-input
-            style="width:45%; margin-right:15px"
+            style="width: 45%; margin-right: 15px"
             v-model="param.value"
             size="small"
             placeholder="value"
@@ -78,7 +78,7 @@
             <div v-for="(header, index) in ruleForm.headers" :key="index">
               <el-autocomplete
                 size="small"
-                style="width:45%"
+                style="width: 45%"
                 popper-class="el-autocomplete"
                 class="inline-input"
                 v-model="header.key"
@@ -94,7 +94,7 @@
               </el-autocomplete>
               <el-autocomplete
                 size="small"
-                style="width:45%"
+                style="width: 45%"
                 popper-class="el-autocomplete"
                 class="inline-input"
                 v-model="header.value"
@@ -129,13 +129,13 @@
               <el-tab-pane label="form-data" name="form-data">
                 <el-row v-for="(item, index) in ruleForm.formData" :key="index">
                   <el-input
-                    style="width:40%; margin-right:20px"
+                    style="width: 40%; margin-right: 20px"
                     size="small"
                     v-model="item.key"
                     placeholder="key"
                   ></el-input>
                   <el-input
-                    style="width:40%"
+                    style="width: 40%"
                     v-model="item.value"
                     size="small"
                     placeholder="value"
@@ -165,13 +165,13 @@
                   :key="index"
                 >
                   <el-input
-                    style="width:40%; margin-right:20px"
+                    style="width: 40%; margin-right: 20px"
                     size="small"
                     v-model="item.key"
                     placeholder="key"
                   ></el-input>
                   <el-input
-                    style="width:40%"
+                    style="width: 40%"
                     v-model="item.value"
                     size="small"
                     placeholder="value"
@@ -202,27 +202,39 @@
           </el-tab-pane>
           <el-tab-pane label="Assert">
             <el-row v-for="(assert, index) in ruleForm.asserts" :key="index">
-              <el-input
-                style="width:20%; margin-right:40px"
-                size="small"
-                v-model="assert.key"
-                placeholder="断言key"
-              ></el-input>
               <el-select
                 v-model="assert.assertType"
                 size="small"
-                placeholder="断言规则"
+                placeholder="表达式类型"
               >
                 <el-option
-                  v-for="(asser_type, index) in assertTypeList"
+                  v-for="(asser_type, index) in assertTypes"
                   :key="index"
                   :label="asser_type.name"
                   :value="asser_type.value"
                 ></el-option>
               </el-select>
               <el-input
-                style="width:30%; margin:0 40px"
-                v-model="assert.examineValue"
+                style="width: 20%; margin-left: 40px; margin-right: 40px"
+                size="small"
+                v-model="assert.expressions"
+                placeholder="断言表达式"
+              ></el-input>
+              <el-select
+                v-model="assert.calculate"
+                size="small"
+                placeholder="运算符"
+              >
+                <el-option
+                  v-for="(asser_type, index) in operators"
+                  :key="index"
+                  :label="asser_type.name"
+                  :value="asser_type.value"
+                ></el-option>
+              </el-select>
+              <el-input
+                style="width: 30%; margin: 0 40px"
+                v-model="assert.expect"
                 size="small"
                 placeholder="期望值"
               ></el-input>
@@ -269,82 +281,86 @@ export default {
   name: "interfaceDetail",
   props: {
     fatherRuleForm: {
-      type: Object
-    }
+      type: Object,
+    },
   },
   data() {
     return {
       ruleForm: this.fatherRuleForm,
       paramsShow: false,
-      assertTypeList: [
+      assertTypes: [
+        { name: "定界符", value: "delimiter" },
+        { name: "正则表达式", value: "regular" },
+      ],
+      operators: [
         {
           name: "等于",
-          value: "equals"
+          value: "equals",
         },
         {
           name: "小于",
-          value: "less_than"
+          value: "less_than",
         },
         {
           name: "小于等于",
-          value: "less_than_or_equals"
+          value: "less_than_or_equals",
         },
         {
           name: "大于",
-          value: "greater_than"
+          value: "greater_than",
         },
         {
           name: "大于等于",
-          value: "greater_than_or_equals"
+          value: "greater_than_or_equals",
         },
         {
           name: "不等于",
-          value: "not_equals"
+          value: "not_equals",
         },
         {
           name: "字符串等于",
-          value: "string_equals"
+          value: "string_equals",
         },
         {
           name: "长度等于",
-          value: "length_equals"
+          value: "length_equals",
         },
         {
           name: "长度不等于",
-          value: "length_not_equals"
+          value: "length_not_equals",
         },
         {
           name: "长度大于",
-          value: "length_greater_than"
+          value: "length_greater_than",
         },
         {
           name: "长度大于等于",
-          value: "length_greater_than_or_equals"
+          value: "length_greater_than_or_equals",
         },
         {
           name: "长度小于",
-          value: "length_less_than"
+          value: "length_less_than",
         },
         {
           name: "长度小于等于",
-          value: "length_less_than_or_equals"
+          value: "length_less_than_or_equals",
         },
         {
           name: "包含",
-          value: "contain"
+          value: "contain",
         },
         {
           name: "不包含",
-          value: "not_contain"
+          value: "not_contain",
         },
         {
           name: "状态码等于",
-          value: "state_code_contain"
+          value: "state_code_contain",
         },
         {
           name: "状态码不等于",
-          value: "state_code_not_contain"
-        }
+          value: "state_code_not_contain",
+        },
       ],
       headersKeys: [
         { value: "Accept" },
@@ -358,7 +374,7 @@ export default {
         { value: "Content-Encoding" },
         { value: "Content-Type" },
         { value: "Content-Location" },
-        { value: "Cache-control" }
+        { value: "Cache-control" },
       ],
       headerValues: [
         { value: "text/html; charset=utf-8" },
@@ -376,19 +392,19 @@ export default {
         { value: "max-age=5" },
         { value: "no-cache" },
         { value: "no-store" },
-        { value: "gzip, deflate, sdch" }
+        { value: "gzip, deflate, sdch" },
       ],
-      assertType: [""],
+      calculate: [""],
       modeList: ["GET", "POST", "PUT", "DELETE", "PATCH"],
       selectHeaderKeys: [],
       selectHeaderValues: [],
       rules: {
         name: [
           { required: true, message: "请输入接口名称", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" },
         ],
         mode: [
-          { required: true, message: "请选择请求方法", trigger: "change" }
+          { required: true, message: "请选择请求方法", trigger: "change" },
         ],
         addr: [
           { required: true, message: "请输入接口地址", trigger: "blur" },
@@ -396,12 +412,12 @@ export default {
             min: 6,
             max: 200,
             message: "长度在 6 到 200 个字符",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         asserts: [],
-        desc: [{ required: true, message: "请填写接口描述", trigger: "blur" }]
-      }
+        desc: [{ required: true, message: "请填写接口描述", trigger: "blur" }],
+      },
     };
   },
   computed: {
@@ -418,7 +434,7 @@ export default {
       } else {
         return "立即创建";
       }
-    }
+    },
   },
   methods: {
     querySearchKey(queryString, cb) {
@@ -439,7 +455,7 @@ export default {
       cb(results);
     },
     createFilter(queryString) {
-      return headers => {
+      return (headers) => {
         return (
           headers.value.toLowerCase().indexOf(queryString.toLowerCase()) === 0
         );
@@ -487,7 +503,12 @@ export default {
       this.ruleForm.urlEncoded.splice(index, 1);
     },
     addAssertItem() {
-      this.ruleForm.asserts.push({ key: "", assertType: "", examineValue: "" });
+      this.ruleForm.asserts.push({
+        assertType: "",
+        expressions: "",
+        calculate: "",
+        expect: "",
+      });
       console.log(this.ruleForm);
     },
     minusAssertItem(index) {
@@ -501,18 +522,18 @@ export default {
           if (typeof obj == "object" && obj) {
             this.$message({
               type: "success ",
-              message: "检验通过"
+              message: "检验通过",
             });
           } else {
             this.$message({
               type: "error",
-              message: "raw数据不是json格式"
+              message: "raw数据不是json格式",
             });
           }
         } catch (e) {
           this.$message({
             type: "error",
-            message: "raw数据不是json格式"
+            message: "raw数据不是json格式",
           });
         }
       }
@@ -525,7 +546,7 @@ export default {
       }
     },
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           alert("submit!");
         } else {
@@ -538,11 +559,11 @@ export default {
       console.log(formName);
       console.log(this.ruleForm);
       this.$refs[formName].resetFields();
-    }
+    },
   },
   mounted() {
     this.selectHeaderKeys = this.loadHeadersKey();
     this.selectHeaderValues = this.loadHeadersValue();
-  }
+  },
 };
 </script>
