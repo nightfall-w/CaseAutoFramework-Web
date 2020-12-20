@@ -8,7 +8,7 @@
  -->
 <template>
   <div>
-    <el-row style="margin-top:30px" type="flex" justify="center"> </el-row>
+    <el-row style="margin-top: 30px" type="flex" justify="center"> </el-row>
     <detail :fatherRuleForm="ruleForm"></detail>
   </div>
 </template>
@@ -22,18 +22,18 @@ export default {
         name: "",
         mode: "GET",
         addr: "",
-        headers: [{ key: "", value: "" }],
-        formData: [{ key: "", value: "" }],
-        urlEncoded: [{ key: "", value: "" }],
+        headers: [],
+        formData: [],
+        urlEncoded: [],
         raw: "",
-        params: [{ key: "", value: "" }],
-        asserts: [{ key: "", assertType: "", examineValue: "" }],
-        desc: ""
-      }
+        params: [],
+        asserts: [],
+        desc: "",
+      },
     };
   },
   components: {
-    Detail
+    Detail,
   },
   methods: {
     saveProject() {
@@ -41,7 +41,7 @@ export default {
     },
     updateProject() {
       console.log(this.project);
-    }
-  }
+    },
+  },
 };
 </script>
