@@ -24,12 +24,15 @@ Vue.prototype.$http = axios.create({
 
 const ADD_COUNT = "ADD_COUNT"; // 用常量代替事件类型，使得代码更清晰
 const REMOVE_COUNT = "REMOVE_COUNT";
+const SWAICH_PROJECT = "SWAICH_PROJECT";
 //注册状态管理全局参数
 var store = new Vuex.Store({
   state: {
     token: "",
     userID: "",
-    userName: ""
+    userName: "",
+    currentProjectID: "",
+    currentProjectName: ""
   },
   mutations: {
     //写法与getters相类似
@@ -52,6 +55,13 @@ var store = new Vuex.Store({
       localStorage.removeItem("token", token);
 
       state.token = token;
+    },
+    [SWAICH_PROJECT](state, currentProject){
+      // 切换项目
+      sessionStorage.setItem("currentProjectID", currentProject.id);
+      sessionStorage.setItem("currentProjectName", currentProject.name);
+      state.currentProjectID = currentProject.id;
+      state.currentProjectName = currentProject.name;
     }
   }
 });

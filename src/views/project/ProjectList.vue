@@ -21,6 +21,9 @@
           <el-input v-model="search" size="mini" placeholder="输入项目名搜索" />
         </template>
         <template slot-scope="scope">
+          <el-button type="success" @click="switchProject(scope.row)"
+            >使用</el-button
+          >
           <el-button
             type="primary"
             @click="handleEdit(scope.$index, scope.row)"
@@ -81,6 +84,22 @@ export default {
     },
   },
   methods: {
+    switchProject(row) {
+      console.log(this.$store.state.currentProjectName);
+      this.$store.commit("SWAICH_PROJECT", {
+        id: row.id,
+        name: row.name,
+      });
+      this.$message({
+        type: "success",
+        message: "切换项目成功",
+      });
+      clearTimeout(this.timer); //清除延迟执行
+      this.timer = setTimeout(() => {
+        //设置延迟执行
+        this.$router.go(0);
+      }, 1000);
+    },
     handleEdit(index, row) {
       this.$router.push({
         path: "edit",

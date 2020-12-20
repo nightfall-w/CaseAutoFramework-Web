@@ -7,7 +7,7 @@
             src="~assets/images/logo.svg"
             width="100%"
             height="60px"
-            style="background:#000;"
+            style="background: #000"
           />
         </a>
       </div>
@@ -51,11 +51,22 @@
 
     <el-container>
       <el-header
-        style="text-align: right; font-size: 12px; background:#000; color:#FFF"
+        style="
+          text-align: right;
+          font-size: 12px;
+          background: #000;
+          color: #fff;
+        "
       >
-        <i class="el-icon-user-solid" style="margin-right: 20px;"></i>
-        <el-dropdown split-button type="primary" style="margin-right: 20px;">
-          <span style="color:#FFF">{{ currentUser }}</span>
+        <i class="el-icon-s-grid" style="margin-right: 20px"></i>
+
+        <span style="color: #fff; margin-right: 600px; font-size:18px">{{
+          currentProject
+        }}</span>
+
+        <i class="el-icon-user-solid" style="margin-right: 20px"></i>
+        <el-dropdown split-button type="primary" style="margin-right: 20px">
+          <span style="color: #fff">{{ currentUser }}</span>
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item @click.native="logout">注销</el-dropdown-item>
           </el-dropdown-menu>
@@ -74,7 +85,8 @@ export default {
   name: "container",
   data() {
     return {
-      currentUser: localStorage.getItem("userName")
+      currentUser: localStorage.getItem("userName"),
+      currentProject: sessionStorage.getItem("currentProjectName"),
     };
   },
   methods: {
@@ -82,9 +94,11 @@ export default {
       window.localStorage.removeItem("token");
       window.localStorage.removeItem("userID");
       window.localStorage.removeItem("userName");
+      window.sessionStorage.removeItem("currentProjectID");
+      window.sessionStorage.removeItem("currentProjectName");
       this.$router.push("/login");
-    }
-  }
+    },
+  },
 };
 </script>
 
