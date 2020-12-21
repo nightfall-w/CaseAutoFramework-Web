@@ -64,6 +64,10 @@ export default {
         })
         .catch(err => {
           console.log(err);
+          this.$message({
+            type: "error",
+            message: "登录失败!"
+          });
         });
     }
   }

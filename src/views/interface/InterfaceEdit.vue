@@ -26,9 +26,8 @@ export default {
         addr: "http://192.168.21.203",
         headers: [{ key: "hhhh", value: "kkkkk" }],
         formData: [{ key: "jjjjj", value: "uuuuu" }],
-        urlEncoded: [{ key: "ttttt", value: "9999999999" }],
+        urlencoded: [{ key: "ttttt", value: "9999999999" }],
         raw: "{}",
-        params: [{ key: "nh", value: "jjj" }],
         asserts: [{ key: "huhu", assertType: "iii", examineValue: "oo" }],
         desc: "676"
       }

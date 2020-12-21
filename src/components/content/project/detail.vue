@@ -89,17 +89,17 @@ export default {
   name: "projectDetail",
   props: {
     fatherProject: {
-      type: Object,
+      type: Object
     },
     fatherEnvDict: {
-      type: Array,
-    },
+      type: Array
+    }
   },
   data() {
     return {
       currentPage: this.$route.path,
       project: this.fatherProject,
-      env_dict: this.fatherEnvDict,
+      env_dict: this.fatherEnvDict
     };
   },
   mounted() {
@@ -113,7 +113,7 @@ export default {
       this.env_dict.push({
         key: "",
         value: "",
-        required: false,
+        required: false
       });
     },
     minus_env(index, required) {
@@ -136,22 +136,22 @@ export default {
         name: this.project.name,
         desc: this.project.desc,
         update_by: localStorage.getItem("userName"),
-        env_variable: JSON.stringify(env_variable),
+        env_variable: JSON.stringify(env_variable)
       };
       updateProject(this.project.id, data)
-        .then((res) => {
+        .then(res => {
           if (res.id) {
             this.$message({
               type: "success",
-              message: "更新成功!",
+              message: "更新成功!"
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.$message({
             type: "error",
-            message: "更新失败!",
+            message: "更新失败!"
           });
         });
     },
@@ -172,25 +172,26 @@ export default {
         desc: this.project.desc,
         update_by: username,
         create_by: username,
-        env_variable: JSON.stringify(env_variable),
+        env_variable: JSON.stringify(env_variable)
       };
+      console.log(data);
       saveProject(data)
-        .then((res) => {
+        .then(res => {
           if (res.id) {
             this.$message({
               type: "success",
-              message: "创建成功!",
+              message: "创建成功!"
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err),
             this.$message({
               type: "error",
-              message: "创建失败!",
+              message: "创建失败!"
             });
         });
-    },
-  },
+    }
+  }
 };
 </script>

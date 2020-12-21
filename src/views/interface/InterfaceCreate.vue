@@ -19,21 +19,24 @@ export default {
   data() {
     return {
       ruleForm: {
+        project: sessionStorage.getItem("currentProjectID"),
         name: "",
-        mode: "GET",
+        request_mode: "GET",
         addr: "",
         headers: [],
         formData: [],
-        urlEncoded: [],
+        urlencoded: [],
         raw: "",
         params: [],
         asserts: [],
         desc: "",
-      },
+        parameters: {},
+        extract: []
+      }
     };
   },
   components: {
-    Detail,
+    Detail
   },
   methods: {
     saveProject() {
@@ -41,7 +44,7 @@ export default {
     },
     updateProject() {
       console.log(this.project);
-    },
-  },
+    }
+  }
 };
 </script>
