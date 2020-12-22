@@ -551,8 +551,6 @@ export default {
       this.$refs[formName].validate(valid => {
         if (valid) {
           let data = this.ruleForm;
-          data.raw = JSON.stringify(data.raw);
-          console.log(data);
           createInterface(data).then(res => {
             console.log(res);
             this.$message({

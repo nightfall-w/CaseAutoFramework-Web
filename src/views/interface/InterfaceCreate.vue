@@ -26,7 +26,7 @@ export default {
         headers: [],
         formData: [],
         urlencoded: [],
-        raw: "",
+        raw: null,
         params: [],
         asserts: [],
         desc: "",
