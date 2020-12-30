@@ -16,7 +16,7 @@
       <el-table-column label="协议" width="100">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.request_mode }}</el-tag>
+            <el-tag size="medium">{{ scope.row.protocol }}</el-tag>
           </div>
         </template>
       </el-table-column>
@@ -89,7 +89,7 @@ export default {
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
-      getProject(
+      listInterface(
         this.currentProjectID,
         (val - 1) * this.defaultPageSize,
         this.defaultPageSize
@@ -117,6 +117,7 @@ export default {
           console.log(row.id);
           deleteInterface(row.id)
             .then(res => {
+              console.log(res);
               this.tableData.splice(index, 1);
               this.$message({
                 type: "success",
