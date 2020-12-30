@@ -7,7 +7,7 @@
  * @LastEditTime: 2020-02-18 15:28:17
  */
 import originAxios from "axios";
-import qs from "qs";
+// import qs from "qs";
 
 export default function axios(option) {
   return new Promise((resolve, reject) => {
@@ -22,14 +22,13 @@ export default function axios(option) {
       config => {
         // console.log('来到了request拦截success中');
         // 1.当发送网络请求时, 在页面中添加一个loading组件, 作为动画
-
         // 2.某些请求要求用户必须登录, 判断用户是否有token, 如果没有token跳转到login页面
         if (localStorage.getItem("token")) {
           config.headers.Authorization = localStorage.getItem("token");
         }
 
         // 3.对请求的参数进行序列化(看服务器是否需要序列化)
-        config.data = qs.stringify(config.data);
+        // config.data = qs.stringify(config.data);
         console.log(config);
 
         // 4.等等

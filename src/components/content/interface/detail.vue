@@ -526,17 +526,20 @@ export default {
               type: "success ",
               message: "检验通过"
             });
+            return true;
           } else {
             this.$message({
               type: "error",
               message: "raw数据不是json格式"
             });
+            return false;
           }
         } catch (e) {
           this.$message({
             type: "error",
             message: "raw数据不是json格式"
           });
+          return false;
         }
       }
     },
@@ -549,17 +552,31 @@ export default {
     },
     submitForm(formName) {
       this.$refs[formName].validate(valid => {
-        if (valid) {
-          let data = this.ruleForm;
-          createInterface(data).then(res => {
-            console.log(res);
-            this.$message({
-              type: "success",
-              message: "创建成功!"
+        if (valid && this.checkJson()) {
+          let data = Object.assign({}, this.ruleForm);
+          data.raw = JSON.parse(data.raw);
+          console.log(this.ruleForm.raw);
+          console.log(data.raw);
+          createInterface(data)
+            .then(res => {
+              console.log(res);
+              this.$message({
+                type: "success",
+                message: "创建成功!"
+              });
+            })
+            .catch(err => {
+              console.log(err);
+              this.$message({
+                type: "error",
+                message: "创建失败1!"
+              });
             });
-          });
         } else {
-          console.log("error submit!!");
+          this.$message({
+            type: "error",
+            message: "创建失败2!"
+          });
           return false;
         }
       });

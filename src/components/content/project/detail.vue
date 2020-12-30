@@ -167,12 +167,12 @@ export default {
         }
       }
       let username = localStorage.getItem("userName");
-      const data = {
+      let data = {
         name: this.project.name,
         desc: this.project.desc,
         update_by: username,
         create_by: username,
-        env_variable: JSON.stringify(env_variable)
+        env_variable: env_variable
       };
       console.log(data);
       saveProject(data)

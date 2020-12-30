@@ -17,24 +17,40 @@
 
 <script>
 import Detail from "content/interface/detail";
+import { getInterfaceDeatil } from "network/interface";
 export default {
   data() {
     return {
       ruleForm: {
-        name: "测试测试",
-        mode: "GET",
-        addr: "http://192.168.21.203",
-        headers: [{ key: "hhhh", value: "kkkkk" }],
-        formData: [{ key: "jjjjj", value: "uuuuu" }],
-        urlencoded: [{ key: "ttttt", value: "9999999999" }],
+        name: "",
+        request_mode: "GET",
+        addr: "",
+        headers: {},
+        formData: {},
+        urlencoded: {},
         raw: "{}",
-        asserts: [{ key: "huhu", assertType: "iii", examineValue: "oo" }],
-        desc: "676"
+        params: {},
+        asserts: [],
+        desc: "",
+        parameters: {},
+        extract: []
       }
     };
   },
   components: {
     Detail
+  },
+  mounted() {
+    getInterfaceDeatil(this.$route.query.itemId).then(res => {
+      this.ruleForm.desc = res.desc;
+      this.ruleForm.name = res.name;
+      this.ruleForm.request_mode = res.request_mode;
+      this.ruleForm.addr = res.addr;
+      this.ruleForm.headers = res.headers;
+      this.ruleForm.urlencoded = res.urlencoded;
+      this.ruleForm.raw = JSON.stringify(res.raw);
+      this.ruleForm.asserts = res.asserts;
+    });
   },
   methods: {
     saveProject() {
