@@ -54,7 +54,9 @@ export default function axios(option) {
               err.message = "请求错误";
               break;
             case 401:
-              localStorage.removeItem("Authorization");
+              localStorage.removeItem("token");
+              localStorage.removeItem("userID");
+              localStorage.removeItem("userName");
               this.$router.push("/login");
               err.message = "未授权的访问";
               break;

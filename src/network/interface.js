@@ -8,6 +8,14 @@ export function createInterface(data) {
   });
 }
 
+export function updateInterface(id, data) {
+  return axios({
+    url: "/api/interface/"+id+"/",
+    method: "put",
+    data: data
+  });
+}
+
 export function listInterface(projectId, offset, limit) {
   return axios({
     url: "/api/interface/",

@@ -8,7 +8,7 @@
  -->
 <template>
   <div>
-    <el-row style="margin-top:30px" type="flex" justify="center">
+    <el-row style="margin-top: 30px" type="flex" justify="center">
       <h3>接口编辑</h3>
     </el-row>
     <detail :fatherRuleForm="ruleForm"></detail>
@@ -22,6 +22,8 @@ export default {
   data() {
     return {
       ruleForm: {
+        project: null,
+        id: null,
         name: "",
         request_mode: "GET",
         addr: "",
@@ -33,15 +35,17 @@ export default {
         asserts: [],
         desc: "",
         parameters: {},
-        extract: []
-      }
+        extract: [],
+      },
     };
   },
   components: {
-    Detail
+    Detail,
   },
   mounted() {
-    getInterfaceDeatil(this.$route.query.itemId).then(res => {
+    getInterfaceDeatil(this.$route.query.itemId).then((res) => {
+      this.ruleForm.project = res.project;
+      this.ruleForm.id = res.id;
       this.ruleForm.desc = res.desc;
       this.ruleForm.name = res.name;
       this.ruleForm.request_mode = res.request_mode;
@@ -58,7 +62,7 @@ export default {
     },
     updateProject() {
       console.log(this.project);
-    }
-  }
+    },
+  },
 };
 </script>
