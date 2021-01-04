@@ -16,7 +16,7 @@
       <el-table-column label="协议" width="100">
         <template slot-scope="scope">
           <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.protocol }}</el-tag>
+            <el-tag size="medium">{{ getProtocol(scope.row.addr) }}</el-tag>
           </div>
         </template>
       </el-table-column>
@@ -76,6 +76,17 @@ export default {
       });
     }
   },
+  computed: {
+    getProtocol(addr) {
+      return function(value) {
+        if (value.indexOf("https://") == 0) {
+          return "HTTPS";
+        } else {
+          return "HTTP";
+        }
+      };
+    }
+  },
   methods: {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
@@ -102,8 +113,8 @@ export default {
       this.$router.push({
         path: "edit",
         query: {
-          itemId: row.id,
-        },
+          itemId: row.id
+        }
       });
     },
     handleDelete(index, row) {
