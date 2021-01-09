@@ -77,7 +77,7 @@ export default {
     }
   },
   computed: {
-    getProtocol(addr) {
+    getProtocol() {
       return function(value) {
         if (value.indexOf("https://") == 0) {
           return "HTTPS";

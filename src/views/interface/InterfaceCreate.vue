@@ -23,20 +23,20 @@ export default {
         name: "",
         request_mode: "GET",
         addr: "",
-        headers: {},
-        formData: {},
-        urlencoded: {},
+        headers: [],
+        formData: [],
+        urlencoded: [],
         raw: "{}",
-        params: {},
+        params: [],
         asserts: [],
         desc: "",
         parameters: {},
-        extract: []
-      }
+        extract: [],
+      },
     };
   },
   components: {
-    Detail
+    Detail,
   },
   methods: {
     saveProject() {
@@ -44,7 +44,7 @@ export default {
     },
     updateProject() {
       console.log(this.project);
-    }
-  }
+    },
+  },
 };
 </script>

@@ -550,6 +550,19 @@ export default {
         this.paramsShow = false;
       }
     },
+    list2map(listObj) {
+      let map = {};
+      console.log(listObj);
+      for (this.index in listObj) {
+        if (listObj[this.index].key) {
+          map[listObj[this.index].key] = listObj[this.index].value;
+        } else {
+          continue;
+        }
+      }
+      console.log(map);
+      return map;
+    },
     submitForm(formName) {
       if (this.$route.path.indexOf("edit") != -1) {
         return this.updateForm(formName);
@@ -562,8 +575,15 @@ export default {
         if (valid && this.checkJson()) {
           let data = Object.assign({}, this.ruleForm);
           data.raw = JSON.parse(data.raw);
-          console.log(this.ruleForm.raw);
-          console.log(data.raw);
+          console.log(data.headers);
+          data.headers = this.list2map(data.headers);
+          data.formData = this.list2map(data.formData);
+          data.urlencoded.push.apply(
+            data.urlencoded,
+            data.params
+          );
+          console.log(data.urlencoded);
+          data.urlencoded = this.list2map(data.urlencoded);
           createInterface(data)
             .then((res) => {
               console.log(res);
