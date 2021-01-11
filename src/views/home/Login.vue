@@ -60,13 +60,20 @@ export default {
             userName: res.username,
             userID: res.user_id
           });
+          this.$notify({
+            title: "成功",
+            duration: 2500,
+            message: "登录成功 欢迎" + this.loginForm.username,
+            type: "success"
+          });
           this.$router.push("/");
         })
         .catch(err => {
           console.log(err);
-          this.$message({
-            type: "error",
-            message: "登录失败!"
+          this.$notify.error({
+            title: "错误",
+            duration: 2500,
+            message: "登录失败 请检查你的用户名密码是否正确"
           });
         });
     }

@@ -603,13 +603,13 @@ export default {
               console.log(err);
               this.$message({
                 type: "error",
-                message: "创建失败1!"
+                message: "创建失败"
               });
             });
         } else {
           this.$message({
             type: "error",
-            message: "创建失败2!"
+            message: "创建失败"
           });
           return false;
         }
