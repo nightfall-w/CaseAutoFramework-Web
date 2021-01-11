@@ -266,7 +266,9 @@
         <el-button type="primary" @click="submitForm('ruleForm')">{{
           submitbnt
         }}</el-button>
-        <el-button @click="resetForm('ruleForm')">{{ resetbnt }}</el-button>
+        <el-button @click="resetForm('ruleForm', resetbnt)">{{
+          resetbnt
+        }}</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -644,10 +646,19 @@ export default {
         }
       });
     },
-    resetForm(formName) {
-      console.log(formName);
-      console.log(this.ruleForm);
-      this.$refs[formName].resetFields();
+    resetForm(formName, resetbnt) {
+      if (resetbnt == "恢复") {
+        location.reload();
+      } else if (resetbnt == "重置") {
+        console.log(formName);
+        console.log(this.ruleForm);
+        this.$refs[formName].resetFields();
+        this.ruleForm.params = [];
+        this.ruleForm.headers = [];
+        this.ruleForm.urlencoded = [];
+        this.ruleForm.formData = [];
+        this.ruleForm.raw = "{}";
+      }
     }
   },
   mounted() {

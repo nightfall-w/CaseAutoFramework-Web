@@ -27,42 +27,53 @@ export default {
         name: "",
         request_mode: "GET",
         addr: "",
-        headers: {},
-        formData: {},
-        urlencoded: {},
+        headers: [],
+        formData: [],
+        urlencoded: [],
         raw: "{}",
-        params: {},
+        params: [],
         asserts: [],
         desc: "",
         parameters: {},
-        extract: [],
-      },
+        extract: []
+      }
     };
   },
   components: {
-    Detail,
+    Detail
   },
   mounted() {
-    getInterfaceDeatil(this.$route.query.itemId).then((res) => {
-      this.ruleForm.project = res.project;
-      this.ruleForm.id = res.id;
-      this.ruleForm.desc = res.desc;
-      this.ruleForm.name = res.name;
-      this.ruleForm.request_mode = res.request_mode;
-      this.ruleForm.addr = res.addr;
-      this.ruleForm.headers = res.headers;
-      this.ruleForm.urlencoded = res.urlencoded;
-      this.ruleForm.raw = JSON.stringify(res.raw);
-      this.ruleForm.asserts = res.asserts;
-    });
+    getInterfaceDeatil(this.$route.query.itemId)
+      .then(res => {
+        this.ruleForm.project = res.project;
+        this.ruleForm.id = res.id;
+        this.ruleForm.desc = res.desc;
+        this.ruleForm.name = res.name;
+        this.ruleForm.request_mode = res.request_mode;
+        this.ruleForm.addr = res.addr;
+        this.ruleForm.headers = this.map2list(res.headers);
+        this.ruleForm.formData = this.map2list(res.formData);
+        this.ruleForm.urlencoded = this.map2list(res.urlencoded);
+        this.ruleForm.raw = JSON.stringify(res.raw);
+        this.ruleForm.asserts = res.asserts;
+      })
+      .catch(err => {
+        console.log(err);
+        this.$message({
+          type: "error",
+          message: "出错啦"
+        });
+      });
   },
   methods: {
-    saveProject() {
-      console.log(this.project);
-    },
-    updateProject() {
-      console.log(this.project);
-    },
-  },
+    map2list(mapData) {
+      let data = [];
+      for (let k in mapData) {
+        data.push({ key: k, value: mapData[k] });
+      }
+      console.log(data);
+      return data;
+    }
+  }
 };
 </script>
