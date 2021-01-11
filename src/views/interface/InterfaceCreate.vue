@@ -31,12 +31,12 @@ export default {
         asserts: [],
         desc: "",
         parameters: {},
-        extract: [],
-      },
+        extract: []
+      }
     };
   },
   components: {
-    Detail,
+    Detail
   },
   methods: {
     saveProject() {
@@ -44,7 +44,7 @@ export default {
     },
     updateProject() {
       console.log(this.project);
-    },
-  },
+    }
+  }
 };
 </script>
