@@ -620,8 +620,14 @@ export default {
         if (valid && this.checkJson()) {
           let data = Object.assign({}, this.ruleForm);
           data.raw = JSON.parse(data.raw);
-          console.log(this.ruleForm.raw);
-          console.log(data.raw);
+          console.log(data.headers);
+          data.headers = this.list2map(data.headers);
+          data.formData = this.list2map(data.formData);
+          data.urlencoded.push.apply(data.urlencoded, data.params);
+          data.params = [];
+          this.ruleForm.params = [];
+          console.log(data.urlencoded);
+          data.urlencoded = this.list2map(data.urlencoded);
           updateInterface(data.id, data)
             .then(res => {
               console.log(res);
