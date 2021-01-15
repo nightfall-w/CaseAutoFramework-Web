@@ -11,3 +11,27 @@ export function getProjectList(gitlab_url, private_token, desc=null) {
     }
   });
 }
+
+export function getBranchList(token, project_id) {
+  return axios({
+    url: "/api/case/branch/",
+    method: "post",
+    data:{
+      token: token,
+      project_id: project_id,
+    }
+  });
+}
+
+export function askPullBranch(token, project_id, branch) {
+  return axios({
+    url: "/api/case/branch_pull/",
+    method: "post",
+    data:{
+      token: token,
+      project_id: project_id,
+      branch: branch
+    }
+  });
+}
+

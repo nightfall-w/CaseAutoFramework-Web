@@ -63,7 +63,8 @@
         <span style="margin-left:2%; color:#606266">选择case所在项目:</span>
         <el-select
           style="margin-left:2%;"
-          v-model="projects.projectName"
+          v-model="projectValue"
+          @change="getBranchByProjectId"
           clearable
           placeholder="请选择case所在项目"
         >
@@ -72,7 +73,7 @@
             :key="item.projectId"
             :label="item.projectName"
             :value="item.projectId"
-            >
+          >
           </el-option>
         </el-select>
       </el-tab-pane>
@@ -81,12 +82,37 @@
       <br />
       <el-tab-pane :key="'three'" :label="'three'" :name="'three'">
         <span slot="label"><i class="el-icon-s-operation"></i> 选择分支</span>
-        选择分支</el-tab-pane
-      >
+        <span style="margin-left:2%; color:#606266">选择case所在分支:</span>
+        <el-select
+          style="margin-left:2%;"
+          v-model="branchValue"
+          @change="pullBranch"
+          clearable
+          placeholder="请选择case所在分支"
+        >
+          <el-option
+            v-for="item in branchs"
+            :key="item"
+            :label="item"
+            :value="item"
+          >
+          </el-option>
+        </el-select>
+      </el-tab-pane>
       <el-tab-pane :key="'four'" :label="'four'" :name="'four'">
         <span slot="label"><i class="el-icon-download"></i> 拉取代码</span>
-        拉取代码</el-tab-pane
-      >
+        <h2 style="margin-left:32%; color:lightgray">
+          正在努力下载中,请稍加等待......
+        </h2>
+        <br />
+        <el-progress
+          style="margin-left:35%"
+          type="dashboard"
+          :width="200"
+          :percentage="percentage"
+          :color="colors"
+        ></el-progress>
+      </el-tab-pane>
     </el-tabs>
 
     <el-steps
@@ -104,26 +130,85 @@
 </template>
 
 <script>
-import { getProjectList } from "network/case";
+import { getProjectList, getBranchList, askPullBranch } from "network/case";
 export default {
   data() {
     return {
       tabActiveName: "one",
       step_active: 0,
-      desc: null,
       step1SubmitButtonLoading: false,
+
+      token: "",
+      desc: null,
       gitlab_url: "",
       private_token: "",
-      projects: []
+      projects: [],
+      projectValue: "",
+      checkedProjectId: null,
+
+      branchs: [],
+      branchValue: "",
+
+      percentage: 0,
+      colors: [
+        { color: "#f56c6c", percentage: 20 },
+        { color: "#e6a23c", percentage: 40 },
+        { color: "#5cb87a", percentage: 60 },
+        { color: "#1989fa", percentage: 80 },
+        { color: "#6f7ad3", percentage: 100 }
+      ]
     };
   },
+  created() {
+    this.initWebSocket();
+  },
+  destroyed() {
+    this.websock.close(); //离开路由之后断开websocket连接
+  },
   methods: {
+    initWebSocket() {
+      //初始化weosocket
+      const wsuri = process.env.VUE_APP_SERVER_WS + "/ws/casepull/result/";
+      this.websock = new WebSocket(wsuri);
+      this.websock.onmessage = this.websocketonmessage;
+      this.websock.onopen = this.websocketonopen;
+      this.websock.onerror = this.websocketonerror;
+      this.websock.onclose = this.websocketclose;
+    },
+    websocketonopen() {
+      console.log("websocket连接已经建立");
+    },
+    websocketonerror() {
+      //连接建立失败重连
+      this.initWebSocket();
+    },
+    websocketonmessage(e) {
+      //数据接收
+      const redata = JSON.parse(e.data);
+      console.log(redata);
+      if (redata.status === "DONE") {
+        this.websock.close();
+      }
+    },
+    websocketsend(Data) {
+      //数据发送
+      this.websock.send(Data);
+    },
+    websocketclose(e) {
+      //关闭
+      console.log("断开连接", e);
+    },
     getGitlabProjectsByPrivateToken() {
       this.step1SubmitButtonLoading = true;
+      this.projects = [];
+      this.token = "";
+      this.branchs = [];
+      this.projectValue = "";
       getProjectList(this.gitlab_url, this.private_token, this.desc)
         .then(res => {
           this.step1SubmitButtonLoading = false;
-          this.projects = [];
+          this.token = res.token;
+          this.branchs = [];
           for (let key in res.result) {
             this.projects.push({
               projectName: key,
@@ -147,6 +232,87 @@ export default {
             message: err.message
           });
         });
+    },
+    getBranchByProjectId(value) {
+      this.branchs = [];
+      this.branchValue = "";
+      let projectObj = {};
+      projectObj = this.projects.find(item => {
+        //遍历list的数据
+        return item.projectId === value; //筛选出匹配数据
+      });
+      console.log(projectObj.projectId); //获取list里面的name
+      this.checkedProjectId = projectObj.projectId;
+      // getBranchList;
+      if (!this.token) {
+        return false;
+      }
+      this.branchs = [];
+      getBranchList(this.token, projectObj.projectId)
+        .then(res => {
+          this.branchs = res.result;
+          this.step_active = 2;
+          this.tabActiveName = "three";
+          this.$notify({
+            title: "成功",
+            message: "获取分支成功 请进行下一步操作",
+            type: "success"
+          });
+        })
+        .catch(err => {
+          this.$notify.error({
+            title: "错误",
+            message: err.message
+          });
+        });
+    },
+    pullBranch() {
+      let project_id = this.checkedProjectId;
+      askPullBranch(this.token, project_id, this.branchValue)
+        .then(res => {
+          console.log(res);
+          this.step_active = 3;
+          this.tabActiveName = "four";
+          this.$notify({
+            title: "成功",
+            message: "pull请求已经成功, 请等待完成",
+            type: "success"
+          });
+          //发起websocket请求 获取分支pull状态
+          var sleep = function(time) {
+            var startTime = new Date().getTime() + parseInt(time, 10);
+            while (new Date().getTime() < startTime) {}
+          };
+          this.websock.onopen = this.websocketonopen();
+          sleep(2000);
+          let actions = {
+            token: this.token,
+            project_id: this.checkedProjectId,
+            branch_name: this.branchValue
+          };
+          this.websocketsend(JSON.stringify(actions));
+        })
+        .catch(err => {
+          this.$notify.error({
+            title: "错误",
+            message: err.message
+          });
+        });
+    },
+
+    // 仪表盘进度增加
+    increase() {
+      this.percentage += 10;
+      if (this.percentage > 100) {
+        this.percentage = 100;
+      }
+    },
+    // 仪表盘进度减少
+    decrease() {
+      this.percentage -= 10;
+      if (this.percentage < 0) {
+        this.percentage = 0;
+      }
     }
   }
 };
