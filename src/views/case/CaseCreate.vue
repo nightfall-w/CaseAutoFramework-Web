@@ -13,9 +13,9 @@
         <span slot="label"><i class="el-icon-key"></i> 身份令牌认证</span>
         <br />
         <br />
-        <span style="margin-left:2%; color:#606266">描述( 非必填 ):</span>
+        <span style="margin-left: 2%; color: #606266">描述( 非必填 ):</span>
         <el-input
-          style="width:50%;margin-left:4%"
+          style="width: 50%; margin-left: 4%"
           placeholder="描述"
           v-model="desc"
           clearable
@@ -24,9 +24,9 @@
         <br />
         <br />
         <br />
-        <span style="margin-left:2%; color:#606266">gitlab服务器地址:</span>
+        <span style="margin-left: 2%; color: #606266">gitlab服务器地址:</span>
         <el-input
-          style="width:50%;margin-left:2%"
+          style="width: 50%; margin-left: 2%"
           placeholder="gitlab地址"
           v-model="gitlab_url"
           clearable
@@ -35,9 +35,9 @@
         <br />
         <br />
         <br />
-        <span style="margin-left:2%; color:#606266">私有身份令牌:</span>
+        <span style="margin-left: 2%; color: #606266">私有身份令牌:</span>
         <el-input
-          style="width:50%;margin-left:4%"
+          style="width: 50%; margin-left: 4%"
           placeholder="private token"
           v-model="private_token"
           clearable
@@ -60,9 +60,9 @@
         <br />
         <br />
         <br />
-        <span style="margin-left:2%; color:#606266">选择case所在项目:</span>
+        <span style="margin-left: 2%; color: #606266">选择case所在项目:</span>
         <el-select
-          style="margin-left:2%;"
+          style="margin-left: 2%"
           v-model="projectValue"
           @change="getBranchByProjectId"
           clearable
@@ -82,9 +82,9 @@
       <br />
       <el-tab-pane :key="'three'" :label="'three'" :name="'three'">
         <span slot="label"><i class="el-icon-s-operation"></i> 选择分支</span>
-        <span style="margin-left:2%; color:#606266">选择case所在分支:</span>
+        <span style="margin-left: 2%; color: #606266">选择case所在分支:</span>
         <el-select
-          style="margin-left:2%;"
+          style="margin-left: 2%"
           v-model="branchValue"
           @change="pullBranch"
           clearable
@@ -101,12 +101,12 @@
       </el-tab-pane>
       <el-tab-pane :key="'four'" :label="'four'" :name="'four'">
         <span slot="label"><i class="el-icon-download"></i> 拉取代码</span>
-        <h2 style="margin-left:32%; color:lightgray">
+        <h2 style="margin-left: 32%; color: lightgray">
           正在努力下载中,请稍加等待......
         </h2>
         <br />
         <el-progress
-          style="margin-left:35%"
+          style="margin-left: 35%"
           type="dashboard"
           :width="200"
           :percentage="percentage"
@@ -139,7 +139,7 @@ export default {
       step1SubmitButtonLoading: false,
 
       token: "",
-      desc: null,
+      desc: "",
       gitlab_url: "",
       private_token: "",
       projects: [],
@@ -155,8 +155,8 @@ export default {
         { color: "#e6a23c", percentage: 40 },
         { color: "#5cb87a", percentage: 60 },
         { color: "#1989fa", percentage: 80 },
-        { color: "#6f7ad3", percentage: 100 }
-      ]
+        { color: "#6f7ad3", percentage: 100 },
+      ],
     };
   },
   created() {
@@ -186,7 +186,11 @@ export default {
       //数据接收
       const redata = JSON.parse(e.data);
       console.log(redata);
+      if (redata.progress) {
+        this.percentage = Math.floor(redata.progress);
+      }
       if (redata.status === "DONE") {
+        this.percentage = 100;
         this.websock.close();
       }
     },
@@ -197,6 +201,7 @@ export default {
     websocketclose(e) {
       //关闭
       console.log("断开连接", e);
+      this.initWebSocket();
     },
     getGitlabProjectsByPrivateToken() {
       this.step1SubmitButtonLoading = true;
@@ -205,14 +210,14 @@ export default {
       this.branchs = [];
       this.projectValue = "";
       getProjectList(this.gitlab_url, this.private_token, this.desc)
-        .then(res => {
+        .then((res) => {
           this.step1SubmitButtonLoading = false;
           this.token = res.token;
           this.branchs = [];
           for (let key in res.result) {
             this.projects.push({
               projectName: key,
-              projectId: res.result[key]
+              projectId: res.result[key],
             });
           }
           this.step_active = 1;
@@ -221,15 +226,15 @@ export default {
           this.$notify({
             title: "成功",
             message: "验证通过 请进行下一步操作",
-            type: "success"
+            type: "success",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.step1SubmitButtonLoading = false;
           console.log(err);
           this.$notify.error({
             title: "错误",
-            message: err.message
+            message: err.message,
           });
         });
     },
@@ -237,7 +242,7 @@ export default {
       this.branchs = [];
       this.branchValue = "";
       let projectObj = {};
-      projectObj = this.projects.find(item => {
+      projectObj = this.projects.find((item) => {
         //遍历list的数据
         return item.projectId === value; //筛选出匹配数据
       });
@@ -249,53 +254,53 @@ export default {
       }
       this.branchs = [];
       getBranchList(this.token, projectObj.projectId)
-        .then(res => {
+        .then((res) => {
           this.branchs = res.result;
           this.step_active = 2;
           this.tabActiveName = "three";
           this.$notify({
             title: "成功",
             message: "获取分支成功 请进行下一步操作",
-            type: "success"
+            type: "success",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.$notify.error({
             title: "错误",
-            message: err.message
+            message: err.message,
           });
         });
     },
     pullBranch() {
       let project_id = this.checkedProjectId;
+      this.percentage = 0;
       askPullBranch(this.token, project_id, this.branchValue)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.step_active = 3;
           this.tabActiveName = "four";
           this.$notify({
             title: "成功",
             message: "pull请求已经成功, 请等待完成",
-            type: "success"
+            type: "success",
           });
           //发起websocket请求 获取分支pull状态
-          var sleep = function(time) {
+          var sleep = function (time) {
             var startTime = new Date().getTime() + parseInt(time, 10);
             while (new Date().getTime() < startTime) {}
           };
-          this.websock.onopen = this.websocketonopen();
           sleep(2000);
           let actions = {
             token: this.token,
             project_id: this.checkedProjectId,
-            branch_name: this.branchValue
+            branch_name: this.branchValue,
           };
           this.websocketsend(JSON.stringify(actions));
         })
-        .catch(err => {
+        .catch((err) => {
           this.$notify.error({
             title: "错误",
-            message: err.message
+            message: err.message,
           });
         });
     },
@@ -313,7 +318,7 @@ export default {
       if (this.percentage < 0) {
         this.percentage = 0;
       }
-    }
-  }
+    },
+  },
 };
 </script>
