@@ -101,17 +101,33 @@
       </el-tab-pane>
       <el-tab-pane :key="'four'" :label="'four'" :name="'four'">
         <span slot="label"><i class="el-icon-download"></i> 拉取代码</span>
-        <h2 style="margin-left: 32%; color: lightgray">
-          正在努力下载中,请稍加等待......
-        </h2>
-        <br />
-        <el-progress
-          style="margin-left: 35%"
-          type="dashboard"
-          :width="200"
-          :percentage="percentage"
-          :color="colors"
-        ></el-progress>
+        <div>
+          <h2
+            v-if="percentage != 100"
+            style="margin-left: 32%; color: lightgray"
+          >
+            正在努力下载中,请稍加等待......
+          </h2>
+          <h2
+            v-if="percentage === 100"
+            style="margin-left: 30%; color: lightgray"
+          >
+            同步远程case完成，<a
+              href="url"
+              style="color: cornflowerblue"
+              @click.prevent="skip2createTestplan"
+              >去创建测试计划</a
+            >？
+          </h2>
+          <br />
+          <el-progress
+            style="margin-left: 35%"
+            type="dashboard"
+            :width="200"
+            :percentage="percentage"
+            :color="colors"
+          ></el-progress>
+        </div>
       </el-tab-pane>
     </el-tabs>
 
@@ -192,6 +208,12 @@ export default {
       if (redata.status === "DONE") {
         this.percentage = 100;
         this.websock.close();
+        this.step_active = 4;
+        this.$notify({
+          title: "成功",
+          message: "拉取远程代码完成！",
+          type: "success",
+        });
       }
     },
     websocketsend(Data) {
@@ -289,7 +311,7 @@ export default {
             var startTime = new Date().getTime() + parseInt(time, 10);
             while (new Date().getTime() < startTime) {}
           };
-          sleep(2000);
+          sleep(1000);
           let actions = {
             token: this.token,
             project_id: this.checkedProjectId,
@@ -318,6 +340,9 @@ export default {
       if (this.percentage < 0) {
         this.percentage = 0;
       }
+    },
+    skip2createTestplan() {
+      
     },
   },
 };
