@@ -14,7 +14,10 @@ import axios from "axios";
 import Router from "vue-router";
 import iView from "iview";
 import Vuex from "vuex";
-
+//引入拖拽排序插件
+import VueDND from "awe-dnd";
+ 
+Vue.use(VueDND)
 Vue.use(Vuex);
 Vue.config.productionTip = false;
 Vue.config.devtools = true;

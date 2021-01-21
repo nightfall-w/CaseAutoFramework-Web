@@ -21,9 +21,9 @@ const InterfaceList = () => import("views/interface/InterfaceList");
 const InterfaceEdit = () => import("views/interface/InterfaceEdit");
 const ReportList = () => import("views/report/ReportList");
 const ReportDetail = () => import("views/report/ReportDetail");
-const TestPlanList = () => import("views/testplan/TestPlanList");
-const TestPlanCreate = () => import("views/testplan/TestPlanCreate");
-const TestPlanDetail = () => import("views/testplan/TestPlanDetail");
+const CaseTestPlanList = () => import("views/testplan/CaseTestPlanList");
+const CaseTestPlanCreate = () => import("views/testplan/CaseTestPlanCreate");
+const CaseTestPlanDetail = () => import("views/testplan/CaseTestPlanDetail");
 
 Vue.use(VueRouter);
 
@@ -123,25 +123,25 @@ const routes = [
         }
       },
       {
-        path: "/testplan/detail",
+        path: "/casetestplan/detail",
         name: "testplan-detail",
-        component: TestPlanDetail,
+        component: CaseTestPlanDetail,
         meta: {
           requireAuth: true
         }
       },
       {
-        path: "/testplan/list",
-        name: "testplan-list",
-        component: TestPlanList,
+        path: "/casetestplan/list",
+        name: "case-testplan-list",
+        component: CaseTestPlanList,
         meta: {
           requireAuth: true
         }
       },
       {
-        path: "/testplan/create",
+        path: "/casetestplan/create",
         name: "testplan-create",
-        component: TestPlanCreate,
+        component: CaseTestPlanCreate,
         meta: {
           requireAuth: true
         }

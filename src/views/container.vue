@@ -37,8 +37,12 @@
           <template slot="title">
             <i class="el-icon-document"></i>测试计划
           </template>
-          <el-menu-item index="/testplan/list">测试计划列表</el-menu-item>
-          <el-menu-item index="/testplan/create">测试计划创建</el-menu-item>
+          <el-menu-item index="/casetestplan/list"
+            >case测试计划列表</el-menu-item
+          >
+          <el-menu-item index="/casetestplan/create"
+            >case测试计划创建</el-menu-item
+          >
         </el-submenu>
         <el-submenu index="5">
           <template slot="title">
@@ -86,7 +90,7 @@ export default {
   data() {
     return {
       currentUser: localStorage.getItem("userName"),
-      currentProject: sessionStorage.getItem("currentProjectName"),
+      currentProject: sessionStorage.getItem("currentProjectName")
     };
   },
   methods: {
@@ -97,8 +101,8 @@ export default {
       window.sessionStorage.removeItem("currentProjectID");
       window.sessionStorage.removeItem("currentProjectName");
       this.$router.push("/login");
-    },
-  },
+    }
+  }
 };
 </script>
 
