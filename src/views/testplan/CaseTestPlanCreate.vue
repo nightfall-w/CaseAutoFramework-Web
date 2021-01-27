@@ -108,18 +108,21 @@
         <el-button type="primary">添加选中到右侧case池</el-button>
         <el-button type="primary">取消全部选中</el-button>
       </div>
-      <div style="text-align:center">
+      <div>
         <h2>case池</h2>
-        <div class="case-list">
-          <div
+        <ul class="case-list">
+          <li
             class="case-item"
             v-for="color in colors"
             v-dragging="{ item: color, list: colors, group: 'color' }"
             :key="color.text"
           >
-            {{ color.text }}
-          </div>
-        </div>
+            <div style="float:left">{{ color.text }}</div>
+            <div style="float:right">
+              <i class="el-icon-delete"></i>
+            </div>
+          </li>
+        </ul>
       </div>
     </el-container>
   </div>
@@ -165,6 +168,7 @@
 }
 
 .case-item {
+  list-style-type: decimal;
   background-color: rgba(86, 171, 197, 0.952);
   margin-top: 10px;
   padding: 10px;
