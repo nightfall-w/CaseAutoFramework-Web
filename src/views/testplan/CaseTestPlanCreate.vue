@@ -113,13 +113,13 @@
         <ul class="case-list">
           <li
             class="case-item"
-            v-for="color in colors"
-            v-dragging="{ item: color, list: colors, group: 'color' }"
-            :key="color.text"
+            v-for="case_item in cases"
+            v-dragging="{ item: case_item, list: cases, group: 'case' }"
+            :key="case_item.text"
           >
-            <div style="float:left">{{ color.text }}</div>
+            <div style="float:left">{{ case_item.text }}</div>
             <div style="float:right">
-              <i class="el-icon-delete"></i>
+              <i @click="delete_case_item" class="el-icon-delete"></i>
             </div>
           </li>
         </ul>
@@ -193,7 +193,7 @@ export default {
 
   data() {
     return {
-      colors: [
+      cases: [
         {
           text: "Aquamarine5555557777777777777777777777555555"
         },
@@ -294,6 +294,11 @@ export default {
         label: "label"
       }
     };
+  },
+  methods: {
+    delete_case_item() {
+      console.log(43434);
+    }
   }
 };
 </script>
