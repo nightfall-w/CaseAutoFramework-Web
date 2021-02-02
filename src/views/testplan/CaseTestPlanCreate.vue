@@ -8,7 +8,9 @@
  -->
 <template>
   <div
-    style="box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04)"
+    style="
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+    "
   >
     <el-container>
       <el-card class="box-card">
@@ -20,7 +22,7 @@
         </div>
         <div v-for="(value, key) in caseBaseInfo" :key="key" class="text item">
           <el-tag>{{ key }}:</el-tag>
-          <el-tag style="margin-left:2%" :type="'info'">{{ value }}</el-tag>
+          <el-tag style="margin-left: 2%" :type="'info'">{{ value }}</el-tag>
         </div>
       </el-card>
       <el-main>
@@ -40,7 +42,7 @@
                 type="date"
                 placeholder="选择日期"
                 v-model="sizeForm.date1"
-                style="width: 100%;"
+                style="width: 100%"
               ></el-date-picker>
             </el-col>
             <el-col class="line" :span="2">-</el-col>
@@ -48,7 +50,7 @@
               <el-time-picker
                 placeholder="选择时间"
                 v-model="sizeForm.date2"
-                style="width: 100%;"
+                style="width: 100%"
               ></el-time-picker>
             </el-col>
           </el-form-item>
@@ -85,10 +87,10 @@
       ><i class="el-icon-star-on">选择case并添加到执行列表</i></el-divider
     >
     <el-container>
-      <div class="block" style="margin-left:5%; width:40%; float:left;">
+      <div class="block" style="margin-left: 5%; width: 40%; float: left">
         <h2>case目录</h2>
         <el-input
-          style="width:200px"
+          style="width: 200px"
           placeholder="输入关键字进行过滤"
           v-model="filterText"
         >
@@ -100,6 +102,7 @@
           :data="case_tree"
           :props="defaultProps"
           :default-expand-all="false"
+          node-key="id"
           :filter-node-method="filterNode"
           ref="tree"
         >
@@ -108,7 +111,9 @@
         <el-button @click="add_case2_list" type="primary"
           >添加选中到右侧case池</el-button
         >
-        <el-button type="primary">取消全部选中</el-button>
+        <el-button @click="cancel_checked_nodes" type="primary"
+          >取消全部选中</el-button
+        >
       </div>
       <div>
         <el-table :data="cases" border style="width: 100%" :rowKey="getrowKey">
@@ -169,7 +174,7 @@ export default {
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val);
-    }
+    },
   },
 
   data() {
@@ -177,49 +182,49 @@ export default {
       col: [
         {
           label: "case路径",
-          prop: "case_path"
-        }
+          prop: "case_path",
+        },
       ],
       dropCol: [
         {
           label: "case路径",
-          prop: "case_path"
-        }
+          prop: "case_path",
+        },
       ],
       cases: [
         {
           case_path:
-            "Aquamarine5555557777777777777777777777555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555"
+            "Aquamarine5555557777777777777777777777555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555",
         },
         {
-          case_path: "Hotpink"
+          case_path: "Hotpink",
         },
         {
-          case_path: "Gold"
+          case_path: "Gold",
         },
         {
-          case_path: "Crimson"
+          case_path: "Crimson",
         },
         {
-          case_path: "Blueviolet"
+          case_path: "Blueviolet",
         },
         {
-          case_path: "Lightblue"
+          case_path: "Lightblue",
         },
         {
-          case_path: "Cornflowerblue"
+          case_path: "Cornflowerblue",
         },
         {
-          case_path: "Skyblue"
+          case_path: "Skyblue",
         },
         {
-          case_path: "Burlywood"
-        }
+          case_path: "Burlywood",
+        },
       ],
       caseBaseInfo: {
-        gitlab服务器: "2016-05-02",
-        项目名: "王小虎",
-        分支名: "上海市普陀区金沙江路 1518 弄"
+        gitlab服务器: "",
+        项目名: "",
+        分支名: "",
       },
       sizeForm: {
         name: "",
@@ -229,7 +234,7 @@ export default {
         delivery: false,
         type: [],
         resource: "",
-        desc: ""
+        desc: "",
       },
       checked: [],
       filterText: "",
@@ -242,7 +247,7 @@ export default {
               id: 3,
               label: "cmdline_args.py",
               filepath:
-                "http-git-flashhold-com-10080/master/g2p-planer/cmdline_args.py"
+                "http-git-flashhold-com-10080/master/g2p-planer/cmdline_args.py",
             },
             {
               id: 4,
@@ -252,68 +257,69 @@ export default {
                   id: 5,
                   label: "g2p_generate_map.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/g2p_generate_map.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/g2p_generate_map.py",
                 },
                 {
                   id: 6,
                   label: "g2p_layout.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/g2p_layout.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/g2p_layout.py",
                 },
                 {
                   id: 7,
                   label: "g2p_plot_layout.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/g2p_plot_layout.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/g2p_plot_layout.py",
                 },
                 {
                   id: 8,
                   label: "general_planer.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/general_planer.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/general_planer.py",
                 },
                 {
                   id: 9,
                   label: "hds_soqn_model.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/hds_soqn_model.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/hds_soqn_model.py",
                 },
                 {
                   id: 10,
                   label: "main.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/main.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/main.py",
                 },
                 {
                   id: 11,
                   label: "planer_base.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/planer_base.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/planer_base.py",
                 },
                 {
                   id: 12,
                   label: "regular_planer.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/regular_planer.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/regular_planer.py",
                 },
                 {
                   id: 13,
                   label: "std_soqn_model.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/layout/std_soqn_model.py"
-                }
-              ]
+                    "http-git-flashhold-com-10080/master/g2p-planer/layout/std_soqn_model.py",
+                },
+              ],
             },
             {
               id: 14,
               label: "logutil.py",
               filepath:
-                "http-git-flashhold-com-10080/master/g2p-planer/logutil.py"
+                "http-git-flashhold-com-10080/master/g2p-planer/logutil.py",
             },
             {
               id: 15,
               label: "main.py",
-              filepath: "http-git-flashhold-com-10080/master/g2p-planer/main.py"
+              filepath:
+                "http-git-flashhold-com-10080/master/g2p-planer/main.py",
             },
             {
               id: 18,
@@ -323,79 +329,79 @@ export default {
                   id: 20,
                   label: "db_pool.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/db_pool.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/db_pool.py",
                 },
                 {
                   id: 21,
                   label: "environ_version_config.json",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/environ_version_config.json"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/environ_version_config.json",
                 },
                 {
                   id: 22,
                   label: "framework_report.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/framework_report.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/framework_report.py",
                 },
                 {
                   id: 23,
                   label: "framework_warehouse.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/framework_warehouse.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/framework_warehouse.py",
                 },
                 {
                   id: 24,
                   label: "g2p_simulation.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/g2p_simulation.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/g2p_simulation.py",
                 },
                 {
                   id: 25,
                   label: "g2p_simulation_new.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/g2p_simulation_new.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/g2p_simulation_new.py",
                 },
                 {
                   id: 26,
                   label: "inventory_data.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/inventory_data.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/inventory_data.py",
                 },
                 {
                   id: 27,
                   label: "main.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/main.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/main.py",
                 },
                 {
                   id: 28,
                   label: "simu_environment.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/simu_environment.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/simu_environment.py",
                 },
                 {
                   id: 29,
                   label: "ssh_server.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/ssh_server.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/ssh_server.py",
                 },
                 {
                   id: 30,
                   label: "util.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/util.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/util.py",
                 },
                 {
                   id: 31,
                   label: "warehouse_config.json",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/warehouse_config.json"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/warehouse_config.json",
                 },
                 {
                   id: 32,
                   label: "warehouse_data.py",
                   filepath:
-                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/warehouse_data.py"
+                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/warehouse_data.py",
                 },
                 {
                   id: 33,
@@ -409,33 +415,33 @@ export default {
                           id: 37,
                           label: "count_check.py",
                           filepath:
-                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/count_check.py"
+                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/count_check.py",
                         },
                         {
                           id: 38,
                           label: "direct_put_away.py",
                           filepath:
-                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/direct_put_away.py"
+                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/direct_put_away.py",
                         },
                         {
                           id: 39,
                           label: "entrance.py",
                           filepath:
-                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/entrance.py"
+                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/entrance.py",
                         },
                         {
                           id: 40,
                           label: "guided_put_away.py",
                           filepath:
-                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/guided_put_away.py"
+                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/guided_put_away.py",
                         },
                         {
                           id: 41,
                           label: "picking.py",
                           filepath:
-                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/picking.py"
-                        }
-                      ]
+                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/interface_for_simulation/picking.py",
+                        },
+                      ],
                     },
                     {
                       id: 43,
@@ -449,33 +455,33 @@ export default {
                               id: 45,
                               label: "customizeDate.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/customizeDate.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/customizeDate.py",
                             },
                             {
                               id: 46,
                               label: "Logging.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/Logging.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/Logging.py",
                             },
                             {
                               id: 47,
                               label: "messge.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/messge.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/messge.py",
                             },
                             {
                               id: 48,
                               label: "randomlib.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/randomlib.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/randomlib.py",
                             },
                             {
                               id: 49,
                               label: "__init__.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/__init__.py"
-                            }
-                          ]
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/automation/__init__.py",
+                            },
+                          ],
                         },
                         {
                           id: 50,
@@ -489,27 +495,27 @@ export default {
                                   id: 52,
                                   label: "basic_data.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/common/basic_data.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/common/basic_data.py",
                                 },
                                 {
                                   id: 53,
                                   label: "basic_station.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/common/basic_station.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/common/basic_station.py",
                                 },
                                 {
                                   id: 54,
                                   label: "__init__.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/common/__init__.py"
-                                }
-                              ]
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/common/__init__.py",
+                                },
+                              ],
                             },
                             {
                               id: 55,
                               label: "document_type.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/document_type.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/document_type.py",
                             },
                             {
                               id: 56,
@@ -519,33 +525,33 @@ export default {
                                   id: 57,
                                   label: "delete_data.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/delete_data.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/delete_data.py",
                                 },
                                 {
                                   id: 58,
                                   label: "order_creater.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/order_creater.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/order_creater.py",
                                 },
                                 {
                                   id: 59,
                                   label: "strategy.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/strategy.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/strategy.py",
                                 },
                                 {
                                   id: 60,
                                   label: "template.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/template.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/template.py",
                                 },
                                 {
                                   id: 61,
                                   label: "__init__.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/__init__.py"
-                                }
-                              ]
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/order/__init__.py",
+                                },
+                              ],
                             },
                             {
                               id: 62,
@@ -555,45 +561,45 @@ export default {
                                   id: 63,
                                   label: "api.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/api.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/api.py",
                                 },
                                 {
                                   id: 64,
                                   label: "direct_put_away.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/direct_put_away.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/direct_put_away.py",
                                 },
                                 {
                                   id: 65,
                                   label: "guided_put_away.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/guided_put_away.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/guided_put_away.py",
                                 },
                                 {
                                   id: 66,
                                   label: "inventory.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/inventory.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/inventory.py",
                                 },
                                 {
                                   id: 67,
                                   label: "picking.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/picking.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/picking.py",
                                 },
                                 {
                                   id: 69,
                                   label: "station.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/station.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/station.py",
                                 },
                                 {
                                   id: 70,
                                   label: "__init__.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/__init__.py"
-                                }
-                              ]
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_agant/__init__.py",
+                                },
+                              ],
                             },
                             {
                               id: 71,
@@ -603,63 +609,63 @@ export default {
                                   id: 72,
                                   label: "db_data_select.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/db_data_select.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/db_data_select.py",
                                 },
                                 {
                                   id: 73,
                                   label: "db_pool.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/db_pool.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/db_pool.py",
                                 },
                                 {
                                   id: 74,
                                   label: "flask_task.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/flask_task.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/flask_task.py",
                                 },
                                 {
                                   id: 75,
                                   label: "Logging.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/Logging.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/Logging.py",
                                 },
                                 {
                                   id: 77,
                                   label: "station.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/station.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/station.py",
                                 },
                                 {
                                   id: 78,
                                   label: "stationService.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/stationService.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/stationService.py",
                                 },
                                 {
                                   id: 79,
                                   label: "station_celery.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/station_celery.py"
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/station_celery.py",
                                 },
                                 {
                                   id: 80,
-                                  label: "web"
+                                  label: "web",
                                 },
                                 {
                                   id: 82,
                                   label: "__init__.py",
                                   filepath:
-                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/__init__.py"
-                                }
-                              ]
+                                    "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/station_service/__init__.py",
+                                },
+                              ],
                             },
                             {
                               id: 83,
                               label: "__init__.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/__init__.py"
-                            }
-                          ]
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/business_component/__init__.py",
+                            },
+                          ],
                         },
                         {
                           id: 84,
@@ -669,63 +675,63 @@ export default {
                               id: 85,
                               label: "class_data_backup.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/class_data_backup.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/class_data_backup.py",
                             },
                             {
                               id: 86,
                               label: "db_data_select.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/db_data_select.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/db_data_select.py",
                             },
                             {
                               id: 87,
                               label: "db_data_update.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/db_data_update.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/db_data_update.py",
                             },
                             {
                               id: 88,
                               label: "db_pool.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/db_pool.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/db_pool.py",
                             },
                             {
                               id: 89,
                               label: "demo.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/demo.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/demo.py",
                             },
                             {
                               id: 90,
                               label: "generate_db_class.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/generate_db_class.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/generate_db_class.py",
                             },
                             {
                               id: 91,
                               label: "mq_pool.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/mq_pool.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/mq_pool.py",
                             },
                             {
                               id: 92,
                               label: "mq_utils.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/mq_utils.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/mq_utils.py",
                             },
                             {
                               id: 93,
                               label: "rabbitMQ_demo.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/rabbitMQ_demo.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/rabbitMQ_demo.py",
                             },
                             {
                               id: 94,
                               label: "__init__.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/__init__.py"
-                            }
-                          ]
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/db_tool/__init__.py",
+                            },
+                          ],
                         },
                         {
                           id: 95,
@@ -735,7 +741,7 @@ export default {
                               id: 96,
                               label: "class_init_service.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/init_service/class_init_service.py"
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/init_service/class_init_service.py",
                             },
                             {
                               id: 97,
@@ -743,37 +749,37 @@ export default {
                               children: [
                                 {
                                   id: 98,
-                                  label: "auto_test"
-                                }
-                              ]
+                                  label: "auto_test",
+                                },
+                              ],
                             },
                             {
                               id: 101,
                               label: "run_init_service.py",
                               filepath:
-                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/init_service/run_init_service.py"
-                            }
-                          ]
+                                "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/init_service/run_init_service.py",
+                            },
+                          ],
                         },
                         {
                           id: 104,
                           label: "__init__.py",
                           filepath:
-                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/__init__.py"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
+                            "http-git-flashhold-com-10080/master/g2p-planer/simulation/wcs_autocase/wcs_tool/__init__.py",
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
       ],
       defaultProps: {
         children: "children",
-        label: "label"
-      }
+        label: "label",
+      },
     };
   },
 
@@ -797,13 +803,16 @@ export default {
           console.log(_this.cases);
           _this.$set(this, "cases", _this.cases);
           console.log(this.cases);
-        }
+        },
       });
     },
     delete_case_item(index) {
       console.log(index);
       this.cases.splice(index, 1);
       console.log(this.cases);
+    },
+    cancel_checked_nodes() {
+      this.$refs.tree.setCheckedNodes([]);
     },
     add_case2_list() {
       let CheckedNodes = this.$refs.tree.getCheckedNodes();
@@ -821,7 +830,7 @@ export default {
               if (j + 1 == this.cases.length) {
                 console.log(CheckedNodes[i].filepath);
                 this.cases.splice(this.cases.length, 0, {
-                  case_path: CheckedNodes[i].filepath
+                  case_path: CheckedNodes[i].filepath,
                 });
               }
             }
@@ -831,11 +840,25 @@ export default {
     },
     onSubmit() {
       console.log(1111);
-    }
+    },
   },
   mounted() {
+    const gitlab_url = this.$route.query.gitlab_url;
+    const gitlab_project = this.$route.query.gitlab_project;
+    const gitlab_branch = this.$route.query.gitlab_branch;
+    if (gitlab_url && gitlab_project && gitlab_branch) {
+      this.caseBaseInfo.gitlab服务器 = gitlab_url;
+      this.caseBaseInfo.gitlab_project = gitlab_project;
+      this.caseBaseInfo.gitlab_branch = gitlab_branch;
+    } else {
+      this.$message({
+        message: "未提供case相关信息 请先同步case",
+        type: "warning",
+      });
+      this.$router.push({ path: "/case/create" });
+    }
     this.rowDrop();
-  }
+  },
 };
 </script>
 
