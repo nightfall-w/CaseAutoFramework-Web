@@ -74,6 +74,7 @@
         </el-input>
         <br />
         <el-tree
+          v-loading="loading"
           class="filter-tree"
           :show-checkbox="true"
           :data="case_tree"
@@ -152,7 +153,7 @@ export default {
   watch: {
     filterText(val) {
       this.$refs.tree.filter(val);
-    }
+    },
   },
 
   data() {
@@ -160,62 +161,34 @@ export default {
       col: [
         {
           label: "case路径",
-          prop: "case_path"
-        }
+          prop: "case_path",
+        },
       ],
       dropCol: [
         {
           label: "case路径",
-          prop: "case_path"
-        }
+          prop: "case_path",
+        },
       ],
-      cases: [
-        {
-          case_path:
-            "Aquamarine5555557777777777777777777777555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555"
-        },
-        {
-          case_path: "Hotpink"
-        },
-        {
-          case_path: "Gold"
-        },
-        {
-          case_path: "Crimson"
-        },
-        {
-          case_path: "Blueviolet"
-        },
-        {
-          case_path: "Lightblue"
-        },
-        {
-          case_path: "Cornflowerblue"
-        },
-        {
-          case_path: "Skyblue"
-        },
-        {
-          case_path: "Burlywood"
-        }
-      ],
+      cases: [],
       caseBaseInfo: {
         gitlab服务器: "",
         项目名: "",
-        分支名: ""
+        分支名: "",
       },
       testplanInfo: {
         name: "",
         description: "",
-        parallel: false
+        parallel: false,
       },
       checked: [],
       filterText: "",
       case_tree: [],
+      loading: true,
       defaultProps: {
         children: "children",
-        label: "label"
-      }
+        label: "label",
+      },
     };
   },
 
@@ -239,7 +212,7 @@ export default {
           console.log(_this.cases);
           _this.$set(this, "cases", _this.cases);
           console.log(this.cases);
-        }
+        },
       });
     },
     delete_case_item(index) {
@@ -266,7 +239,7 @@ export default {
               if (j + 1 == this.cases.length) {
                 console.log(CheckedNodes[i].filepath);
                 this.cases.splice(this.cases.length, 0, {
-                  case_path: CheckedNodes[i].filepath
+                  case_path: CheckedNodes[i].filepath,
                 });
               }
             }
@@ -276,7 +249,7 @@ export default {
     },
     onSubmit() {
       console.log(1111);
-    }
+    },
   },
   mounted() {
     const gitlab_url = this.$route.query.gitlab_url;
@@ -289,21 +262,27 @@ export default {
 
       // 根据case信息获取对应目录树数据
       getCaseTree(gitlab_url, gitlab_project, gitlab_branch)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.case_tree = res.case_tree;
+          this.loading = false;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
+          this.$message({
+            showClose: true,
+            message: "获取case目录树出错！",
+            type: "error",
+          });
         });
     } else {
       this.$message({
         message: "未提供case相关信息 请先同步case",
-        type: "warning"
+        type: "warning",
       });
       this.$router.push({ path: "/case/create" });
     }
     this.rowDrop();
-  }
+  },
 };
 </script>
