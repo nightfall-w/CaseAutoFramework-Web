@@ -14,7 +14,7 @@ export default function axios(option) {
     // 1.创建axios的实例
     const instance = originAxios.create({
       baseURL: process.env.VUE_APP_SERVER_URL,
-      timeout: 5000
+      timeout: 10000
     });
 
     // 配置请求和响应拦截

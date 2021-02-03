@@ -160,7 +160,8 @@ export default {
       private_token: "",
       projects: [],
       projectValue: "",
-      checkedProjectId: null,
+      projectName: "",
+      checkedProjectObj: null,
 
       branchs: [],
       branchValue: "",
@@ -171,8 +172,8 @@ export default {
         { color: "#e6a23c", percentage: 40 },
         { color: "#5cb87a", percentage: 60 },
         { color: "#1989fa", percentage: 80 },
-        { color: "#6f7ad3", percentage: 100 },
-      ],
+        { color: "#6f7ad3", percentage: 100 }
+      ]
     };
   },
   created() {
@@ -212,7 +213,7 @@ export default {
         this.$notify({
           title: "成功",
           message: "拉取远程代码完成！",
-          type: "success",
+          type: "success"
         });
       }
     },
@@ -232,14 +233,14 @@ export default {
       this.branchs = [];
       this.projectValue = "";
       getProjectList(this.gitlab_url, this.private_token, this.desc)
-        .then((res) => {
+        .then(res => {
           this.step1SubmitButtonLoading = false;
           this.token = res.token;
           this.branchs = [];
           for (let key in res.result) {
             this.projects.push({
               projectName: key,
-              projectId: res.result[key],
+              projectId: res.result[key]
             });
           }
           this.step_active = 1;
@@ -248,15 +249,15 @@ export default {
           this.$notify({
             title: "成功",
             message: "验证通过 请进行下一步操作",
-            type: "success",
+            type: "success"
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.step1SubmitButtonLoading = false;
           console.log(err);
           this.$notify.error({
             title: "错误",
-            message: err.message,
+            message: err.message
           });
         });
     },
@@ -264,50 +265,51 @@ export default {
       this.branchs = [];
       this.branchValue = "";
       let projectObj = {};
-      projectObj = this.projects.find((item) => {
+      projectObj = this.projects.find(item => {
         //遍历list的数据
         return item.projectId === value; //筛选出匹配数据
       });
       console.log(projectObj.projectId); //获取list里面的name
-      this.checkedProjectId = projectObj.projectId;
+      this.checkedProjectObj = projectObj;
+
       // getBranchList;
       if (!this.token) {
         return false;
       }
       this.branchs = [];
       getBranchList(this.token, projectObj.projectId)
-        .then((res) => {
+        .then(res => {
           this.branchs = res.result;
           this.step_active = 2;
           this.tabActiveName = "three";
           this.$notify({
             title: "成功",
             message: "获取分支成功 请进行下一步操作",
-            type: "success",
+            type: "success"
           });
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error({
             title: "错误",
-            message: err.message,
+            message: err.message
           });
         });
     },
     pullBranch() {
-      let project_id = this.checkedProjectId;
+      let project_id = this.checkedProjectObj.projectId;
       this.percentage = 0;
       askPullBranch(this.token, project_id, this.branchValue)
-        .then((res) => {
+        .then(res => {
           console.log(res);
           this.step_active = 3;
           this.tabActiveName = "four";
           this.$notify({
             title: "成功",
             message: "pull请求已经成功, 请等待完成",
-            type: "success",
+            type: "success"
           });
           //发起websocket请求 获取分支pull状态
-          var sleep = function (time) {
+          var sleep = function(time) {
             var startTime = new Date().getTime() + parseInt(time, 10);
             while (new Date().getTime() < startTime) {
               // pass
@@ -316,15 +318,15 @@ export default {
           sleep(1000);
           let actions = {
             token: this.token,
-            project_id: this.checkedProjectId,
-            branch_name: this.branchValue,
+            project_id: project_id,
+            branch_name: this.branchValue
           };
           this.websocketsend(JSON.stringify(actions));
         })
-        .catch((err) => {
+        .catch(err => {
           this.$notify.error({
             title: "错误",
-            message: err.message,
+            message: err.message
           });
         });
     },
@@ -344,10 +346,15 @@ export default {
       }
     },
     skip2createTestplan() {
-      this.$router.push({ path: "/casetestplan/create", query: {
-        gitlab_url:this.gitlab_url, gitlab_project:this.gitlab_
-      } });
-    },
-  },
+      this.$router.push({
+        path: "/casetestplan/create",
+        query: {
+          gitlab_url: this.gitlab_url,
+          gitlab_project: this.checkedProjectObj.projectName,
+          gitlab_branch: this.branchValue
+        }
+      });
+    }
+  }
 };
 </script>
