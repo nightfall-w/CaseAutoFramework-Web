@@ -46,3 +46,16 @@ export function getCaseTree(gitlab_url, project_name, branch_name) {
     }
   });
 }
+
+export function createCaseTestplan(testplan_name, description, parallel, case_paths, project_id) {
+  return axios({
+    url: "/api/caseTestPlan/",
+    method: "post",
+    data:{
+      name: testplan_name,
+      description: description,
+      parallel: parallel,
+      case_paths: case_paths,
+    }
+  });
+}
