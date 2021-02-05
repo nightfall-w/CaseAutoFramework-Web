@@ -61,7 +61,7 @@ var store = new Vuex.Store({
     },
     [SWAICH_PROJECT](state, currentProject){
       // 切换项目
-      sessionStorage.setItem("currentProjectID", currentProject.id);
+      sessionStorage.setItem("currentProjectID", parseInt(currentProject.id));
       sessionStorage.setItem("currentProjectName", currentProject.name);
       state.currentProjectID = currentProject.id;
       state.currentProjectName = currentProject.name;

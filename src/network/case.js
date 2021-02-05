@@ -56,6 +56,7 @@ export function createCaseTestplan(testplan_name, description, parallel, case_pa
       description: description,
       parallel: parallel,
       case_paths: case_paths,
+      project_id: project_id
     }
   });
 }

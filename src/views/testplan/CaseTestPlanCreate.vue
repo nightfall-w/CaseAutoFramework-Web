@@ -27,22 +27,23 @@
       </el-card>
       <el-main>
         <el-form
-          ref="form"
+          ref="testplanInfo"
+          :rules="rules"
           :model="testplanInfo"
           label-width="80px"
           size="mini"
         >
-          <el-form-item label="测试计划名称">
+          <el-form-item label="测试计划名称" prop="name">
             <el-input
               v-model="testplanInfo.name"
               placeholder="请输入测试计划名"
             ></el-input>
           </el-form-item>
-          <el-form-item label="描述">
+          <el-form-item label="描述" prop="description">
             <el-input
               type="textarea"
               :rows="2"
-              placeholder="请输入内容"
+              placeholder="请输入测试计划描述"
               v-model="testplanInfo.description"
             >
             </el-input>
@@ -54,7 +55,9 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item size="large">
-            <el-button type="primary" @click="onSubmit">立即创建</el-button>
+            <el-button type="primary" @click="onSubmit('testplanInfo')"
+              >立即创建</el-button
+            >
             <el-button>取消</el-button>
           </el-form-item>
         </el-form>
@@ -94,6 +97,12 @@
         >
       </div>
       <div>
+        <el-tag type="success"
+          ><i class="el-icon-info"></i>
+          支持对case条目进行拖拽排序,排序后的顺序为执行顺序(仅对串行执行时有效)</el-tag
+        >
+        <br />
+        <br />
         <el-table
           :data="cases"
           v-loading="cases_loading"
@@ -151,7 +160,7 @@
 
 <script>
 import Sortable from "sortablejs";
-import { getCaseTree } from "network/case";
+import { getCaseTree, createCaseTestplan } from "network/case";
 export default {
   watch: {
     filterText(val) {
@@ -179,6 +188,15 @@ export default {
         gitlab服务器: "",
         项目名: "",
         分支名: ""
+      },
+      rules: {
+        name: [
+          { required: true, message: "请输入测试计划名", trigger: "blur" },
+          { min: 3, max: 30, message: "长度在 3 到 30 个字符", trigger: "blur" }
+        ],
+        description: [
+          { required: false, message: "请输入测试计划描述", trigger: "blur" }
+        ]
       },
       testplanInfo: {
         name: "",
@@ -226,28 +244,6 @@ export default {
     add_case2_list() {
       this.cases_loading = true;
       let CheckedNodes = this.$refs.tree.getCheckedNodes();
-      // for (let i in CheckedNodes) {
-      //   if (!CheckedNodes[i].filepath) {
-      //     continue;
-      //   } else {
-      //     if (this.cases.length == 0) {
-      //       this.cases.splice(this.cases.length, 0, CheckedNodes[i].filepath);
-      //     }
-      //     for (let j = 0; j < this.cases.length; j++) {
-      //       if (CheckedNodes[i].filepath == this.cases[j]) {
-      //         break;
-      //       } else {
-      //         if (j + 1 == this.cases.length) {
-      //           this.cases.splice(
-      //             this.cases.length,
-      //             0,
-      //             CheckedNodes[i].filepath
-      //           );
-      //         }
-      //       }
-      //     }
-      //   }
-      // }
       for (let i in CheckedNodes) {
         if (!CheckedNodes[i].filepath) {
           continue;
@@ -258,8 +254,35 @@ export default {
       this.cases = [...new Set(this.cases)];
       this.cases_loading = false;
     },
-    onSubmit() {
-      console.log(1111);
+    onSubmit(formName) {
+      this.$refs[formName].validate(valid => {
+        if (valid) {
+          if (this.cases.length == 0) {
+            this.$message.error("必须添加case到计划列表");
+            return false;
+          } else {
+            createCaseTestplan(
+              this.testplanInfo.name,
+              this.testplanInfo.description,
+              this.testplanInfo.parallel,
+              this.cases,
+              sessionStorage.getItem("currentProjectID")
+            )
+              .then(res => {
+                this.$message({
+                  message: "创建成功",
+                  type: "success"
+                });
+              })
+              .catch(err => {
+                this.$message.error("创建失败");
+              });
+          }
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
     }
   },
   mounted() {
