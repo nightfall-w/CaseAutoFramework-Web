@@ -1,13 +1,47 @@
-<!--
- * @Descripttion: 
- * @version: 
- * @Author: wangbaojun
- * @Date: 2020-01-02 16:00:32
- * @LastEditors: 
- * @LastEditTime: 2020-01-10 09:50:18
- -->
 <template>
   <div>
-    测试计划详情
+    <el-row style="margin-top: 30px" type="flex" justify="center"> </el-row>
+    <detail
+      :fatherCaseBaseInfo="caseBaseInfo"
+      :fatherTestplanInfo="testPlanInfo"
+      :fatherCaes="cases"
+    ></detail>
   </div>
 </template>
+
+<script>
+import Detail from "content/testplan/detail_case";
+import { getCaseTestplanDetail } from "network/testplan";
+export default {
+  data() {
+    return {
+      caseBaseInfo: {
+        gitlab服务器: "",
+        项目名: "",
+        分支名: "",
+      },
+      testPlanInfo: {
+        name: "",
+        description: "",
+        parallel: false,
+      },
+      cases: [],
+    };
+  },
+  components: {
+    Detail,
+  },
+  mounted() {
+    getCaseTestplanDetail(2, 18)
+      .then((res) => {
+        this.case_paths = res.case_paths;
+        this.testPlanInfo.name = res.name;
+        this.testPlanInfo.description = res.description;
+        this.testPlanInfo.parallel = res.parallel;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  },
+};
+</script>

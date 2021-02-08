@@ -168,7 +168,18 @@ export default {
       this.$refs.tree.filter(val);
     },
   },
-
+  name: "caseTestplanDetail",
+  props: {
+    fatherCaseBaseInfo: {
+      type: Object,
+    },
+    fatherTestplanInfo: {
+      type: Object,
+    },
+    fatherCaes: {
+      type: Array,
+    },
+  },
   data() {
     return {
       col: [
@@ -183,13 +194,9 @@ export default {
           prop: "case_path",
         },
       ],
-      cases: [],
+      cases: this.fatherCaes,
       cases_loading: false,
-      caseBaseInfo: {
-        gitlab服务器: "",
-        项目名: "",
-        分支名: "",
-      },
+      caseBaseInfo: this.fatherCaseBaseInfo,
       rules: {
         name: [
           { required: true, message: "请输入测试计划名", trigger: "blur" },
@@ -204,11 +211,7 @@ export default {
           { required: false, message: "请输入测试计划描述", trigger: "blur" },
         ],
       },
-      testplanInfo: {
-        name: "",
-        description: "",
-        parallel: false,
-      },
+      testplanInfo: this.fatherTestplanInfo,
       checked: [],
       filterText: "",
       case_tree: [],
@@ -272,10 +275,7 @@ export default {
               this.testplanInfo.description,
               this.testplanInfo.parallel,
               this.cases,
-              sessionStorage.getItem("currentProjectID"),
-              this.caseBaseInfo.gitlab服务器,
-              this.caseBaseInfo.项目名,
-              this.caseBaseInfo.分支名
+              sessionStorage.getItem("currentProjectID")
             )
               .then((res) => {
                 console.log(res);
@@ -306,7 +306,11 @@ export default {
       this.caseBaseInfo.分支名 = gitlab_branch;
 
       // 根据case信息获取对应目录树数据
-      getCaseTree(gitlab_url, gitlab_project, gitlab_branch)
+      getCaseTree(
+        this.caseBaseInfo.gitlab服务器,
+        this.caseBaseInfo.项目名,
+        this.caseBaseInfo.分支名
+      )
         .then((res) => {
           console.log(res);
           this.case_tree = res.case_tree;

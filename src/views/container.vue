@@ -62,9 +62,8 @@
           color: #fff;
         "
       >
-        <i class="el-icon-s-grid" style="margin-right: 20px"></i>
-
-        <span style="color: #fff; margin-right: 600px; font-size:18px">{{
+        <i class="el-icon-s-grid" style="margin-right: 20px;"></i>
+        <span style="color: #fff; margin-right: 46%; font-size:18px">{{
           currentProject
         }}</span>
 
