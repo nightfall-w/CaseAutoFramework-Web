@@ -3,8 +3,8 @@
  * @version: 
  * @Author: wangbaojun
  * @Date: 2020-01-02 16:00:11
- * @LastEditors: 
- * @LastEditTime: 2020-01-10 09:49:30
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-11 00:28:47
  -->
 <template>
   <div
@@ -167,6 +167,24 @@ export default {
     filterText(val) {
       this.$refs.tree.filter(val);
     },
+    caseBaseInfo: {
+      handler() {
+        // 监听获取ajax数据
+        if (this.caseBaseInfo.分支名) {
+          this.get_case_tree();
+        }
+      },
+      // 监听到数据变化时立即调用
+      immediate: true,
+      deep: true,
+    },
+    cases: {
+      handler() {
+        console.log(this.cases);
+      },
+      immediate: true,
+      deep: true,
+    },
   },
   name: "caseTestplanDetail",
   props: {
@@ -176,7 +194,7 @@ export default {
     fatherTestplanInfo: {
       type: Object,
     },
-    fatherCaes: {
+    fatherCases: {
       type: Array,
     },
   },
@@ -194,7 +212,7 @@ export default {
           prop: "case_path",
         },
       ],
-      cases: this.fatherCaes,
+      cases: this.fatherCases,
       cases_loading: false,
       caseBaseInfo: this.fatherCaseBaseInfo,
       rules: {
@@ -243,6 +261,28 @@ export default {
         },
       });
     },
+    get_case_tree() {
+      // 根据case信息获取对应目录树数据
+      console.log(this.caseBaseInfo.分支名);
+      getCaseTree(
+        this.caseBaseInfo.gitlab服务器,
+        this.caseBaseInfo.项目名,
+        this.caseBaseInfo.分支名
+      )
+        .then((res) => {
+          console.log(res);
+          this.case_tree = res.case_tree;
+          this.tree_loading = false;
+        })
+        .catch((err) => {
+          console.log(err);
+          this.$message({
+            showClose: true,
+            message: "获取case目录树出错！",
+            type: "error",
+          });
+        });
+    },
     delete_case_item(index) {
       console.log(index);
       this.cases.splice(index, 1);
@@ -251,6 +291,7 @@ export default {
       this.$refs.tree.setCheckedNodes([]);
     },
     add_case2_list() {
+      console.log(this.cases);
       this.cases_loading = true;
       let CheckedNodes = this.$refs.tree.getCheckedNodes();
       for (let i in CheckedNodes) {
@@ -297,39 +338,23 @@ export default {
     },
   },
   mounted() {
-    const gitlab_url = this.$route.query.gitlab_url;
-    const gitlab_project = this.$route.query.gitlab_project;
-    const gitlab_branch = this.$route.query.gitlab_branch;
-    if (gitlab_url && gitlab_project && gitlab_branch) {
-      this.caseBaseInfo.gitlab服务器 = gitlab_url;
-      this.caseBaseInfo.项目名 = gitlab_project;
-      this.caseBaseInfo.分支名 = gitlab_branch;
-
-      // 根据case信息获取对应目录树数据
-      getCaseTree(
-        this.caseBaseInfo.gitlab服务器,
-        this.caseBaseInfo.项目名,
-        this.caseBaseInfo.分支名
-      )
-        .then((res) => {
-          console.log(res);
-          this.case_tree = res.case_tree;
-          this.tree_loading = false;
-        })
-        .catch((err) => {
-          console.log(err);
-          this.$message({
-            showClose: true,
-            message: "获取case目录树出错！",
-            type: "error",
-          });
+    if (this.$route.path == "casetestplan/create") {
+      const gitlab_url = this.$route.query.gitlab_url;
+      const gitlab_project = this.$route.query.gitlab_project;
+      const gitlab_branch = this.$route.query.gitlab_branch;
+      if (gitlab_url && gitlab_project && gitlab_branch) {
+        this.caseBaseInfo.gitlab服务器 = gitlab_url;
+        this.caseBaseInfo.项目名 = gitlab_project;
+        this.caseBaseInfo.分支名 = gitlab_branch;
+        this.get_case_tree();
+      } else {
+        this.$message({
+          message: "未提供case相关信息 请先同步case",
+          type: "warning",
         });
-    } else {
-      this.$message({
-        message: "未提供case相关信息 请先同步case",
-        type: "warning",
-      });
-      this.$router.push({ path: "/case/create" });
+        // this.$router.push({ path: "/case/create" });
+        return false;
+      }
     }
     this.rowDrop();
   },

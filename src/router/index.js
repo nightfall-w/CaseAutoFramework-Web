@@ -3,8 +3,8 @@
  * @version:
  * @Author: wangbaojun
  * @Date: 2019-11-16 22:38:44
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-10 11:44:06
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-10 21:52:13
  */
 import Vue from "vue";
 import VueRouter from "vue-router";
@@ -23,7 +23,7 @@ const ReportList = () => import("views/report/ReportList");
 const ReportDetail = () => import("views/report/ReportDetail");
 const CaseTestPlanList = () => import("views/testplan/CaseTestPlanList");
 const CaseTestPlanCreate = () => import("views/testplan/CaseTestPlanCreate");
-const CaseTestPlanDetail = () => import("views/testplan/CaseTestPlanDetail");
+const CaseTestPlanEdit = () => import("views/testplan/CaseTestPlanEdit");
 
 Vue.use(VueRouter);
 
@@ -125,7 +125,7 @@ const routes = [
       {
         path: "/casetestplan/detail",
         name: "testplan-detail",
-        component: CaseTestPlanDetail,
+        component: CaseTestPlanEdit,
         meta: {
           requireAuth: true
         }
@@ -145,7 +145,15 @@ const routes = [
         meta: {
           requireAuth: true
         }
-      }
+      },
+      {
+        path: "/casetestplan/edit",
+        name: "testplan-edit",
+        component: CaseTestPlanEdit,
+        meta: {
+          requireAuth: true
+        }
+      },
     ]
   }
 ];

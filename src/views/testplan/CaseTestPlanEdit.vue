@@ -1,10 +1,18 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: wangbaojun
+ * @Date: 2021-01-23 16:14:54
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-11 02:20:49
+-->
 <template>
   <div>
     <el-row style="margin-top: 30px" type="flex" justify="center"> </el-row>
     <detail
       :fatherCaseBaseInfo="caseBaseInfo"
       :fatherTestplanInfo="testPlanInfo"
-      :fatherCaes="cases"
+      v-if="this.cases.length>0" :fatherCases="cases"
     ></detail>
   </div>
 </template>
@@ -31,13 +39,19 @@ export default {
   components: {
     Detail,
   },
-  mounted() {
-    getCaseTestplanDetail(2, 18)
+  created() {
+    getCaseTestplanDetail(3, 1)
       .then((res) => {
-        this.case_paths = res.case_paths;
+        console.log(this.cases);
+        this.cases = res.case_paths;
         this.testPlanInfo.name = res.name;
         this.testPlanInfo.description = res.description;
         this.testPlanInfo.parallel = res.parallel;
+        this.caseBaseInfo.gitlab服务器 = res.gitlab_url;
+        this.caseBaseInfo.项目名 = res.gitlab_project_name;
+        this.caseBaseInfo.分支名 = res.branch_name;
+        console.log(res.case_paths);
+        console.log(this.cases);
       })
       .catch((err) => {
         console.log(err);

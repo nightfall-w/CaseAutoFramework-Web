@@ -3,8 +3,8 @@
  * @version: 
  * @Author: wangbaojun
  * @Date: 2019-12-17 11:44:09
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-10 13:22:21
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-10 22:43:57
  -->
 <template>
   <div>
@@ -33,7 +33,7 @@ export default {
   components: {
     Detail
   },
-  mounted() {
+  created() {
     getProjectDetail(this.$route.query.itemId).then(res => {
       console.log(res);
       this.project.id = res.id;
