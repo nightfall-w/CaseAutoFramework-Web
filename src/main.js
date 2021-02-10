@@ -3,8 +3,8 @@
  * @version:
  * @Author: wangbaojun
  * @Date: 2019-11-16 22:38:44
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-01-14 12:58:58
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-10 15:18:41
  */
 import Vue from "vue";
 import App from "./App.vue";
@@ -16,7 +16,7 @@ import iView from "iview";
 import Vuex from "vuex";
 //引入拖拽排序插件
 import VueDND from "awe-dnd";
- 
+
 Vue.use(VueDND)
 Vue.use(Vuex);
 Vue.config.productionTip = false;
@@ -51,19 +51,19 @@ var store = new Vuex.Store({
       state.token = userinfo.token;
       state.userID = userinfo.userID;
       state.userName = userinfo.userName;
+      console.log(state)
     },
     [REMOVE_COUNT](state, token) {
       // 退出登录
 
       localStorage.removeItem("token", token);
-
-      state.token = token;
+      state.token = "";
     },
-    [SWAICH_PROJECT](state, currentProject){
+    [SWAICH_PROJECT](state, currentProject) {
       // 切换项目
       sessionStorage.setItem("currentProjectID", parseInt(currentProject.id));
       sessionStorage.setItem("currentProjectName", currentProject.name);
-      state.currentProjectID = currentProject.id;
+      state.currentProjectID = parseInt(currentProject.id);
       state.currentProjectName = currentProject.name;
     }
   }
@@ -73,11 +73,10 @@ router.beforeEach((to, from, next) => {
   iView.LoadingBar.start(); //loadong 效果
 
   store.state.token = localStorage.getItem("token"); //获取本地存储的token
-
   if (to.meta.requireAuth) {
     // 判断该路由是否需要登录权限
     if (store.state.token) {
-      // 通过vuex state获取当前的token是否存
+      // 通过vuex state获取当前的token是否存在
       next();
     } else {
       next({

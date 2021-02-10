@@ -3,8 +3,8 @@
  * @version: 
  * @Author: wangbaojun
  * @Date: 2019-11-16 23:20:06
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-10 10:29:04
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-10 15:39:00
  -->
 <template>
   <div>
@@ -68,6 +68,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.$store.state)
     getProject(this.defaultPageSize, 0).then((res) => {
       this.tableData = res.results;
       this.totalItems = res.count;
@@ -85,7 +86,6 @@ export default {
   },
   methods: {
     switchProject(row) {
-      console.log(this.$store.state.currentProjectName);
       this.$store.commit("SWAICH_PROJECT", {
         id: row.id,
         name: row.name,
