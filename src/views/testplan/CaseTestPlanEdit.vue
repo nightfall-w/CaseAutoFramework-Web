@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2021-01-23 16:14:54
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-11 02:20:49
+ * @LastEditTime: 2021-02-11 17:11:44
 -->
 <template>
   <div>
@@ -12,7 +12,8 @@
     <detail
       :fatherCaseBaseInfo="caseBaseInfo"
       :fatherTestplanInfo="testPlanInfo"
-      v-if="this.cases.length>0" :fatherCases="cases"
+      v-if="this.cases.length > 0"
+      :fatherCases="cases"
     ></detail>
   </div>
 </template>
@@ -40,7 +41,10 @@ export default {
     Detail,
   },
   created() {
-    getCaseTestplanDetail(3, 1)
+    getCaseTestplanDetail(
+      this.$route.query.itemId,
+      sessionStorage.getItem("currentProjectID")
+    )
       .then((res) => {
         console.log(this.cases);
         this.cases = res.case_paths;
