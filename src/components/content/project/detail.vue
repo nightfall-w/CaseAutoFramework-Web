@@ -3,8 +3,8 @@
  * @version: 
  * @Author: wangbaojun
  * @Date: 2020-01-14 15:48:21
- * @LastEditors  : Please set LastEditors
- * @LastEditTime : 2020-02-10 13:23:58
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-15 16:38:18
  -->
 <template>
   <el-form
@@ -136,7 +136,7 @@ export default {
         name: this.project.name,
         desc: this.project.desc,
         update_by: localStorage.getItem("userName"),
-        env_variable: JSON.stringify(env_variable)
+        env_variable: env_variable
       };
       updateProject(this.project.id, data)
         .then(res => {
