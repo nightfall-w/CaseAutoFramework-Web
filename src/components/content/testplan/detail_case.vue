@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2020-01-02 16:00:11
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-11 02:23:22
+ * @LastEditTime: 2021-02-15 16:50:02
  -->
 <template>
   <div
@@ -55,8 +55,17 @@
             </el-radio-group>
           </el-form-item>
           <el-form-item size="large">
-            <el-button type="primary" @click="onSubmit('testplanInfo')"
+            <el-button
+              v-if="getPageUrlIsEdit != true"
+              type="primary"
+              @click="onSubmit('testplanInfo')"
               >立即创建</el-button
+            >
+            <el-button
+              v-else-if="getPageUrlIsEdit == true"
+              type="primary"
+              @click="onUpdate('testplanInfo')"
+              >更新提交</el-button
             >
             <el-button>取消</el-button>
           </el-form-item>
@@ -161,7 +170,7 @@
 <script>
 import Sortable from "sortablejs";
 import { getCaseTree } from "network/case";
-import { createCaseTestplan } from "network/testplan";
+import { createCaseTestplan, updateCaseTestplan } from "network/testplan";
 export default {
   watch: {
     filterText(val) {
@@ -316,7 +325,10 @@ export default {
               this.testplanInfo.description,
               this.testplanInfo.parallel,
               this.cases,
-              sessionStorage.getItem("currentProjectID")
+              sessionStorage.getItem("currentProjectID"),
+              this.caseBaseInfo.gitlab服务器,
+              this.caseBaseInfo.项目名,
+              this.caseBaseInfo.分支名
             )
               .then((res) => {
                 console.log(res);
@@ -336,9 +348,46 @@ export default {
         }
       });
     },
+    onUpdate(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (this.cases.length == 0) {
+            this.$message.error("必须添加case到计划列表");
+            return false;
+          } else {
+            updateCaseTestplan(
+              this.$route.query.itemId,
+              this.testplanInfo.name,
+              this.testplanInfo.description,
+              this.testplanInfo.parallel,
+              this.cases,
+              sessionStorage.getItem("currentProjectID"),
+              this.caseBaseInfo.gitlab服务器,
+              this.caseBaseInfo.项目名,
+              this.caseBaseInfo.分支名
+            )
+              .then((res) => {
+                console.log(res);
+                this.$message({
+                  message: "创建成功",
+                  type: "success",
+                });
+              })
+              .catch((err) => {
+                console.log(err);
+                this.$message.error("更新失败");
+              });
+          }
+        } else {
+          console.log("error update!!");
+          return false;
+        }
+      });
+    },
   },
   mounted() {
-    if (this.$route.path == "casetestplan/create") {
+    console.log(this.$route.path);
+    if (this.$route.path == "/casetestplan/create") {
       const gitlab_url = this.$route.query.gitlab_url;
       const gitlab_project = this.$route.query.gitlab_project;
       const gitlab_branch = this.$route.query.gitlab_branch;
@@ -352,11 +401,16 @@ export default {
           message: "未提供case相关信息 请先同步case",
           type: "warning",
         });
-        // this.$router.push({ path: "/case/create" });
+        this.$router.push({ path: "/case/create" });
         return false;
       }
     }
     this.rowDrop();
+  },
+  computed: {
+    getPageUrlIsEdit() {
+      return this.$route.path == "/casetestplan/edit";
+    },
   },
 };
 </script>
