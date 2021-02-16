@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2021-02-06 21:08:28
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-15 15:56:07
+ * @LastEditTime: 2021-02-16 17:14:59
  */
 import axios from "./axios";
 
@@ -68,4 +68,16 @@ export function getCaseTestplanDetail(case_testplan_id, project_id) {
         method: "get",
         params: { projectId: project_id }
     })
+}
+
+
+export function runCaseTestplan(projectId, testPlanId) {
+    return axios({
+        url: "/api/testPlan/runCaseTestPlan/",
+        method: "post",
+        data: {
+            projectId: projectId,
+            testPlanId: testPlanId,
+        }
+    });
 }

@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2021-01-23 16:14:54
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-10 15:40:58
+ * @LastEditTime: 2021-02-16 21:11:52
 -->
 <template>
   <div>
@@ -37,7 +37,7 @@
           <el-input v-model="search" size="mini" placeholder="输入计划名搜索" />
         </template>
         <template slot-scope="scope">
-          <el-button type="success" @click="switchProject(scope.row)"
+          <el-button type="success" @click="runTestplan(scope.row)"
             >运行</el-button
           >
           <el-button
@@ -72,7 +72,11 @@
 </template>
 
 <script>
-import { getCaseTestplans, deleteCaseTestplan } from "network/testplan";
+import {
+  getCaseTestplans,
+  deleteCaseTestplan,
+  runCaseTestplan,
+} from "network/testplan";
 export default {
   data() {
     return {
@@ -110,20 +114,19 @@ export default {
     },
   },
   methods: {
-    switchProject(row) {
-      this.$store.commit("SWAICH_PROJECT", {
-        id: row.id,
-        name: row.name,
-      });
-      this.$message({
-        type: "success",
-        message: "切换项目成功",
-      });
-      clearTimeout(this.timer); //清除延迟执行
-      this.timer = setTimeout(() => {
-        //设置延迟执行
-        this.$router.go(0);
-      }, 1000);
+    runTestplan(row) {
+      console.log(row.plan_id);
+      runCaseTestplan(row.project_id, row.plan_id)
+        .then((res) => {
+          console.log(res);
+          this.$message({
+            type: "success",
+            message: "已经触发运行!",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
     handleEdit(index, row) {
       this.$router.push({

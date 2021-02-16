@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2021-01-23 16:14:54
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-11 17:11:44
+ * @LastEditTime: 2021-02-16 21:25:24
 -->
 <template>
   <div>
@@ -12,7 +12,7 @@
     <detail
       :fatherCaseBaseInfo="caseBaseInfo"
       :fatherTestplanInfo="testPlanInfo"
-      v-if="this.cases.length > 0"
+      v-if="this.cases != null"
       :fatherCases="cases"
     ></detail>
   </div>
@@ -34,7 +34,7 @@ export default {
         description: "",
         parallel: false,
       },
-      cases: [],
+      cases: null,
     };
   },
   components: {
