@@ -81,3 +81,15 @@ export function runCaseTestplan(projectId, testPlanId) {
         }
     });
 }
+
+export function getCaseTasksInfo(case_testplan_id,limit,offset){
+    return axios({
+      url: "/api/testPlan/caseTask/",
+      method: "get",
+      params: {
+        caseTestPlanUid: case_testplan_id,
+          limit: limit,
+          offset: offset
+      }
+  })
+}

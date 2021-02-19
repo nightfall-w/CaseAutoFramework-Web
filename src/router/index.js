@@ -24,6 +24,7 @@ const ReportDetail = () => import("views/report/ReportDetail");
 const CaseTestPlanList = () => import("views/testplan/CaseTestPlanList");
 const CaseTestPlanCreate = () => import("views/testplan/CaseTestPlanCreate");
 const CaseTestPlanEdit = () => import("views/testplan/CaseTestPlanEdit");
+const CaseTaskList = () => import("views/testplan/CaseTaskList");
 
 Vue.use(VueRouter);
 
@@ -150,6 +151,14 @@ const routes = [
         path: "/casetestplan/edit",
         name: "testplan-edit",
         component: CaseTestPlanEdit,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/casetestplan/task",
+        name: "testplan-task",
+        component: CaseTaskList,
         meta: {
           requireAuth: true
         }

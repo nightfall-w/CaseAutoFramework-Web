@@ -8,7 +8,7 @@
 -->
 <template>
   <div>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table :data="tableData" @row-click="handleSelect" style="width: 100%">
       <el-table-column width="300px" label="测试计划名称" prop="name">
       </el-table-column>
       <el-table-column label="测试计划描述" prop="description">
@@ -75,7 +75,7 @@
 import {
   getCaseTestplans,
   deleteCaseTestplan,
-  runCaseTestplan,
+  runCaseTestplan
 } from "network/testplan";
 export default {
   data() {
@@ -84,7 +84,7 @@ export default {
       search: "",
       defaultPageSize: 10,
       currentPage: 1,
-      totalItems: 0,
+      totalItems: 0
     };
   },
   mounted() {
@@ -93,7 +93,7 @@ export default {
       this.search,
       this.defaultPageSize,
       0
-    ).then((res) => {
+    ).then(res => {
       this.tableData = res.results;
       this.totalItems = res.count;
     });
@@ -106,34 +106,42 @@ export default {
           this.search,
           this.defaultPageSize,
           0
-        ).then((res) => {
+        ).then(res => {
           this.tableData = res.results;
           this.totalItems = res.count;
         });
-      },
-    },
+      }
+    }
   },
   methods: {
     runTestplan(row) {
       console.log(row.plan_id);
       runCaseTestplan(row.project_id, row.plan_id)
-        .then((res) => {
+        .then(res => {
           console.log(res);
           this.$message({
             type: "success",
-            message: "已经触发运行!",
+            message: "已经触发运行!"
           });
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
         });
+    },
+    handleSelect(row) {
+      this.$router.push({
+        path: "/casetestplan/task",
+        query: {
+          case_testplan_uid: row.plan_id
+        }
+      });
     },
     handleEdit(index, row) {
       this.$router.push({
         path: "edit",
         query: {
-          itemId: row.id,
-        },
+          itemId: row.id
+        }
       });
     },
     handleDelete(index, row) {
@@ -141,21 +149,21 @@ export default {
       this.$confirm("此操作将永久删除该项目, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning",
+        type: "warning"
       })
         .then(() => {
           deleteCaseTestplan(row.id).then(
             this.tableData.splice(index, 1),
             this.$message({
               type: "success",
-              message: "删除成功!",
+              message: "删除成功!"
             })
           );
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除",
+            message: "已取消删除"
           });
         });
     },
@@ -167,7 +175,7 @@ export default {
         this.search,
         this.defaultPageSize,
         0
-      ).then((res) => {
+      ).then(res => {
         this.tableData = res.results;
         this.totalItems = res.count;
       });
@@ -179,11 +187,11 @@ export default {
         this.search,
         this.defaultPageSize,
         (val - 1) * this.defaultPageSize
-      ).then((res) => {
+      ).then(res => {
         this.tableData = res.results;
         this.totalItems = res.count;
       });
-    },
-  },
+    }
+  }
 };
 </script>
