@@ -1,8 +1,17 @@
+<!--
+ * @Descripttion: 
+ * @version: 
+ * @Author: wangbaojun
+ * @Date: 2021-02-19 22:43:32
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-20 00:21:34
+-->
 <template>
-  <el-table :data="tableData" style="width: 100%">
-    <el-table-column type="expand">
-      <template slot-scope="props">
-        <!-- <el-form label-position="left" inline class="table-expand">
+  <div>
+    <el-table :data="tableData" style="width: 100%">
+      <el-table-column type="expand">
+        <template slot-scope="props">
+          <!-- <el-form label-position="left" inline class="table-expand">
           <el-form-item label="商品名称">
             <span>{{ props.row.name }}</span>
           </el-form-item>
@@ -25,16 +34,46 @@
             <span>{{ props.row.desc }}</span>
           </el-form-item>
         </el-form> -->
-      </template>
-    </el-table-column>
-    <el-table-column label="任务 ID" prop="id"> </el-table-column>
-    <el-table-column label="状态" prop="state"> </el-table-column>
-    <el-table-column label="任务总job数" prop="case_job_number">
-    </el-table-column>
-    <el-table-column label="完成job数" prop="finish_num"> </el-table-column>
-    <el-table-column label="创建时间" prop="create_date"> </el-table-column>
-    <el-table-column label="总计用时" prop="used_time"> </el-table-column>
-  </el-table>
+        </template>
+      </el-table-column>
+      <el-table-column label="任务 ID" prop="id"> </el-table-column>
+      <el-table-column label="状态" prop="state">
+        <template slot-scope="scope">
+          <el-tag :type="tag_style(scope.row.state)" disable-transitions>{{
+            scope.row.state
+          }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="任务总job数" prop="case_job_number">
+      </el-table-column>
+      <el-table-column label="完成job数" prop="finish_num"> </el-table-column>
+      <el-table-column
+        label="创建时间"
+        :formatter="formatter"
+        prop="create_date"
+      >
+      </el-table-column>
+      <el-table-column label="总计用时" prop="used_time">
+        <template slot-scope="scope">
+          <i class="el-icon-time"></i>
+          <span style="margin-left: 10px">{{ scope.row.used_time }}</span>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-row style="margin-top: 30px" type="flex" justify="end">
+      <el-pagination
+        background
+        layout="total, sizes, prev, pager, next"
+        :total="totalItems"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="currentPage"
+        :page-sizes="[10, 20, 30, 40]"
+        :page-size="defaultPageSize"
+      >
+      </el-pagination>
+    </el-row>
+  </div>
 </template>
 
 <style>
@@ -57,18 +96,64 @@ import { getCaseTasksInfo } from "network/testplan";
 export default {
   data() {
     return {
-      tableData: []
+      tableData: [],
+      defaultPageSize: 10,
+      currentPage: 1,
+      totalItems: 0,
     };
   },
   created() {
     console.log(this.$route.query.case_testplan_uid);
-    getCaseTasksInfo(this.$route.query.case_testplan_uid, 10, 0)
-      .then(res => {
+    getCaseTasksInfo(
+      this.$route.query.case_testplan_uid,
+      this.defaultPageSize,
+      0
+    )
+      .then((res) => {
         console.log(res);
+        this.tableData = res.results;
+        this.totalItems = res.count;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
-  }
+  },
+  methods: {
+    formatter(row) {
+      return row.create_date.replace("T", " ");
+    },
+    tag_style(state) {
+      if (state === "FINISH") {
+        return "success";
+      } else if (state === "WAITING") {
+        return "info";
+      } else if (state === "RUNNING") {
+        return "primary";
+      }
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.defaultPageSize = val;
+      getCaseTasksInfo(
+        this.$route.query.case_testplan_uid,
+        this.defaultPageSize,
+        0
+      ).then((res) => {
+        this.tableData = res.results;
+        this.totalItems = res.count;
+      });
+    },
+    handleCurrentChange(val) {
+      console.log(`当前页: ${val}`);
+      getCaseTasksInfo(
+        this.$route.query.case_testplan_uid,
+        this.defaultPageSize,
+        (val - 1) * this.defaultPageSize
+      ).then((res) => {
+        this.tableData = res.results;
+        this.totalItems = res.count;
+      });
+    },
+  },
 };
 </script>
