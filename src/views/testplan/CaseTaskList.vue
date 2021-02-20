@@ -43,6 +43,18 @@
         </template>
       </el-table-column>
       <el-table-column label="任务 ID" prop="id"> </el-table-column>
+      <el-table-column label="任务总job数" prop="case_job_number">
+      </el-table-column>
+      <el-table-column label="完成job数" prop="finish_num"> </el-table-column>
+      <el-table-column label="进度" prop="percentage">
+        <template slot-scope="scope">
+          <el-progress
+            :text-inside="true"
+            :stroke-width="20"
+            :percentage="70"
+          ></el-progress>
+        </template>
+      </el-table-column>
       <el-table-column label="状态" prop="state">
         <template slot-scope="scope">
           <el-tag :type="tag_style(scope.row.state)" disable-transitions>{{
@@ -50,9 +62,6 @@
           }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="任务总job数" prop="case_job_number">
-      </el-table-column>
-      <el-table-column label="完成job数" prop="finish_num"> </el-table-column>
       <el-table-column label="创建时间" prop="create_date"> </el-table-column>
       <el-table-column label="总计用时/s" prop="used_time">
         <template slot-scope="scope">
