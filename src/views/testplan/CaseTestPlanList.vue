@@ -128,13 +128,16 @@ export default {
           console.log(err);
         });
     },
-    handleSelect(row) {
-      this.$router.push({
-        path: "/casetestplan/task",
-        query: {
-          case_testplan_uid: row.plan_id
-        }
-      });
+    handleSelect(row, column) {
+      console.log(column.label);
+      if (column.label != undefined) {
+        this.$router.push({
+          path: "/casetestplan/task",
+          query: {
+            case_testplan_uid: row.plan_id
+          }
+        });
+      }
     },
     handleEdit(index, row) {
       this.$router.push({
@@ -145,7 +148,6 @@ export default {
       });
     },
     handleDelete(index, row) {
-      console.log(index, row);
       this.$confirm("此操作将永久删除该项目, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",

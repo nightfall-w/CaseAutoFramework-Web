@@ -8,7 +8,13 @@
 -->
 <template>
   <div>
-    <el-table :data="tableData" style="width: 100%">
+    <el-table
+      :data="tableData"
+      :row-key="record => record.id"
+      :expand-row-keys="expands"
+      @expand-change="expand_change"
+      style="width: 100%"
+    >
       <el-table-column type="expand">
         <template slot-scope="props">
           <!-- <el-form label-position="left" inline class="table-expand">
@@ -47,13 +53,8 @@
       <el-table-column label="任务总job数" prop="case_job_number">
       </el-table-column>
       <el-table-column label="完成job数" prop="finish_num"> </el-table-column>
-      <el-table-column
-        label="创建时间"
-        :formatter="formatter"
-        prop="create_date"
-      >
-      </el-table-column>
-      <el-table-column label="总计用时" prop="used_time">
+      <el-table-column label="创建时间" prop="create_date"> </el-table-column>
+      <el-table-column label="总计用时/s" prop="used_time">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
           <span style="margin-left: 10px">{{ scope.row.used_time }}</span>
@@ -67,7 +68,7 @@
         :total="totalItems"
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
-        :current-page="currentPage"
+        :current-page.sync="currentPage"
         :page-sizes="[10, 20, 30, 40]"
         :page-size="defaultPageSize"
       >
@@ -100,27 +101,74 @@ export default {
       defaultPageSize: 10,
       currentPage: 1,
       totalItems: 0,
+      expands: []
     };
   },
   created() {
+    this.initWebSocket();
     console.log(this.$route.query.case_testplan_uid);
     getCaseTasksInfo(
       this.$route.query.case_testplan_uid,
       this.defaultPageSize,
       0
     )
-      .then((res) => {
+      .then(res => {
         console.log(res);
         this.tableData = res.results;
         this.totalItems = res.count;
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   },
+  destroyed() {
+    this.websock.close(); //离开路由之后断开websocket连接
+  },
   methods: {
-    formatter(row) {
-      return row.create_date.replace("T", " ");
+    initWebSocket() {
+      //初始化weosocket
+      const wsuri = process.env.VUE_APP_SERVER_WS + "/ws/testplan/result/";
+      this.websock = new WebSocket(wsuri);
+      this.websock.onmessage = this.websocketonmessage;
+      this.websock.onopen = this.websocketonopen;
+      this.websock.onerror = this.websocketonerror;
+      this.websock.onclose = this.websocketclose;
+    },
+    websocketonopen() {
+      console.log("websocket连接已经建立");
+      this.websocketsend(this.package_ws_task_data());
+    },
+    websocketonerror() {
+      //连接建立失败重连
+      this.initWebSocket();
+    },
+    websocketonmessage(e) {
+      //数据接收
+      const redata = JSON.parse(e.data);
+      console.log(redata);
+      if (redata.success && redata.mode === "task") {
+        var that = this;
+        for (var i = 0; i < redata.data.length; i++) {
+          for (var j = 0; j < that.tableData.length; j++) {
+            if (redata.data[i].id == that.tableData[j].id) {
+              that.tableData[j].state = redata.data[i].state;
+              that.tableData[j].finish_num = redata.data[i].finish_num;
+              that.tableData[j].used_time = redata.data[i].used_time;
+            }
+          }
+        }
+      }
+    },
+    websocketsend(Data) {
+      //数据发送
+      this.websock.send(Data);
+    },
+    websocketclose(e) {
+      //关闭
+      console.log("断开连接", e);
+      if (this.$route.path === "/casetestplan/task") {
+        this.initWebSocket();
+      }
     },
     tag_style(state) {
       if (state === "FINISH") {
@@ -138,9 +186,22 @@ export default {
         this.$route.query.case_testplan_uid,
         this.defaultPageSize,
         0
-      ).then((res) => {
+      ).then(res => {
         this.tableData = res.results;
         this.totalItems = res.count;
+        console.log(this.websock.readyState);
+        this.websock.close();
+        // while (true) {
+        //   if (this.websock == WebSocket.OPEN) {
+        //     this.websocketsend(this.package_ws_task_data());
+        //     break;
+        //   } else {
+        //     setTimeout(function() {
+        //       //可以是一句或是很多句代码，也可以是个函数
+        //     }, 1000); //延时10秒
+        //     continue;
+        //   }
+        // }
       });
     },
     handleCurrentChange(val) {
@@ -149,11 +210,37 @@ export default {
         this.$route.query.case_testplan_uid,
         this.defaultPageSize,
         (val - 1) * this.defaultPageSize
-      ).then((res) => {
+      ).then(res => {
         this.tableData = res.results;
         this.totalItems = res.count;
+        this.websock.close();
       });
     },
-  },
+    expand_change(row, expandedRows) {
+      var that = this;
+      if (expandedRows.length) {
+        // 只展开一行//说明展开了
+        that.expands = [];
+        if (row) {
+          that.expands.push(row.id); // 只展开当前行id
+        }
+        //  this.tablaData(row.eqId)  这里可以调用接口数据渲染
+      } else {
+        // 说明收起了
+        that.expands = [];
+      }
+    },
+    package_ws_task_data() {
+      return JSON.stringify({
+        mode_type: "case",
+        task_or_job: "task",
+        value: {
+          case_test_plan_uid: this.$route.query.case_testplan_uid,
+          limit: this.currentPage * this.defaultPageSize,
+          offset: (this.currentPage - 1) * this.defaultPageSize
+        }
+      });
+    }
+  }
 };
 </script>
