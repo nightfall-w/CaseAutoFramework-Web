@@ -51,7 +51,9 @@
           <el-progress
             :text-inside="true"
             :stroke-width="20"
-            :percentage="70"
+            :percentage="
+              percentage(scope.row.finish_num, scope.row.case_job_number)
+            "
           ></el-progress>
         </template>
       </el-table-column>
@@ -132,6 +134,13 @@ export default {
   },
   destroyed() {
     this.websock.close(); //离开路由之后断开websocket连接
+  },
+  computed: {
+    percentage() {
+      return function(finish_num, case_job_number) {
+        return (finish_num / case_job_number) * 100;
+      };
+    }
   },
   methods: {
     initWebSocket() {
