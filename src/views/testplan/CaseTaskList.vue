@@ -10,7 +10,7 @@
   <div>
     <el-table
       :data="tableData"
-      :row-key="(record) => record.id"
+      :row-key="record => record.id"
       :expand-row-keys="expands"
       @expand-change="expand_change"
       style="width: 100%"
@@ -107,6 +107,7 @@ export default {
       expands: [],
       job_list: [],
       activeNames: [],
+      ws_retry: 10
     };
   },
   created() {
@@ -117,12 +118,12 @@ export default {
       this.defaultPageSize,
       0
     )
-      .then((res) => {
+      .then(res => {
         console.log(res);
         this.tableData = res.results;
         this.totalItems = res.count;
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
       });
   },
@@ -131,10 +132,10 @@ export default {
   },
   computed: {
     percentage() {
-      return function (finish_num, case_job_number) {
+      return function(finish_num, case_job_number) {
         return (finish_num / case_job_number) * 100;
       };
-    },
+    }
   },
   methods: {
     initWebSocket() {
@@ -151,8 +152,11 @@ export default {
       this.websocketsend(this.package_ws_task_data());
     },
     websocketonerror() {
+      this.ws_retry -= 1;
       //连接建立失败重连
-      this.initWebSocket();
+      if (this.ws_retry >= 0) {
+        this.initWebSocket();
+      }
     },
     websocketonmessage(e) {
       //数据接收
@@ -181,7 +185,10 @@ export default {
       //关闭
       console.log("断开连接", e);
       if (this.$route.path === "/casetestplan/task") {
-        this.initWebSocket();
+        this.ws_retry -= 1;
+        if (this.ws_retry >= 0) {
+          this.initWebSocket();
+        }
       }
     },
     tag_style(state) {
@@ -200,7 +207,7 @@ export default {
         this.$route.query.case_testplan_uid,
         this.defaultPageSize,
         0
-      ).then((res) => {
+      ).then(res => {
         this.tableData = res.results;
         this.totalItems = res.count;
         console.log(this.websock.readyState);
@@ -213,7 +220,7 @@ export default {
         this.$route.query.case_testplan_uid,
         this.defaultPageSize,
         (val - 1) * this.defaultPageSize
-      ).then((res) => {
+      ).then(res => {
         this.tableData = res.results;
         this.totalItems = res.count;
         this.websock.close();
@@ -245,8 +252,8 @@ export default {
         value: {
           case_test_plan_uid: this.$route.query.case_testplan_uid,
           limit: this.currentPage * this.defaultPageSize,
-          offset: (this.currentPage - 1) * this.defaultPageSize,
-        },
+          offset: (this.currentPage - 1) * this.defaultPageSize
+        }
       });
     },
     package_ws_job_data() {
@@ -254,10 +261,10 @@ export default {
         mode_type: "case",
         task_or_job: "job",
         value: {
-          case_task_id: this.expands[0],
-        },
+          case_task_id: this.expands[0]
+        }
       });
-    },
-  },
+    }
+  }
 };
 </script>
