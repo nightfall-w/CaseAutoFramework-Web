@@ -16,20 +16,38 @@
       style="width: 100%"
     >
       <el-table-column type="expand">
-        <template slot-scope="props">
+        <template>
           <el-collapse v-model="activeNames" @change="handleChange">
             <el-collapse-item
               v-for="(item, i) in job_list"
               :key="i"
-              title="一致性 Consistency"
-              name="1"
+              :title="item.case_path"
+              :name="i"
             >
-              <div>
-                与现实生活一致：与现实生活的流程、逻辑保持一致，遵循用户习惯的语言和概念；
-              </div>
-              <div>
-                在界面中一致：所有的元素和结构需保持一致，比如：设计样式、图标和文本、元素的位置等。
-              </div>
+              <template slot="title">
+                <i
+                  ><strong>{{ i + 1 }}. </strong></i
+                >
+                <i
+                  ><strong>{{ item.case_path }}</strong></i
+                >
+                <i class="header-icon el-icon-info"></i>
+              </template>
+              <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="执行状态">
+                  <span>{{ item.state }}</span>
+                </el-form-item>
+                <el-form-item label="执行结果">
+                  <span>{{ item.result }}</span>
+                </el-form-item>
+                <el-form-item v-if="item.report_path" label="报告地址">
+                  <a
+                    :href="VUE_APP_SERVER_URL + item.report_path"
+                    target="_blank"
+                    >查看详细报告</a
+                  >
+                </el-form-item>
+              </el-form>
             </el-collapse-item>
           </el-collapse>
         </template>
@@ -93,13 +111,26 @@
   margin-bottom: 0;
   width: 50%;
 }
+.demo-table-expand {
+  font-size: 0;
+}
+.demo-table-expand label {
+  width: 90px;
+  color: #99a9bf;
+}
+.demo-table-expand .el-form-item {
+  margin-right: 0;
+  margin-bottom: 0;
+  width: 50%;
+}
 </style>
 
 <script>
-import { getCaseTasksInfo } from "network/testplan";
+import { getCaseTasksInfo, getCaseJobsInfo } from "network/testplan";
 export default {
   data() {
     return {
+      VUE_APP_SERVER_URL: process.env.VUE_APP_SERVER_URL,
       tableData: [],
       defaultPageSize: 10,
       currentPage: 1,
@@ -231,18 +262,29 @@ export default {
       if (expandedRows.length) {
         // 只展开一行//说明展开了
         that.expands = [];
+        this.activeNames = [];
+        this.job_list = [];
         if (row) {
           that.expands.push(row.id); // 只展开当前行id
-          console.log(this.package_ws_job_data());
-          this.websocketsend(this.package_ws_job_data());
         }
-        //  this.tablaData(row.eqId)  这里可以调用接口数据渲染
+        // 调用case job接口数据渲染
+        getCaseJobsInfo(row.id)
+          .then(res => {
+            console.log(res);
+            this.job_list = res.results;
+          })
+          .catch(err => {
+            console.log(err);
+          });
       } else {
         // 说明收起了
         that.expands = [];
+        this.activeNames = [];
+        this.job_list = [];
       }
     },
     handleChange(value) {
+      // pass
       console.log(value);
     },
     package_ws_task_data() {
@@ -253,15 +295,6 @@ export default {
           case_test_plan_uid: this.$route.query.case_testplan_uid,
           limit: this.currentPage * this.defaultPageSize,
           offset: (this.currentPage - 1) * this.defaultPageSize
-        }
-      });
-    },
-    package_ws_job_data() {
-      return JSON.stringify({
-        mode_type: "case",
-        task_or_job: "job",
-        value: {
-          case_task_id: this.expands[0]
         }
       });
     }

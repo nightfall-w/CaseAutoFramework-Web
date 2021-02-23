@@ -87,9 +87,19 @@ export function getCaseTasksInfo(case_testplan_id,limit,offset){
       url: "/api/testPlan/caseTask/",
       method: "get",
       params: {
-        caseTestPlanUid: case_testplan_id,
+          caseTestPlanUid: case_testplan_id,
           limit: limit,
           offset: offset
+      }
+  })
+}
+
+export function getCaseJobsInfo(case_task_id){
+    return axios({
+      url: "/api/caseJob/",
+      method: "get",
+      params: {
+        task_id: case_task_id,
       }
   })
 }
