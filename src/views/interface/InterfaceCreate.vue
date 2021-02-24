@@ -30,7 +30,7 @@ export default {
         params: [],
         asserts: [],
         desc: "",
-        parameters: {},
+        parameters: "{}",
         extract: []
       }
     };

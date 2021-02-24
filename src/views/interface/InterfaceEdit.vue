@@ -34,7 +34,7 @@ export default {
         params: [],
         asserts: [],
         desc: "",
-        parameters: {},
+        parameters: "{}",
         extract: []
       }
     };
@@ -55,7 +55,9 @@ export default {
         this.ruleForm.formData = this.map2list(res.formData);
         this.ruleForm.urlencoded = this.map2list(res.urlencoded);
         this.ruleForm.raw = JSON.stringify(res.raw);
+        this.ruleForm.parameters = JSON.stringify(res.parameters);
         this.ruleForm.asserts = res.asserts;
+        this.ruleForm.extract = res.extract;
       })
       .catch(err => {
         console.log(err);

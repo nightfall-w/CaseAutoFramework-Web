@@ -21,6 +21,14 @@
       <el-form-item label="接口描述" prop="desc">
         <el-input v-model="ruleForm.desc" type="textarea"></el-input>
       </el-form-item>
+      <el-form-item label="数据集合" prop="parameters">
+        <el-input v-model="ruleForm.parameters" type="textarea"></el-input>
+        <el-button
+          size="small"
+          @click="checkJson('数据集合', ruleForm.parameters)"
+          >json格式化校验</el-button
+        >
+      </el-form-item>
       <el-form-item label="请求地址" prop="addr">
         <el-input
           placeholder="请输入地址"
@@ -199,7 +207,7 @@
               </el-tab-pane>
               <el-tab-pane label="raw" name="raw" circle>
                 <el-input v-model="ruleForm.raw" type="textarea"></el-input>
-                <el-button size="small" @click="checkJson"
+                <el-button size="small" @click="checkJson('raw', ruleForm.row)"
                   >json格式化校验</el-button
                 >
               </el-tab-pane>
@@ -484,29 +492,24 @@ export default {
       console.log(ev);
     },
     addItem() {
-      console.log("+++");
       this.ruleForm.headers.push({ key: "", value: "" });
     },
     minusItem(index) {
-      console.log("----");
       this.ruleForm.headers.splice(index, 1);
     },
     addParamsItem() {
-      console.log("+++");
       this.ruleForm.params.push({ key: "", value: "" });
     },
     minusParamsItem(index) {
       this.ruleForm.params.splice(index, 1);
     },
     addFormDataItem() {
-      console.log("+++");
       this.ruleForm.formData.push({ key: "", value: "" });
     },
     minusFormDataItem(index) {
       this.ruleForm.formData.splice(index, 1);
     },
     addurlEncodedItem() {
-      console.log("+++");
       this.ruleForm.urlencoded.push({ key: "", value: "" });
     },
     minusurlEncodedItem(index) {
@@ -524,28 +527,28 @@ export default {
     minusAssertItem(index) {
       this.ruleForm.asserts.splice(index, 1);
     },
-    checkJson() {
-      let data = this.ruleForm.raw;
+    checkJson(field_name, field_value) {
+      let data = field_value;
       if (typeof data == "string") {
         try {
           var obj = JSON.parse(data);
           if (typeof obj == "object" && obj) {
             this.$message({
               type: "success ",
-              message: "检验通过"
+              message: field_name + "检验通过"
             });
             return true;
           } else {
             this.$message({
               type: "error",
-              message: "raw数据不是json格式"
+              message: field_name + "不是json格式"
             });
             return false;
           }
         } catch (e) {
           this.$message({
             type: "error",
-            message: "raw数据不是json格式"
+            message: field_name + "不是json格式"
           });
           return false;
         }
@@ -580,9 +583,14 @@ export default {
     },
     createForm(formName) {
       this.$refs[formName].validate(valid => {
-        if (valid && this.checkJson()) {
+        if (
+          valid &&
+          this.checkJson("raw", this.ruleForm.raw) &&
+          this.checkJson("数据集合", this.ruleForm.parameters)
+        ) {
           let data = Object.assign({}, this.ruleForm);
           data.raw = JSON.parse(data.raw);
+          data.parameters = JSON.parse(data.parameters);
           console.log(data.headers);
           data.headers = this.list2map(data.headers);
           data.formData = this.list2map(data.formData);
@@ -617,9 +625,14 @@ export default {
     },
     updateForm(formName) {
       this.$refs[formName].validate(valid => {
-        if (valid && this.checkJson()) {
+        if (
+          valid &&
+          this.checkJson("raw", this.ruleForm.raw) &&
+          this.checkJson("数据集合", this.ruleForm.parameters)
+        ) {
           let data = Object.assign({}, this.ruleForm);
           data.raw = JSON.parse(data.raw);
+          data.parameters = JSON.parse(data.parameters);
           console.log(data.headers);
           data.headers = this.list2map(data.headers);
           data.formData = this.list2map(data.formData);
@@ -640,13 +653,13 @@ export default {
               console.log(err);
               this.$message({
                 type: "error",
-                message: "更新失败1!"
+                message: "更新失败!"
               });
             });
         } else {
           this.$message({
             type: "error",
-            message: "更新失败2!"
+            message: "更新失败!"
           });
           return false;
         }
