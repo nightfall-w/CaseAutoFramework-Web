@@ -268,6 +268,49 @@
               circle
             ></el-button>
           </el-tab-pane>
+          <el-tab-pane label="Extract">
+            <el-row v-for="(extract, index) in ruleForm.extract" :key="index">
+              <el-input
+                style="width: 20%; margin-right: 40px"
+                size="small"
+                v-model="extract.variable_name"
+                placeholder="变量名"
+              ></el-input>
+              <el-select
+                v-model="extract.assertType"
+                size="small"
+                placeholder="表达式类型"
+              >
+                <el-option
+                  v-for="(asser_type, index) in assertTypes"
+                  :key="index"
+                  :label="asser_type.name"
+                  :value="asser_type.value"
+                ></el-option>
+              </el-select>
+              <el-input
+                style="width: 20%; margin-left: 40px; margin-right: 40px"
+                size="small"
+                v-model="extract.expressions"
+                placeholder="断言表达式"
+              ></el-input>
+              <el-button
+                style="margin-left: 30px"
+                type="danger"
+                size="small"
+                icon="el-icon-delete"
+                @click="minusExtractItem(index)"
+                circle
+              ></el-button>
+            </el-row>
+            <el-button
+              type="primary"
+              size="small"
+              icon="el-icon-plus"
+              @click="addExtractItem"
+              circle
+            ></el-button>
+          </el-tab-pane>
         </el-tabs>
       </el-form-item>
       <el-form-item>
@@ -526,6 +569,17 @@ export default {
     },
     minusAssertItem(index) {
       this.ruleForm.asserts.splice(index, 1);
+    },
+    addExtractItem() {
+      this.ruleForm.extract.push({
+        assertType: "",
+        expressions: "",
+        variable_name: ""
+      });
+      console.log(this.ruleForm);
+    },
+    minusExtractItem(index) {
+      this.ruleForm.extract.splice(index, 1);
     },
     checkJson(field_name, field_value) {
       let data = field_value;
