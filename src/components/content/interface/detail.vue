@@ -3,8 +3,8 @@
  * @version: 
  * @Author: wangbaojun
  * @Date: 2020-01-02 15:57:56
- * @LastEditors: Please set LastEditors
- * @LastEditTime: 2020-02-18 17:40:53
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-26 00:36:27
  -->
 <template>
   <div>
@@ -480,7 +480,7 @@ export default {
           }
         ],
         asserts: [],
-        desc: [{ required: true, message: "请填写接口描述", trigger: "blur" }]
+        // desc: [{ required: true, message: "请填写接口描述", trigger: "blur" }]
       }
     };
   },
