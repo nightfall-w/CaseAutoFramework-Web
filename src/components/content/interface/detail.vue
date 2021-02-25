@@ -207,7 +207,7 @@
               </el-tab-pane>
               <el-tab-pane label="raw" name="raw" circle>
                 <el-input v-model="ruleForm.raw" type="textarea"></el-input>
-                <el-button size="small" @click="checkJson('raw', ruleForm.row)"
+                <el-button size="small" @click="checkJson('raw', ruleForm.raw)"
                   >json格式化校验</el-button
                 >
               </el-tab-pane>
@@ -269,15 +269,18 @@
             ></el-button>
           </el-tab-pane>
           <el-tab-pane label="Extract">
-            <el-row v-for="(extract, index) in ruleForm.extract" :key="index">
+            <el-row
+              v-for="(extract_item, index) in ruleForm.extract"
+              :key="index"
+            >
               <el-input
                 style="width: 20%; margin-right: 40px"
                 size="small"
-                v-model="extract.variable_name"
+                v-model="extract_item.variable_name"
                 placeholder="变量名"
               ></el-input>
               <el-select
-                v-model="extract.assertType"
+                v-model="extract_item.extractType"
                 size="small"
                 placeholder="表达式类型"
               >
@@ -291,7 +294,7 @@
               <el-input
                 style="width: 20%; margin-left: 40px; margin-right: 40px"
                 size="small"
-                v-model="extract.expressions"
+                v-model="extract_item.expressions"
                 placeholder="断言表达式"
               ></el-input>
               <el-button
@@ -572,7 +575,7 @@ export default {
     },
     addExtractItem() {
       this.ruleForm.extract.push({
-        assertType: "",
+        extractType: "",
         expressions: "",
         variable_name: ""
       });
