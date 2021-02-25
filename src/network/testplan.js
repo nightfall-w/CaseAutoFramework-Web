@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2021-02-06 21:08:28
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-16 17:14:59
+ * @LastEditTime: 2021-02-26 00:11:21
  */
 import axios from "./axios";
 
@@ -82,47 +82,47 @@ export function runCaseTestplan(projectId, testPlanId) {
     });
 }
 
-export function getCaseTasksInfo(case_testplan_id,limit,offset){
+export function getCaseTasksInfo(case_testplan_id, limit, offset) {
     return axios({
-      url: "/api/testPlan/caseTask/",
-      method: "get",
-      params: {
-          caseTestPlanUid: case_testplan_id,
-          limit: limit,
-          offset: offset
-      }
-  })
+        url: "/api/testPlan/caseTask/",
+        method: "get",
+        params: {
+            caseTestPlanUid: case_testplan_id,
+            limit: limit,
+            offset: offset
+        }
+    })
 }
 
-export function getCaseJobsInfo(case_task_id){
+export function getCaseJobsInfo(case_task_id) {
     return axios({
-      url: "/api/caseJob/",
-      method: "get",
-      params: {
-        task_id: case_task_id,
-      }
-  })
+        url: "/api/caseJob/",
+        method: "get",
+        params: {
+            task_id: case_task_id,
+        }
+    })
 }
 
-export function getApilist(project_id){
+export function getApilist(project_id) {
     return axios({
-      url: "/api/interface/",
-      method: "get",
-      params: {
-        projectId: project_id,
-      }
-  })
+        url: "/api/interface/",
+        method: "get",
+        params: {
+            projectId: project_id,
+        }
+    })
 }
 
-export function createApiTestplan(name, description,projectId, interfaceIds) {
-  return axios({
-      url: "/api/apiTestPlan/",
-      method: "post",
-      data: {
-        name:name,
-        description:description,
-        project_id: projectId,
-        interfaceIds:interfaceIds,
-      }
-  });
+export function createApiTestplan(name, description, projectId, interfaceIds) {
+    return axios({
+        url: "/api/apiTestPlan/",
+        method: "post",
+        data: {
+            name: name,
+            description: description,
+            project_id: projectId,
+            interfaceIds: interfaceIds,
+        }
+    });
 }

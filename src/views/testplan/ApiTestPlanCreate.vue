@@ -6,6 +6,7 @@
   >
     <div style="text-align: center">
       <el-form
+        ref="testplanInfo"
         style="text-align: center"
         :label-position="labelPosition"
         label-width="80px"
@@ -45,7 +46,9 @@
       </el-transfer>
     </div>
     <p style="text-align: center; margin: 50px 0 50px">
-      <el-button type="primary">提交</el-button>
+      <el-button type="primary" @click="submitForm('testplanInfo')"
+        >提交</el-button
+      >
     </p>
   </div>
 </template>
@@ -116,6 +119,7 @@ export default {
           for (let i = 0; i < res.results.length; i++) {
             this.api_list.push({
               key: i,
+              id: res.results[i].id,
               label: `${res.results[i].name}（${res.results[i].addr}）`,
               // disabled: i % 4 === 0
             });
@@ -125,14 +129,39 @@ export default {
           console.log(err);
         });
     },
-    submitForm() {
-      if (!this.value) {
-        this.$notify.error({
-          title: "错误",
-          message: "测试计划列表至少包含一条接口!",
-        });
-        return false;
-      }
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (this.value.length === 0) {
+            this.$notify.error({
+              title: "错误",
+              message: "测试计划列表至少包含1个接口!",
+            });
+            return false;
+          } else {
+            let interfaceIds = [];
+            for (let i = 0; i < this.value.length; i++) {
+              //pass
+              console.log(this.value[i]);
+              interfaceIds.push(this.api_list[this.value[i]].id);
+            }
+            console.log(interfaceIds);
+            createApiTestplan(
+              this.testplanInfo.name,
+              this.testplanInfo.description,
+              sessionStorage.getItem("currentProjectID"),
+              JSON.stringify(interfaceIds)
+            )
+              .then((res) => {
+                console.log(res);
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+          return false;
+        }
+      });
     },
     // createApiTestplan()
     updateForm() {},
