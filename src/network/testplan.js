@@ -103,3 +103,26 @@ export function getCaseJobsInfo(case_task_id){
       }
   })
 }
+
+export function getApilist(project_id){
+    return axios({
+      url: "/api/interface/",
+      method: "get",
+      params: {
+        projectId: project_id,
+      }
+  })
+}
+
+export function createApiTestplan(name, description,projectId, interfaceIds) {
+  return axios({
+      url: "/api/apiTestPlan/",
+      method: "post",
+      data: {
+        name:name,
+        description:description,
+        project_id: projectId,
+        interfaceIds:interfaceIds,
+      }
+  });
+}

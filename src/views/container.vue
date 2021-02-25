@@ -43,6 +43,12 @@
           <el-menu-item index="/casetestplan/create"
             >case测试计划创建</el-menu-item
           >
+          <el-menu-item index="/apitestplan/list"
+            >接口测试计划列表</el-menu-item
+          >
+          <el-menu-item index="/apitestplan/create"
+            >接口测试计划创建</el-menu-item
+          >
         </el-submenu>
         <el-submenu index="5">
           <template slot="title">

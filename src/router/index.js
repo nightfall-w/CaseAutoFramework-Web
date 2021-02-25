@@ -25,6 +25,10 @@ const CaseTestPlanList = () => import("views/testplan/CaseTestPlanList");
 const CaseTestPlanCreate = () => import("views/testplan/CaseTestPlanCreate");
 const CaseTestPlanEdit = () => import("views/testplan/CaseTestPlanEdit");
 const CaseTaskList = () => import("views/testplan/CaseTaskList");
+const ApiTestPlanList = () => import("views/testplan/ApiTestPlanList");
+const ApiTestPlanCreate = () => import("views/testplan/ApiTestPlanCreate");
+const ApiTestPlanEdit = () => import("views/testplan/ApiTestPlanEdit");
+const ApiTaskList = () => import("views/testplan/ApiTaskList");
 
 Vue.use(VueRouter);
 
@@ -124,14 +128,6 @@ const routes = [
         }
       },
       {
-        path: "/casetestplan/detail",
-        name: "testplan-detail",
-        component: CaseTestPlanEdit,
-        meta: {
-          requireAuth: true
-        }
-      },
-      {
         path: "/casetestplan/list",
         name: "case-testplan-list",
         component: CaseTestPlanList,
@@ -141,7 +137,7 @@ const routes = [
       },
       {
         path: "/casetestplan/create",
-        name: "testplan-create",
+        name: "case-testplan-create",
         component: CaseTestPlanCreate,
         meta: {
           requireAuth: true
@@ -149,7 +145,7 @@ const routes = [
       },
       {
         path: "/casetestplan/edit",
-        name: "testplan-edit",
+        name: "case-testplan-edit",
         component: CaseTestPlanEdit,
         meta: {
           requireAuth: true
@@ -157,8 +153,40 @@ const routes = [
       },
       {
         path: "/casetestplan/task",
-        name: "testplan-task",
+        name: "case-testplan-task",
         component: CaseTaskList,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/apitestplan/list",
+        name: "api-testplan-list",
+        component: ApiTestPlanList,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/apitestplan/create",
+        name: "api-testplan-create",
+        component: ApiTestPlanCreate,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/apitestplan/edit",
+        name: "api-testplan-edit",
+        component: ApiTestPlanEdit,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/apitestplan/task",
+        name: "api-testplan-task",
+        component: ApiTaskList,
         meta: {
           requireAuth: true
         }
