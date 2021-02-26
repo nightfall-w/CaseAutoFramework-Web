@@ -297,8 +297,10 @@ export default {
       console.log(node);
       console.log(data);
       console.log(obj);
-      if (node.filepath) {
-        // pass
+      if (data.filepath) {
+        console.log(data.filepath);
+      } else {
+        console.log(3333333);
       }
     },
     delete_case_item(index) {
