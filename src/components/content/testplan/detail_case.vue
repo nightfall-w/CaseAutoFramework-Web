@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2020-01-02 16:00:11
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-15 16:50:02
+ * @LastEditTime: 2021-02-27 03:34:46
  -->
 <template>
   <div
@@ -138,6 +138,29 @@
           ></el-table-column>
         </el-table>
       </div>
+      <el-dialog
+        :title="dialogTitle"
+        :visible.sync="dialogVisible"
+        :destroy-on-close="true"
+      >
+        <vue-ace-editor
+          height="800px"
+          ref="editor"
+          :content="dialogContent"
+          :options="{
+            enableBasicAutocompletion: true,
+            enableSnippets: true,
+            enableLiveAutocompletion: true,
+            tabSize: 4,
+          }"
+          :fontSize="14"
+          :lang="'python'"
+          :theme="'eclipse'"
+          @init="editorInit"
+        >
+          <div>toolbar or something</div>
+        </vue-ace-editor>
+      </el-dialog>
     </el-container>
   </div>
 </template>
@@ -172,6 +195,7 @@
 import Sortable from "sortablejs";
 import { getCaseTree, getCaseContent } from "network/case";
 import { createCaseTestplan, updateCaseTestplan } from "network/testplan";
+import { VueAceEditor } from "vue2x-ace-editor";
 export default {
   watch: {
     filterText(val) {
@@ -186,41 +210,44 @@ export default {
       },
       // 监听到数据变化时立即调用
       immediate: true,
-      deep: true
+      deep: true,
     },
     cases: {
       handler() {
         console.log(this.cases);
       },
       immediate: true,
-      deep: true
-    }
+      deep: true,
+    },
   },
   name: "caseTestplanDetail",
   props: {
     fatherCaseBaseInfo: {
-      type: Object
+      type: Object,
     },
     fatherTestplanInfo: {
-      type: Object
+      type: Object,
     },
     fatherCases: {
-      type: Array
-    }
+      type: Array,
+    },
+  },
+  components: {
+    VueAceEditor,
   },
   data() {
     return {
       col: [
         {
           label: "case路径",
-          prop: "case_path"
-        }
+          prop: "case_path",
+        },
       ],
       dropCol: [
         {
           label: "case路径",
-          prop: "case_path"
-        }
+          prop: "case_path",
+        },
       ],
       cases: this.fatherCases,
       cases_loading: false,
@@ -232,22 +259,25 @@ export default {
             min: 3,
             max: 30,
             message: "长度在 3 到 30 个字符",
-            trigger: "blur"
-          }
+            trigger: "blur",
+          },
         ],
         description: [
-          { required: false, message: "请输入测试计划描述", trigger: "blur" }
-        ]
+          { required: false, message: "请输入测试计划描述", trigger: "blur" },
+        ],
       },
       testplanInfo: this.fatherTestplanInfo,
       checked: [],
       filterText: "",
       case_tree: [],
       tree_loading: true,
+      dialogVisible: false,
+      dialogContent: "",
+      dialogTitle: "",
       defaultProps: {
         children: "children",
-        label: "label"
-      }
+        label: "label",
+      },
     };
   },
 
@@ -268,7 +298,7 @@ export default {
           _this.cases.splice(newIndex, 0, currRow);
           // _this.$set(this, "cases", _this.cases);
           // console.log(this.cases);
-        }
+        },
       });
     },
     get_case_tree() {
@@ -279,28 +309,48 @@ export default {
         this.caseBaseInfo.项目名,
         this.caseBaseInfo.分支名
       )
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.case_tree = res.case_tree;
           this.tree_loading = false;
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           this.$message({
             showClose: true,
             message: "获取case目录树出错！",
-            type: "error"
+            type: "error",
           });
         });
+    },
+    editorInit() {
+      require("brace/ext/language_tools");
+      require("brace/mode/python");
+      require("brace/snippets/python");
+      require("brace/theme/eclipse");
     },
     get_case_content(data, node, obj) {
       console.log(node);
       console.log(data);
       console.log(obj);
       if (data.filepath) {
-        console.log(data.filepath);
+        getCaseContent(
+          this.caseBaseInfo.gitlab服务器,
+          this.caseBaseInfo.项目名,
+          this.caseBaseInfo.分支名,
+          data.filepath
+        )
+          .then((res) => {
+            console.log(res);
+            this.dialogContent = res;
+            this.dialogTitle = data.label;
+            this.dialogVisible = true;
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       } else {
-        console.log(3333333);
+        return false;
       }
     },
     delete_case_item(index) {
@@ -325,7 +375,7 @@ export default {
       this.cases_loading = false;
     },
     onSubmit(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.cases.length == 0) {
             this.$message.error("必须添加case到计划列表");
@@ -341,14 +391,14 @@ export default {
               this.caseBaseInfo.项目名,
               this.caseBaseInfo.分支名
             )
-              .then(res => {
+              .then((res) => {
                 console.log(res);
                 this.$message({
                   message: "创建成功",
-                  type: "success"
+                  type: "success",
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err);
                 this.$message.error("创建失败");
               });
@@ -360,7 +410,7 @@ export default {
       });
     },
     onUpdate(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.cases.length == 0) {
             this.$message.error("必须添加case到计划列表");
@@ -377,14 +427,14 @@ export default {
               this.caseBaseInfo.项目名,
               this.caseBaseInfo.分支名
             )
-              .then(res => {
+              .then((res) => {
                 console.log(res);
                 this.$message({
                   message: "创建成功",
-                  type: "success"
+                  type: "success",
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err);
                 this.$message.error("更新失败");
               });
@@ -394,7 +444,7 @@ export default {
           return false;
         }
       });
-    }
+    },
   },
   mounted() {
     console.log(this.$route.path);
@@ -410,7 +460,7 @@ export default {
       } else {
         this.$message({
           message: "未提供case相关信息 请先同步case",
-          type: "warning"
+          type: "warning",
         });
         this.$router.push({ path: "/case/create" });
         return false;
@@ -421,7 +471,7 @@ export default {
   computed: {
     getPageUrlIsEdit() {
       return this.$route.path == "/casetestplan/edit";
-    }
-  }
+    },
+  },
 };
 </script>

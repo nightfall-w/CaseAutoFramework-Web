@@ -1,3 +1,11 @@
+/*
+ * @Descripttion: 
+ * @version: 
+ * @Author: wangbaojun
+ * @Date: 2021-02-27 02:05:48
+ * @LastEditors: wangbaojun
+ * @LastEditTime: 2021-02-27 02:15:45
+ */
 import axios from "./axios";
 
 export function getProjectList(gitlab_url, private_token, desc=null) {
@@ -55,7 +63,7 @@ export function getCaseContent(gitlab_url, project_name, branch_name, case_path)
       gitlab_url: gitlab_url,
       project_name: project_name,
       branch_name: branch_name,
-      case_path: case_path
+      path: case_path
     }
   });
 }
