@@ -46,3 +46,16 @@ export function getCaseTree(gitlab_url, project_name, branch_name) {
     }
   });
 }
+
+export function getCaseContent(gitlab_url, project_name, branch_name, case_path) {
+  return axios({
+    url: "/api/case/tree/",
+    method: "get",
+    params:{
+      gitlab_url: gitlab_url,
+      project_name: project_name,
+      branch_name: branch_name,
+      case_path: case_path
+    }
+  });
+}

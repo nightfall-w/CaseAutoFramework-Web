@@ -126,3 +126,57 @@ export function createApiTestplan(name, description, projectId, interfaceIds) {
         }
     });
 }
+
+export function updateApiTestplan(id, name, description, projectId, interfaceIds) {
+  return axios({
+      url: "/api/apiTestPlan/" + id + "/",
+      method: "put",
+      data: {
+          name: name,
+          description: description,
+          project_id: projectId,
+          interfaceIds: interfaceIds,
+      }
+  });
+}
+
+export function getApiTestplans(project_id, api_testplan_name, limit, offset) {
+  return axios({
+      url: "/api/apiTestPlan/",
+      method: "get",
+      params: {
+          projectId: project_id,
+          api_testplan_name: api_testplan_name,
+          limit: limit,
+          offfset: offset
+      }
+  });
+}
+
+export function readApiTestplan(id, projectId) {
+  return axios({
+      url: "/api/apiTestPlan/" + id + "/",
+      method: "get",
+      params:{
+        projectId:projectId
+      }
+  });
+}
+
+export function deleteApiTestplan(id) {
+  return axios({
+      url: "/api/apiTestPlan/" + id + "/",
+      method: "delete",
+  });
+}
+
+export function runApiTestplan(projectId, testPlanId) {
+  return axios({
+      url: "/api/testPlan/runApiTestPlan/",
+      method: "post",
+      data: {
+          projectId: projectId,
+          testPlanId: testPlanId,
+      }
+  });
+}
