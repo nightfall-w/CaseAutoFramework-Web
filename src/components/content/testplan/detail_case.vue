@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2020-01-02 16:00:11
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-27 03:34:46
+ * @LastEditTime: 2021-02-27 15:18:27
  -->
 <template>
   <div
@@ -142,6 +142,7 @@
         :title="dialogTitle"
         :visible.sync="dialogVisible"
         :destroy-on-close="true"
+        @close="dialogClose"
       >
         <vue-ace-editor
           height="800px"
@@ -158,7 +159,7 @@
           :theme="'eclipse'"
           @init="editorInit"
         >
-          <div>toolbar or something</div>
+          <div>{{ dialogDesc }}</div>
         </vue-ace-editor>
       </el-dialog>
     </el-container>
@@ -274,6 +275,7 @@ export default {
       dialogVisible: false,
       dialogContent: "",
       dialogTitle: "",
+      dialogDesc: "",
       defaultProps: {
         children: "children",
         label: "label",
@@ -329,6 +331,9 @@ export default {
       require("brace/snippets/python");
       require("brace/theme/eclipse");
     },
+    dialogClose() {
+      (this.dialogDesc = ""), (this.dialogTitle = "");
+    },
     get_case_content(data, node, obj) {
       console.log(node);
       console.log(data);
@@ -344,6 +349,7 @@ export default {
             console.log(res);
             this.dialogContent = res;
             this.dialogTitle = data.label;
+            this.dialogDesc = data.filepath;
             this.dialogVisible = true;
           })
           .catch((err) => {
