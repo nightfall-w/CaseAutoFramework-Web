@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2019-11-16 22:38:44
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-27 02:57:48
+ * @LastEditTime: 2021-03-01 22:52:57
  */
 import Vue from "vue";
 import VueRouter from "vue-router";
@@ -196,7 +196,7 @@ const routes = [
 ];
 
 const router = new VueRouter({
-  mode: "hash",
+  mode: "history",
   base: process.env.BASE_URL,
   routes
 });

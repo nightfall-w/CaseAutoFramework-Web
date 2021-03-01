@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2019-11-16 22:38:44
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-10 15:18:41
+ * @LastEditTime: 2021-03-01 23:17:21
  */
 import Vue from "vue";
 import App from "./App.vue";
@@ -77,7 +77,15 @@ router.beforeEach((to, from, next) => {
     // 判断该路由是否需要登录权限
     if (store.state.token) {
       // 通过vuex state获取当前的token是否存在
-      next();
+      store.state.currentProjectID = sessionStorage.getItem("currentProjectID");
+      if (store.state.currentProjectID || to.path == "/project/index" || to.path == "/project/create") {
+        next();
+      } else {
+        next({
+          path: "/project/index",
+          query: { redirect: to.fullPath }
+        })
+      }
     } else {
       next({
         path: "/login",
@@ -85,7 +93,8 @@ router.beforeEach((to, from, next) => {
       });
     }
   } else {
-    next();
+    next(
+    );
   }
 });
 
