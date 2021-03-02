@@ -21,7 +21,7 @@
             <el-collapse-item
               v-for="(item, i) in job_list"
               :key="i"
-              :title="item.case_path"
+              :title="item.api_info.addr"
               :name="i"
             >
               <template slot="title">
@@ -29,7 +29,7 @@
                   ><strong>{{ i + 1 }}. </strong></i
                 >
                 <i
-                  ><strong>{{ item.case_path }}</strong></i
+                  ><strong>{{ item.api_info.addr }}</strong></i
                 >
                 <i class="header-icon el-icon-info"></i>
               </template>
