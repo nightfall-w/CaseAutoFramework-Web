@@ -37,8 +37,17 @@
                 <el-form-item label="执行状态">
                   <span>{{ item.state }}</span>
                 </el-form-item>
+                <el-form-item label="响应码">
+                  <span>{{ item.status_code }}</span>
+                </el-form-item>
+                <el-form-item label="用时">
+                  <span>{{ item.elapsed }}</span>
+                </el-form-item>
                 <el-form-item label="执行结果">
                   <span>{{ item.result }}</span>
+                </el-form-item>
+                <el-form-item label="参数提取">
+                  <span>{{ item.extracts }}</span>
                 </el-form-item>
                 <el-form-item v-if="item.report_path" label="报告地址">
                   <a
