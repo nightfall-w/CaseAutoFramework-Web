@@ -180,3 +180,25 @@ export function runApiTestplan(projectId, testPlanId) {
       }
   });
 }
+
+export function getApiTasksInfo(api_testplan_id, limit, offset) {
+  return axios({
+      url: "/api/testPlan/apiTask/",
+      method: "get",
+      params: {
+        ApiTestPlanUid: api_testplan_id,
+          limit: limit,
+          offset: offset
+      }
+  })
+}
+
+export function getApiJobsInfo(api_task_id) {
+  return axios({
+      url: "/api/apiJob/",
+      method: "get",
+      params: {
+          task_id: api_task_id,
+      }
+  })
+}
