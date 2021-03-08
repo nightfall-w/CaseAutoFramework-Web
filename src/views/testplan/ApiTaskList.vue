@@ -25,17 +25,58 @@
               :name="i"
             >
               <template slot="title">
-                <i
-                  ><strong>{{ i + 1 }}. </strong></i
+                <div
+                  v-if="item.state == 'SUCCESS'"
+                  style="color:rgb(103, 194, 58)"
                 >
-                <i
-                  ><strong>{{ item.api_info.addr }}</strong></i
+                  <i
+                    ><strong>{{ i + 1 }}. </strong></i
+                  >
+                  <i
+                    ><strong>{{ item.api_info.addr }}</strong></i
+                  >
+                  <i class="header-icon el-icon-info"></i>
+                </div>
+                <div
+                  v-if="item.state == 'WAITING'"
+                  style="color:rgb(144, 147, 153)"
                 >
-                <i class="header-icon el-icon-info"></i>
+                  <i
+                    ><strong>{{ i + 1 }}. </strong></i
+                  >
+                  <i
+                    ><strong>{{ item.api_info.addr }}</strong></i
+                  >
+                  <i class="header-icon el-icon-info"></i>
+                </div>
+                <div
+                  v-if="item.state == 'FAILED'"
+                  style="color:rgb(245, 108, 108)"
+                >
+                  <i
+                    ><strong>{{ i + 1 }}. </strong></i
+                  >
+                  <i
+                    ><strong>{{ item.api_info.addr }}</strong></i
+                  >
+                  <i class="header-icon el-icon-info"></i>
+                </div>
               </template>
               <el-form label-position="left" inline class="demo-table-expand">
+                <el-form-item label="接口名称">
+                  <span>{{ item.api_info.name }}</span>
+                </el-form-item>
                 <el-form-item label="执行状态">
                   <span>{{ item.state }}</span>
+                </el-form-item>
+                <el-form-item label="请求头">
+                  <span>{{ item.api_info.headers }}</span>
+                </el-form-item>
+                <el-form-item label="请求方式">
+                  <span>{{ item.api_info.request_mode }}</span>
+                </el-form-item>
+                <el-form-item label="请求体">
+                  <span>{{ item.api_info.raw }}</span>
                 </el-form-item>
                 <el-form-item label="响应码">
                   <span>{{ item.status_code }}</span>
@@ -244,7 +285,7 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.defaultPageSize = val;
-      getCaseTasksInfo(
+      getApiTasksInfo(
         this.$route.query.case_testplan_uid,
         this.defaultPageSize,
         0
@@ -302,7 +343,7 @@ export default {
         mode_type: "api",
         task_or_job: "task",
         value: {
-          case_test_plan_uid: this.$route.query.api_testplan_uid,
+          api_test_plan_uid: this.$route.query.api_testplan_uid,
           limit: this.currentPage * this.defaultPageSize,
           offset: (this.currentPage - 1) * this.defaultPageSize
         }
