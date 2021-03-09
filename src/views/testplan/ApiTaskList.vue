@@ -61,6 +61,15 @@
                   >
                   <i class="header-icon el-icon-info"></i>
                 </div>
+                <div v-if="item.state == 'RUNNING'" style="color:#409eff">
+                  <i
+                    ><strong>{{ i + 1 }}. </strong></i
+                  >
+                  <i
+                    ><strong>{{ item.api_info.addr }}</strong></i
+                  >
+                  <i class="header-icon el-icon-info"></i>
+                </div>
               </template>
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="接口名称">

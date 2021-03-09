@@ -25,13 +25,42 @@
               :name="i"
             >
               <template slot="title">
-                <i
-                  ><strong>{{ i + 1 }}. </strong></i
-                >
-                <i
-                  ><strong>{{ item.case_path }}</strong></i
-                >
-                <i class="header-icon el-icon-info"></i>
+                <div v-if="item.state == 'WAITING'" style="color: #909399">
+                  <i
+                    ><strong>{{ i + 1 }}. </strong></i
+                  >
+                  <i
+                    ><strong>{{ item.case_path }}</strong></i
+                  >
+                  <i class="header-icon el-icon-info"></i>
+                </div>
+                <div v-if="item.state == 'RUNNING'" style="color: #409eff">
+                  <i
+                    ><strong>{{ i + 1 }}. </strong></i
+                  >
+                  <i
+                    ><strong>{{ item.case_path }}</strong></i
+                  >
+                  <i class="header-icon el-icon-info"></i>
+                </div>
+                <div v-if="item.state == 'FINISH'" style="color: #67c23a">
+                  <i
+                    ><strong>{{ i + 1 }}. </strong></i
+                  >
+                  <i
+                    ><strong>{{ item.case_path }}</strong></i
+                  >
+                  <i class="header-icon el-icon-info"></i>
+                </div>
+                <div v-if="item.state == 'FAILED'" style="color: #f56c6c">
+                  <i
+                    ><strong>{{ i + 1 }}. </strong></i
+                  >
+                  <i
+                    ><strong>{{ item.case_path }}</strong></i
+                  >
+                  <i class="header-icon el-icon-info"></i>
+                </div>
               </template>
               <el-form label-position="left" inline class="demo-table-expand">
                 <el-form-item label="执行状态">
