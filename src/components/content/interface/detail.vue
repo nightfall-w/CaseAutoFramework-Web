@@ -328,7 +328,7 @@
   </div>
 </template>
 
-<style lang="stylus">
+<style>
 .el-autocomplete {
   margin-right: 10px;
 }
@@ -479,7 +479,7 @@ export default {
             trigger: "blur"
           }
         ],
-        asserts: [],
+        asserts: []
         // desc: [{ required: true, message: "请填写接口描述", trigger: "blur" }]
       }
     };
