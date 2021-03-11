@@ -479,7 +479,7 @@ export default {
             trigger: "blur"
           }
         ],
-        asserts: []
+        asserts: [],
         // desc: [{ required: true, message: "请填写接口描述", trigger: "blur" }]
       }
     };
