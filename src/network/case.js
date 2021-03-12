@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2021-02-27 02:05:48
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-27 02:15:45
+ * @LastEditTime: 2021-03-12 23:55:07
  */
 import axios from "./axios";
 
@@ -51,6 +51,16 @@ export function getCaseTree(gitlab_url, project_name, branch_name) {
       gitlab_url: gitlab_url,
       project_name: project_name,
       branch_name: branch_name
+    }
+  });
+}
+
+export function getScriptCases(path) {
+  return axios({
+    url: "/api/case/case_collect_list/",
+    method: "get",
+    params:{
+      path: path,
     }
   });
 }

@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2020-01-02 16:00:11
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-27 15:18:27
+ * @LastEditTime: 2021-03-13 01:18:32
  -->
 <template>
   <div
@@ -94,7 +94,8 @@
           :default-expand-all="false"
           node-key="id"
           :filter-node-method="filterNode"
-          @node-click="get_case_content"
+          @node-contextmenu="get_case_content"
+          @node-click="appendCaselist"
           ref="tree"
         >
         </el-tree>
@@ -194,9 +195,10 @@
 
 <script>
 import Sortable from "sortablejs";
-import { getCaseTree, getCaseContent } from "network/case";
+import { getCaseTree, getCaseContent, getScriptCases } from "network/case";
 import { createCaseTestplan, updateCaseTestplan } from "network/testplan";
 import { VueAceEditor } from "vue2x-ace-editor";
+let id = 5000;
 export default {
   watch: {
     filterText(val) {
@@ -280,6 +282,7 @@ export default {
         children: "children",
         label: "label",
       },
+      subCases: [],
     };
   },
 
@@ -334,7 +337,7 @@ export default {
     dialogClose() {
       (this.dialogDesc = ""), (this.dialogTitle = "");
     },
-    get_case_content(data, node, obj) {
+    get_case_content(event, data, node, obj) {
       console.log(node);
       console.log(data);
       console.log(obj);
@@ -358,6 +361,32 @@ export default {
       } else {
         return false;
       }
+    },
+    appendCaselist(data, node, obj) {
+      console.log(node);
+      console.log(data);
+      console.log(obj);
+      if (!data.filepath) {
+        return false;
+      }
+      this.$set(data, "children", []);
+      getScriptCases(data.filepath)
+        .then((res) => {
+          this.subCases = res.subCaseList;
+          console.log(res.subCaseList);
+          for (let i = 0; i < this.subCases.length; i++) {
+            data.children.push({
+              id: id++,
+              label: this.subCases[i],
+              filepath: this.subCases[i],
+              children: [],
+            });
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          this.subCases = [];
+        });
     },
     delete_case_item(index) {
       console.log(index);
