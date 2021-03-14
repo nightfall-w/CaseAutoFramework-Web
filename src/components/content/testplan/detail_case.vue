@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2020-01-02 16:00:11
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-03-13 01:18:32
+ * @LastEditTime: 2021-03-14 17:32:35
  -->
 <template>
   <div
@@ -16,9 +16,6 @@
       <el-card class="box-card">
         <div slot="header" class="clearfix">
           <h3>case信息</h3>
-          <!-- <el-button style="float: right; padding: 3px 0" type="text"
-            >操作按钮</el-button
-          > -->
         </div>
         <div v-for="(value, key) in caseBaseInfo" :key="key" class="text item">
           <el-tag>{{ key }}:</el-tag>
@@ -369,6 +366,9 @@ export default {
       if (!data.filepath) {
         return false;
       }
+      if (data.children) {
+        return true;
+      }
       this.$set(data, "children", []);
       getScriptCases(data.filepath)
         .then((res) => {
@@ -377,8 +377,9 @@ export default {
           for (let i = 0; i < this.subCases.length; i++) {
             data.children.push({
               id: id++,
-              label: this.subCases[i],
-              filepath: this.subCases[i],
+              parent_id: data.id,
+              label: this.subCases[i].label,
+              filepath: this.subCases[i].filepath,
               children: [],
             });
           }
