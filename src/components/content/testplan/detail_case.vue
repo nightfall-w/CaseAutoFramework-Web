@@ -150,7 +150,7 @@
             enableBasicAutocompletion: true,
             enableSnippets: true,
             enableLiveAutocompletion: true,
-            tabSize: 4,
+            tabSize: 4
           }"
           :fontSize="14"
           :lang="'python'"
@@ -210,44 +210,44 @@ export default {
       },
       // 监听到数据变化时立即调用
       immediate: true,
-      deep: true,
+      deep: true
     },
     cases: {
       handler() {
         console.log(this.cases);
       },
       immediate: true,
-      deep: true,
-    },
+      deep: true
+    }
   },
   name: "caseTestplanDetail",
   props: {
     fatherCaseBaseInfo: {
-      type: Object,
+      type: Object
     },
     fatherTestplanInfo: {
-      type: Object,
+      type: Object
     },
     fatherCases: {
-      type: Array,
-    },
+      type: Array
+    }
   },
   components: {
-    VueAceEditor,
+    VueAceEditor
   },
   data() {
     return {
       col: [
         {
           label: "case路径",
-          prop: "case_path",
-        },
+          prop: "case_path"
+        }
       ],
       dropCol: [
         {
           label: "case路径",
-          prop: "case_path",
-        },
+          prop: "case_path"
+        }
       ],
       cases: this.fatherCases,
       cases_loading: false,
@@ -259,12 +259,12 @@ export default {
             min: 3,
             max: 30,
             message: "长度在 3 到 30 个字符",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         description: [
-          { required: false, message: "请输入测试计划描述", trigger: "blur" },
-        ],
+          { required: false, message: "请输入测试计划描述", trigger: "blur" }
+        ]
       },
       testplanInfo: this.fatherTestplanInfo,
       checked: [],
@@ -277,9 +277,9 @@ export default {
       dialogDesc: "",
       defaultProps: {
         children: "children",
-        label: "label",
+        label: "label"
       },
-      subCases: [],
+      subCases: []
     };
   },
 
@@ -300,7 +300,7 @@ export default {
           _this.cases.splice(newIndex, 0, currRow);
           // _this.$set(this, "cases", _this.cases);
           // console.log(this.cases);
-        },
+        }
       });
     },
     get_case_tree() {
@@ -311,17 +311,17 @@ export default {
         this.caseBaseInfo.项目名,
         this.caseBaseInfo.分支名
       )
-        .then((res) => {
+        .then(res => {
           console.log(res);
           this.case_tree = res.case_tree;
           this.tree_loading = false;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.$message({
             showClose: true,
             message: "获取case目录树出错！",
-            type: "error",
+            type: "error"
           });
         });
     },
@@ -345,14 +345,14 @@ export default {
           this.caseBaseInfo.分支名,
           data.filepath
         )
-          .then((res) => {
+          .then(res => {
             console.log(res);
             this.dialogContent = res;
             this.dialogTitle = data.label;
             this.dialogDesc = data.filepath;
             this.dialogVisible = true;
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
           });
       } else {
@@ -371,7 +371,7 @@ export default {
       }
       this.$set(data, "children", []);
       getScriptCases(data.filepath)
-        .then((res) => {
+        .then(res => {
           this.subCases = res.subCaseList;
           console.log(res.subCaseList);
           for (let i = 0; i < this.subCases.length; i++) {
@@ -380,11 +380,11 @@ export default {
               parent_id: data.id,
               label: this.subCases[i].label,
               filepath: this.subCases[i].filepath,
-              children: [],
+              children: []
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.subCases = [];
         });
@@ -411,7 +411,7 @@ export default {
       this.cases_loading = false;
     },
     onSubmit(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.cases.length == 0) {
             this.$message.error("必须添加case到计划列表");
@@ -427,14 +427,14 @@ export default {
               this.caseBaseInfo.项目名,
               this.caseBaseInfo.分支名
             )
-              .then((res) => {
+              .then(res => {
                 console.log(res);
                 this.$message({
                   message: "创建成功",
-                  type: "success",
+                  type: "success"
                 });
               })
-              .catch((err) => {
+              .catch(err => {
                 console.log(err);
                 this.$message.error("创建失败");
               });
@@ -446,7 +446,7 @@ export default {
       });
     },
     onUpdate(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.cases.length == 0) {
             this.$message.error("必须添加case到计划列表");
@@ -463,14 +463,14 @@ export default {
               this.caseBaseInfo.项目名,
               this.caseBaseInfo.分支名
             )
-              .then((res) => {
+              .then(res => {
                 console.log(res);
                 this.$message({
                   message: "创建成功",
-                  type: "success",
+                  type: "success"
                 });
               })
-              .catch((err) => {
+              .catch(err => {
                 console.log(err);
                 this.$message.error("更新失败");
               });
@@ -480,7 +480,7 @@ export default {
           return false;
         }
       });
-    },
+    }
   },
   mounted() {
     console.log(this.$route.path);
@@ -496,7 +496,7 @@ export default {
       } else {
         this.$message({
           message: "未提供case相关信息 请先同步case",
-          type: "warning",
+          type: "warning"
         });
         this.$router.push({ path: "/case/create" });
         return false;
@@ -507,7 +507,7 @@ export default {
   computed: {
     getPageUrlIsEdit() {
       return this.$route.path == "/casetestplan/edit";
-    },
-  },
+    }
+  }
 };
 </script>
