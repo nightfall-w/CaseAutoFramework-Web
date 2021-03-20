@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2021-01-23 16:14:54
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-15 16:49:07
+ * @LastEditTime: 2021-03-20 23:23:49
 -->
 <template>
   <div>
@@ -12,6 +12,8 @@
     <detail
       :fatherCaseBaseInfo="caseBaseInfo"
       :fatherTestplanInfo="testPlanInfo"
+      :fatherTimerEnable="timerEnable"
+      :fatherCrontab="crontab"
       :fatherCases="cases"
     ></detail>
   </div>
@@ -33,6 +35,8 @@ export default {
         parallel: false,
       },
       cases: [],
+      timerEnable: false,
+      crontab: "",
     };
   },
   components: {
