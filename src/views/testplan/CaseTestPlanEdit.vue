@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2021-01-23 16:14:54
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-02-16 21:25:24
+ * @LastEditTime: 2021-03-20 23:24:02
 -->
 <template>
   <div>
@@ -12,6 +12,8 @@
     <detail
       :fatherCaseBaseInfo="caseBaseInfo"
       :fatherTestplanInfo="testPlanInfo"
+      :fatherTimerEnable="timerEnable"
+      :fatherCrontab="crontab"
       v-if="this.cases != null"
       :fatherCases="cases"
     ></detail>
@@ -35,6 +37,8 @@ export default {
         parallel: false,
       },
       cases: null,
+      timerEnable: false,
+      crontab: "",
     };
   },
   components: {
@@ -46,7 +50,6 @@ export default {
       sessionStorage.getItem("currentProjectID")
     )
       .then((res) => {
-        console.log(this.cases);
         this.cases = res.case_paths;
         this.testPlanInfo.name = res.name;
         this.testPlanInfo.description = res.description;
@@ -54,8 +57,8 @@ export default {
         this.caseBaseInfo.gitlab服务器 = res.gitlab_url;
         this.caseBaseInfo.项目名 = res.gitlab_project_name;
         this.caseBaseInfo.分支名 = res.branch_name;
-        console.log(res.case_paths);
-        console.log(this.cases);
+        this.timerEnable = res.timer_enable;
+        this.crontab = res.crontab;
       })
       .catch((err) => {
         console.log(err);

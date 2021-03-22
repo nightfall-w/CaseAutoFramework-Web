@@ -4,26 +4,28 @@
  * @Author: wangbaojun
  * @Date: 2019-11-16 22:38:44
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-03-01 23:17:21
+ * @LastEditTime: 2021-03-20 14:03:16
  */
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
 import "./plugins/element.js";
-import axios from "axios";
+// import axios from "axios";
 import Router from "vue-router";
 import iView from "iview";
 import Vuex from "vuex";
 //引入拖拽排序插件
 import VueDND from "awe-dnd";
+import vcrontab from "vcrontab";
 
+Vue.use(vcrontab);
 Vue.use(VueDND)
 Vue.use(Vuex);
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
-Vue.prototype.$http = axios.create({
-  baseURL: "http://localhost:8000/api"
-});
+// Vue.prototype.$http = axios.create({
+//   baseURL: "http://localhost:8000/api"
+// });
 
 const ADD_COUNT = "ADD_COUNT"; // 用常量代替事件类型，使得代码更清晰
 const REMOVE_COUNT = "REMOVE_COUNT";
