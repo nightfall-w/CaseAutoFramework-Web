@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2020-01-02 16:00:11
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-03-20 23:17:18
+ * @LastEditTime: 2021-03-14 17:32:35
  -->
 <template>
   <div
@@ -50,29 +50,6 @@
               <el-radio border :label="false">串行</el-radio>
               <el-radio border :label="true">并行</el-radio>
             </el-radio-group>
-          </el-form-item>
-          <el-form-item label="开启定时器？">
-            <el-radio-group v-model="timerEnable" size="medium">
-              <el-radio border :label="false">否</el-radio>
-              <el-radio border :label="true">是</el-radio>
-            </el-radio-group>
-          </el-form-item>
-          <el-form-item label="定时规则" v-show="timerEnable">
-            <div id="app">
-              <div class="box">
-                <el-input v-model="input" placeholder class="inp"></el-input>
-                <el-button type="primary" @click="showDialog"
-                  >生成 cron</el-button
-                >
-              </div>
-              <el-dialog title="生成 cron" :visible.sync="showCron">
-                <vcrontab
-                  @hide="showCron = false"
-                  @fill="crontabFill"
-                  :expression="expression"
-                ></vcrontab>
-              </el-dialog>
-            </div>
           </el-form-item>
           <el-form-item size="large">
             <el-button
@@ -173,7 +150,7 @@
             enableBasicAutocompletion: true,
             enableSnippets: true,
             enableLiveAutocompletion: true,
-            tabSize: 4,
+            tabSize: 4
           }"
           :fontSize="14"
           :lang="'python'"
@@ -233,50 +210,44 @@ export default {
       },
       // 监听到数据变化时立即调用
       immediate: true,
-      deep: true,
+      deep: true
     },
     cases: {
       handler() {
         console.log(this.cases);
       },
       immediate: true,
-      deep: true,
-    },
+      deep: true
+    }
   },
   name: "caseTestplanDetail",
   props: {
     fatherCaseBaseInfo: {
-      type: Object,
+      type: Object
     },
     fatherTestplanInfo: {
-      type: Object,
+      type: Object
     },
     fatherCases: {
-      type: Array,
-    },
-    fatherTimerEnable: {
-      type: Boolean,
-    },
-    fatherCrontab: {
-      type: String,
-    },
+      type: Array
+    }
   },
   components: {
-    VueAceEditor,
+    VueAceEditor
   },
   data() {
     return {
       col: [
         {
           label: "case路径",
-          prop: "case_path",
-        },
+          prop: "case_path"
+        }
       ],
       dropCol: [
         {
           label: "case路径",
-          prop: "case_path",
-        },
+          prop: "case_path"
+        }
       ],
       cases: this.fatherCases,
       cases_loading: false,
@@ -288,12 +259,12 @@ export default {
             min: 3,
             max: 30,
             message: "长度在 3 到 30 个字符",
-            trigger: "blur",
-          },
+            trigger: "blur"
+          }
         ],
         description: [
-          { required: false, message: "请输入测试计划描述", trigger: "blur" },
-        ],
+          { required: false, message: "请输入测试计划描述", trigger: "blur" }
+        ]
       },
       testplanInfo: this.fatherTestplanInfo,
       checked: [],
@@ -306,13 +277,9 @@ export default {
       dialogDesc: "",
       defaultProps: {
         children: "children",
-        label: "label",
+        label: "label"
       },
-      subCases: [],
-      timerEnable: this.fatherTimerEnable,
-      input: this.fatherCrontab,
-      expression: "",
-      showCron: false,
+      subCases: []
     };
   },
 
@@ -333,7 +300,7 @@ export default {
           _this.cases.splice(newIndex, 0, currRow);
           // _this.$set(this, "cases", _this.cases);
           // console.log(this.cases);
-        },
+        }
       });
     },
     get_case_tree() {
@@ -344,17 +311,17 @@ export default {
         this.caseBaseInfo.项目名,
         this.caseBaseInfo.分支名
       )
-        .then((res) => {
+        .then(res => {
           console.log(res);
           this.case_tree = res.case_tree;
           this.tree_loading = false;
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.$message({
             showClose: true,
             message: "获取case目录树出错！",
-            type: "error",
+            type: "error"
           });
         });
     },
@@ -378,14 +345,14 @@ export default {
           this.caseBaseInfo.分支名,
           data.filepath
         )
-          .then((res) => {
+          .then(res => {
             console.log(res);
             this.dialogContent = res;
             this.dialogTitle = data.label;
             this.dialogDesc = data.filepath;
             this.dialogVisible = true;
           })
-          .catch((err) => {
+          .catch(err => {
             console.log(err);
           });
       } else {
@@ -404,7 +371,7 @@ export default {
       }
       this.$set(data, "children", []);
       getScriptCases(data.filepath)
-        .then((res) => {
+        .then(res => {
           this.subCases = res.subCaseList;
           console.log(res.subCaseList);
           for (let i = 0; i < this.subCases.length; i++) {
@@ -413,11 +380,11 @@ export default {
               parent_id: data.id,
               label: this.subCases[i].label,
               filepath: this.subCases[i].filepath,
-              children: [],
+              children: []
             });
           }
         })
-        .catch((err) => {
+        .catch(err => {
           console.log(err);
           this.subCases = [];
         });
@@ -444,7 +411,7 @@ export default {
       this.cases_loading = false;
     },
     onSubmit(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.cases.length == 0) {
             this.$message.error("必须添加case到计划列表");
@@ -458,18 +425,16 @@ export default {
               sessionStorage.getItem("currentProjectID"),
               this.caseBaseInfo.gitlab服务器,
               this.caseBaseInfo.项目名,
-              this.caseBaseInfo.分支名,
-              this.timerEnable,
-              this.input
+              this.caseBaseInfo.分支名
             )
-              .then((res) => {
+              .then(res => {
                 console.log(res);
                 this.$message({
                   message: "创建成功",
-                  type: "success",
+                  type: "success"
                 });
               })
-              .catch((err) => {
+              .catch(err => {
                 console.log(err);
                 this.$message.error("创建失败");
               });
@@ -481,8 +446,7 @@ export default {
       });
     },
     onUpdate(formName) {
-      console.log(this.input);
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.cases.length == 0) {
             this.$message.error("必须添加case到计划列表");
@@ -497,18 +461,16 @@ export default {
               sessionStorage.getItem("currentProjectID"),
               this.caseBaseInfo.gitlab服务器,
               this.caseBaseInfo.项目名,
-              this.caseBaseInfo.分支名,
-              this.timerEnable,
-              this.input
+              this.caseBaseInfo.分支名
             )
-              .then((res) => {
+              .then(res => {
                 console.log(res);
                 this.$message({
                   message: "创建成功",
-                  type: "success",
+                  type: "success"
                 });
               })
-              .catch((err) => {
+              .catch(err => {
                 console.log(err);
                 this.$message.error("更新失败");
               });
@@ -518,15 +480,7 @@ export default {
           return false;
         }
       });
-    },
-    crontabFill(value) {
-      //确定后回传的值
-      this.input = value;
-    },
-    showDialog() {
-      this.expression = this.input; //传入的 cron 表达式，可以反解析到 UI 上
-      this.showCron = true;
-    },
+    }
   },
   mounted() {
     console.log(this.$route.path);
@@ -542,7 +496,7 @@ export default {
       } else {
         this.$message({
           message: "未提供case相关信息 请先同步case",
-          type: "warning",
+          type: "warning"
         });
         this.$router.push({ path: "/case/create" });
         return false;
@@ -553,7 +507,7 @@ export default {
   computed: {
     getPageUrlIsEdit() {
       return this.$route.path == "/casetestplan/edit";
-    },
-  },
+    }
+  }
 };
 </script>
