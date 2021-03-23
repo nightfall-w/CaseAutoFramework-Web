@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2020-01-02 16:00:11
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-03-14 17:32:35
+ * @LastEditTime: 2021-03-20 23:17:18
  -->
 <template>
   <div
@@ -50,6 +50,29 @@
               <el-radio border :label="false">串行</el-radio>
               <el-radio border :label="true">并行</el-radio>
             </el-radio-group>
+          </el-form-item>
+          <el-form-item label="开启定时器？">
+            <el-radio-group v-model="timerEnable" size="medium">
+              <el-radio border :label="false">否</el-radio>
+              <el-radio border :label="true">是</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="定时规则" v-show="timerEnable">
+            <div id="app">
+              <div class="box">
+                <el-input v-model="input" placeholder class="inp"></el-input>
+                <el-button type="primary" @click="showDialog"
+                  >生成 cron</el-button
+                >
+              </div>
+              <el-dialog title="生成 cron" :visible.sync="showCron">
+                <vcrontab
+                  @hide="showCron = false"
+                  @fill="crontabFill"
+                  :expression="expression"
+                ></vcrontab>
+              </el-dialog>
+            </div>
           </el-form-item>
           <el-form-item size="large">
             <el-button
@@ -230,6 +253,12 @@ export default {
     },
     fatherCases: {
       type: Array
+    },
+    fatherTimerEnable: {
+      type: Boolean
+    },
+    fatherCrontab: {
+      type: String
     }
   },
   components: {
@@ -279,7 +308,11 @@ export default {
         children: "children",
         label: "label"
       },
-      subCases: []
+      subCases: [],
+      timerEnable: this.fatherTimerEnable,
+      input: this.fatherCrontab,
+      expression: "",
+      showCron: false
     };
   },
 
@@ -425,7 +458,9 @@ export default {
               sessionStorage.getItem("currentProjectID"),
               this.caseBaseInfo.gitlab服务器,
               this.caseBaseInfo.项目名,
-              this.caseBaseInfo.分支名
+              this.caseBaseInfo.分支名,
+              this.timerEnable,
+              this.input
             )
               .then(res => {
                 console.log(res);
@@ -446,6 +481,7 @@ export default {
       });
     },
     onUpdate(formName) {
+      console.log(this.input);
       this.$refs[formName].validate(valid => {
         if (valid) {
           if (this.cases.length == 0) {
@@ -461,7 +497,9 @@ export default {
               sessionStorage.getItem("currentProjectID"),
               this.caseBaseInfo.gitlab服务器,
               this.caseBaseInfo.项目名,
-              this.caseBaseInfo.分支名
+              this.caseBaseInfo.分支名,
+              this.timerEnable,
+              this.input
             )
               .then(res => {
                 console.log(res);
@@ -480,6 +518,14 @@ export default {
           return false;
         }
       });
+    },
+    crontabFill(value) {
+      //确定后回传的值
+      this.input = value;
+    },
+    showDialog() {
+      this.expression = this.input; //传入的 cron 表达式，可以反解析到 UI 上
+      this.showCron = true;
     }
   },
   mounted() {
