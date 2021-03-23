@@ -224,7 +224,7 @@ export default {
   computed: {
     percentage() {
       return function(api_job_number, success_num, failed_num) {
-        return ((success_num + failed_num) / api_job_number) * 100;
+        return (((success_num + failed_num) / api_job_number) * 100).toFixed(2);
       };
     }
   },

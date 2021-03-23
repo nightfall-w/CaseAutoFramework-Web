@@ -193,7 +193,7 @@ export default {
   computed: {
     percentage() {
       return function(finish_num, case_job_number) {
-        return (finish_num / case_job_number) * 100;
+        return ((finish_num / case_job_number) * 100).toFixed(2);
       };
     }
   },
