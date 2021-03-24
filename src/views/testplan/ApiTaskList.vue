@@ -260,6 +260,8 @@ export default {
             if (redata.data[i].id == that.tableData[j].id) {
               that.tableData[j].state = redata.data[i].state;
               that.tableData[j].finish_num = redata.data[i].finish_num;
+              that.tableData[j].success_num = redata.data[i].success_num;
+              that.tableData[j].failed_num = redata.data[i].failed_num;
               that.tableData[j].used_time = redata.data[i].used_time;
             }
           }
