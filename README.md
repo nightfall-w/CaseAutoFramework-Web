@@ -1,9 +1,7 @@
 # automation-web
 
 ## 后端传送门
-```
 [https://github.com/nightfall-w/CaseAutoFramework](https://github.com/nightfall-w/CaseAutoFramework)
-```
 
 ## Project setup
 ```
