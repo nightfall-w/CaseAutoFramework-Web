@@ -1,16 +1,19 @@
-# automation-web
+# CaseAutoFramework-Web  向下翻有演示截图
 
-## Project setup
+## 后端传送门
+[CaseAutoFramework](https://github.com/nightfall-w/CaseAutoFramework)
+
+## 安装相关依赖包
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### 开发环境的编译与运行
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### 生产环境编译构建
 ```
 npm run build
 ```
