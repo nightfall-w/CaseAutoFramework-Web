@@ -4,7 +4,7 @@
  * @Author: wangbaojun
  * @Date: 2020-01-09 16:55:41
  * @LastEditors: wangbaojun
- * @LastEditTime: 2021-04-01 21:43:44
+ * @LastEditTime: 2021-04-01 21:46:08
  */
 console.log("后端服务地址:" + process.env.VUE_APP_SERVER_URL)
 const webpack = require('webpack');
@@ -41,4 +41,4 @@ module.exports = {
       })
     ]
   }
-                                                                                                                           1, 2           Top
+}
