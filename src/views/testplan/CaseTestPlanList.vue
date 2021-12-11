@@ -8,30 +8,40 @@
 -->
 <template>
   <div>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="case测试计划"
+    >
+    </el-page-header>
+    <br />
+    <br />
     <el-table :data="tableData" @row-click="handleSelect" style="width: 100%">
-      <el-table-column width="300px" label="测试计划名称" prop="name">
+      <el-table-column width="300" label="测试计划名称" prop="name">
       </el-table-column>
       <el-table-column label="测试计划描述" prop="description">
       </el-table-column>
-      <el-table-column
-        width="120px"
-        label="运行中任务数"
-        prop="running_task_number"
-      >
+      <el-table-column label="运行中任务数" prop="running_task_number">
       </el-table-column>
-      <el-table-column
-        width="200px"
-        label="所属项目"
-        prop="gitlab_project_name"
-      >
+      <el-table-column label="所属项目" prop="gitlab_project_name">
+        <template slot-scope="scope">
+          <span style="color: cornflowerblue"
+            ><b>{{ scope.row.gitlab_project_name }}</b></span
+          >
+        </template>
       </el-table-column>
-      <el-table-column width="200px" label="所属分支" prop="branch_name">
+      <el-table-column label="所属分支" prop="branch_name">
+        <template slot-scope="scope">
+          <span style="color: orange"
+            ><b>{{ scope.row.branch_name }}</b></span
+          >
+        </template>
       </el-table-column>
-      <el-table-column width="200px" label="创建人" prop="create_user">
+      <el-table-column label="创建人" width="150" prop="user_info.first_name">
       </el-table-column>
-      <el-table-column width="200px" label="创建时间" prop="create_date_format">
+      <el-table-column width="190" label="创建时间" prop="create_date_format">
       </el-table-column>
-      <el-table-column align="right">
+      <el-table-column align="right" width="200">
         <template slot="header" slot-scope="scope">
           {{ (scope = "") }}
           <el-input v-model="search" size="mini" placeholder="输入计划名搜索" />
@@ -75,7 +85,7 @@
 import {
   getCaseTestplans,
   deleteCaseTestplan,
-  runCaseTestplan
+  runCaseTestplan,
 } from "network/testplan";
 export default {
   data() {
@@ -84,7 +94,7 @@ export default {
       search: "",
       defaultPageSize: 10,
       currentPage: 1,
-      totalItems: 0
+      totalItems: 0,
     };
   },
   mounted() {
@@ -93,7 +103,7 @@ export default {
       this.search,
       this.defaultPageSize,
       0
-    ).then(res => {
+    ).then((res) => {
       this.tableData = res.results;
       this.totalItems = res.count;
     });
@@ -106,25 +116,28 @@ export default {
           this.search,
           this.defaultPageSize,
           0
-        ).then(res => {
+        ).then((res) => {
           this.tableData = res.results;
           this.totalItems = res.count;
         });
-      }
-    }
+      },
+    },
   },
   methods: {
+    goBack() {
+      this.$router.push("/toolsweb/casetestplan/list");
+    },
     runTestplan(row) {
       console.log(row.plan_id);
       runCaseTestplan(row.project_id, row.plan_id)
-        .then(res => {
+        .then((res) => {
           console.log(res);
           this.$message({
             type: "success",
-            message: "已经触发运行!"
+            message: "已经触发运行!",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
@@ -132,10 +145,10 @@ export default {
       console.log(column.label);
       if (column.label != undefined) {
         this.$router.push({
-          path: "/casetestplan/task",
+          path: "/toolsweb/casetestplan/task",
           query: {
-            case_testplan_uid: row.plan_id
-          }
+            case_testplan_uid: row.plan_id,
+          },
         });
       }
     },
@@ -143,29 +156,29 @@ export default {
       this.$router.push({
         path: "edit",
         query: {
-          itemId: row.id
-        }
+          itemId: row.id,
+        },
       });
     },
     handleDelete(index, row) {
-      this.$confirm("此操作将永久删除该项目, 是否继续?", "提示", {
+      this.$confirm("此操作将永久删除该测试计划, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           deleteCaseTestplan(row.id).then(
             this.tableData.splice(index, 1),
             this.$message({
               type: "success",
-              message: "删除成功!"
+              message: "删除成功!",
             })
           );
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
     },
@@ -177,7 +190,7 @@ export default {
         this.search,
         this.defaultPageSize,
         0
-      ).then(res => {
+      ).then((res) => {
         this.tableData = res.results;
         this.totalItems = res.count;
       });
@@ -189,11 +202,11 @@ export default {
         this.search,
         this.defaultPageSize,
         (val - 1) * this.defaultPageSize
-      ).then(res => {
+      ).then((res) => {
         this.tableData = res.results;
         this.totalItems = res.count;
       });
-    }
-  }
+    },
+  },
 };
 </script>

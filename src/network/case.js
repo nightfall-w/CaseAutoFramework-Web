@@ -10,7 +10,7 @@ import axios from "./axios";
 
 export function getProjectList(gitlab_url, private_token, desc=null) {
   return axios({
-    url: "/api/gitlabAuthentication/",
+    url: "/cap/api/gitlabAuthentication/",
     method: "post",
     data:{
       gitlab_url: gitlab_url,
@@ -22,7 +22,7 @@ export function getProjectList(gitlab_url, private_token, desc=null) {
 
 export function getBranchList(token, project_id) {
   return axios({
-    url: "/api/case/branch/",
+    url: "/cap/api/case/branch/",
     method: "post",
     data:{
       token: token,
@@ -33,7 +33,7 @@ export function getBranchList(token, project_id) {
 
 export function askPullBranch(token, project_id, branch) {
   return axios({
-    url: "/api/case/branch_pull/",
+    url: "/cap/api/case/branch_pull/",
     method: "post",
     data:{
       token: token,
@@ -45,7 +45,7 @@ export function askPullBranch(token, project_id, branch) {
 
 export function getCaseTree(gitlab_url, project_name, branch_name) {
   return axios({
-    url: "/api/case/tree/",
+    url: "/cap/api/case/tree/",
     method: "get",
     params:{
       gitlab_url: gitlab_url,
@@ -57,7 +57,7 @@ export function getCaseTree(gitlab_url, project_name, branch_name) {
 
 export function getScriptCases(path) {
   return axios({
-    url: "/api/case/case_collect_list/",
+    url: "/cap/api/case/case_collect_list/",
     method: "get",
     params:{
       path: path,
@@ -67,7 +67,7 @@ export function getScriptCases(path) {
 
 export function getCaseContent(gitlab_url, project_name, branch_name, case_path) {
   return axios({
-    url: "/api/case/tree/",
+    url: "/cap/api/case/tree/",
     method: "get",
     params:{
       gitlab_url: gitlab_url,

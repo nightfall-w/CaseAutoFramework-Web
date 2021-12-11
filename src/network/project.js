@@ -1,8 +1,8 @@
 import axios from "./axios";
 
-export function getProject(limit, offset, projectName=null) {
+export function getProject(limit, offset, projectName = null) {
   return axios({
-    url: "/api/project/",
+    url: "/cap/api/project/",
     method: "get",
     params: {
       projectName: projectName,
@@ -14,29 +14,29 @@ export function getProject(limit, offset, projectName=null) {
 
 export function getProjectDetail(id) {
   return axios({
-    url: "/api/project/" + id + "/",
+    url: "/cap/api/project/" + id + "/",
     method: "get"
   });
 }
 
 export function updateProject(id, data) {
   return axios({
-    url: "/api/project/" + id + "/",
-    method: "put",
+    url: "/cap/api/project/" + id + "/",
+    method: "patch",
     data: data
   });
 }
 
 export function deleteProject(id) {
   return axios({
-    url: "/api/project/" + id + "/",
+    url: "/cap/api/project/" + id + "/",
     method: "delete"
   });
 }
 
 export function saveProject(data) {
   return axios({
-    url: "/api/project/",
+    url: "/cap/api/project/",
     method: "post",
     data: data
   });

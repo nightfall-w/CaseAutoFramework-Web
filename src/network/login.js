@@ -2,7 +2,7 @@ import axios from "./axios";
 
 export function userLogin(data) {
   return axios({
-    url: "/api/user/login/",
+    url: "/cap/api/user/login/",
     method: "post",
     data: data
   });

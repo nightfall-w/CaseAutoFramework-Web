@@ -8,9 +8,14 @@
  -->
 <template>
   <div>
-    <el-row style="margin-top: 30px" type="flex" justify="center">
-      <h3>接口编辑</h3>
-    </el-row>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="接口编辑"
+    >
+    </el-page-header>
+    <br />
+    <br />
     <detail :fatherRuleForm="ruleForm"></detail>
   </div>
 </template>
@@ -30,44 +35,48 @@ export default {
         headers: [],
         formData: [],
         urlencoded: [],
-        raw: "{}",
+        raw: {},
         params: [],
         asserts: [],
         desc: "",
-        parameters: "{}",
-        extract: []
-      }
+        parameters: {},
+        extract: [],
+      },
     };
   },
   components: {
-    Detail
+    Detail,
   },
   mounted() {
     getInterfaceDeatil(this.$route.query.itemId)
-      .then(res => {
+      .then((res) => {
         this.ruleForm.project = res.project;
         this.ruleForm.id = res.id;
         this.ruleForm.desc = res.desc;
         this.ruleForm.name = res.name;
         this.ruleForm.request_mode = res.request_mode;
         this.ruleForm.addr = res.addr;
+        this.ruleForm.params = this.map2list(res.params);
         this.ruleForm.headers = this.map2list(res.headers);
         this.ruleForm.formData = this.map2list(res.formData);
         this.ruleForm.urlencoded = this.map2list(res.urlencoded);
-        this.ruleForm.raw = JSON.stringify(res.raw);
-        this.ruleForm.parameters = JSON.stringify(res.parameters);
+        this.ruleForm.raw = res.raw;
+        this.ruleForm.parameters = res.parameters;
         this.ruleForm.asserts = res.asserts;
         this.ruleForm.extract = res.extract;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.$message({
           type: "error",
-          message: "出错啦"
+          message: "出错啦",
         });
       });
   },
   methods: {
+    goBack() {
+      this.$router.push("/toolsweb/interface/list");
+    },
     map2list(mapData) {
       let data = [];
       for (let k in mapData) {
@@ -75,7 +84,7 @@ export default {
       }
       console.log(data);
       return data;
-    }
-  }
+    },
+  },
 };
 </script>

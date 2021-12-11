@@ -8,85 +8,26 @@
  -->
 <template>
   <div>
-    <el-tabs v-model="tabActiveName" type="border-card">
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="同步分支用例"
+    >
+    </el-page-header>
+    <br />
+    <br />
+    <el-tabs class="tab" v-model="tabActiveName" type="border-card">
+      <br />
+      <br />
+      <br />
       <el-tab-pane :key="'one'" :label="'one'" :name="'one'">
-        <span slot="label"><i class="el-icon-key"></i> 身份令牌认证</span>
-        <br />
-        <br />
-        <span style="margin-left: 2%; color: #606266">描述( 非必填 ):</span>
-        <el-input
-          style="width: 50%; margin-left: 4%"
-          placeholder="描述"
-          v-model="desc"
-          clearable
-        >
-        </el-input>
-        <br />
-        <br />
-        <br />
-        <span style="margin-left: 2%; color: #606266">gitlab服务器地址:</span>
-        <el-input
-          style="width: 50%; margin-left: 2%"
-          placeholder="gitlab地址"
-          v-model="gitlab_url"
-          clearable
-        >
-        </el-input>
-        <br />
-        <br />
-        <br />
-        <span style="margin-left: 2%; color: #606266">私有身份令牌:</span>
-        <el-input
-          style="width: 50%; margin-left: 4%"
-          placeholder="private token"
-          v-model="private_token"
-          clearable
-          show-password
-        >
-        </el-input
-        ><br /><br />
-        <el-button
-          @click="getGitlabProjectsByPrivateToken"
-          style="margin-left: 2%"
-          type="primary"
-          :loading="step1SubmitButtonLoading"
-          >提交</el-button
-        >
-      </el-tab-pane>
-      <el-tab-pane :key="'two'" :label="'two'" :name="'two'">
-        <span slot="label"
-          ><i class="el-icon-s-platform"></i> 选择归属项目</span
-        >
-        <br />
-        <br />
-        <br />
-        <span style="margin-left: 2%; color: #606266">选择case所在项目:</span>
-        <el-select
-          style="margin-left: 2%"
-          v-model="projectValue"
-          @change="getBranchByProjectId"
-          clearable
-          placeholder="请选择case所在项目"
-        >
-          <el-option
-            v-for="item in projects"
-            :key="item.projectId"
-            :label="item.projectName"
-            :value="item.projectId"
-          >
-          </el-option>
-        </el-select>
-      </el-tab-pane>
-      <br />
-      <br />
-      <br />
-      <el-tab-pane :key="'three'" :label="'three'" :name="'three'">
         <span slot="label"><i class="el-icon-s-operation"></i> 选择分支</span>
         <span style="margin-left: 2%; color: #606266">选择case所在分支:</span>
         <el-select
           style="margin-left: 2%"
           v-model="branchValue"
           @change="pullBranch"
+          filterable
           clearable
           placeholder="请选择case所在分支"
         >
@@ -99,7 +40,7 @@
           </el-option>
         </el-select>
       </el-tab-pane>
-      <el-tab-pane :key="'four'" :label="'four'" :name="'four'">
+      <el-tab-pane :key="'two'" :label="'two'" :name="'two'">
         <span slot="label"><i class="el-icon-download"></i> 拉取代码</span>
         <div>
           <h2
@@ -137,28 +78,29 @@
       simple
       style="margin-top: 20px"
     >
-      <el-step title="身份令牌认证"></el-step>
-      <el-step title="选择归属项目"></el-step>
       <el-step title="选择分支"></el-step>
       <el-step title="拉取代码"></el-step>
     </el-steps>
   </div>
 </template>
-
+<style scoped>
+.el-select {
+  width: 30%;
+}
+.tab {
+  height: 400px;
+}
+</style>
 <script>
-import { getProjectList, getBranchList, askPullBranch } from "network/case";
+import { getBranchList, askPullBranch } from "network/case";
+import { getProjectDetail } from "network/project";
 export default {
   data() {
     return {
       tabActiveName: "one",
       step_active: 0,
-      step1SubmitButtonLoading: false,
-
-      token: "",
-      desc: "",
       gitlab_url: "",
-      private_token: "",
-      projects: [],
+      token: "",
       projectValue: "",
       projectName: "",
       checkedProjectObj: null,
@@ -172,20 +114,35 @@ export default {
         { color: "#e6a23c", percentage: 40 },
         { color: "#5cb87a", percentage: 60 },
         { color: "#1989fa", percentage: 80 },
-        { color: "#6f7ad3", percentage: 100 }
-      ]
+        { color: "#6f7ad3", percentage: 100 },
+      ],
     };
   },
   created() {
+    getProjectDetail(sessionStorage.getItem("currentProjectID"))
+      .then((res) => {
+        if (res.bound_case_info) {
+          const bound_case_info = res.bound_case_info;
+          this.gitlab_url = bound_case_info.gitlab_service;
+          this.token = bound_case_info.token;
+          this.projectValue = bound_case_info.case_project_id;
+          this.projectName = bound_case_info.case_project_name;
+          this.getBranchByProjectId(this.projectValue);
+        }
+      })
+      .catch((err) => {});
     this.initWebSocket();
   },
   destroyed() {
     this.websock.close(); //离开路由之后断开websocket连接
   },
   methods: {
+    goBack() {
+      this.$router.push("/toolsweb/casetestplan/list");
+    },
     initWebSocket() {
       //初始化weosocket
-      const wsuri = process.env.VUE_APP_SERVER_WS + "/ws/casepull/result/";
+      const wsuri = process.env.VUE_APP_SERVER_WS + "/cap/ws/casepull/result/";
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onopen = this.websocketonopen;
@@ -213,7 +170,7 @@ export default {
         this.$notify({
           title: "成功",
           message: "拉取远程代码完成！",
-          type: "success"
+          type: "success",
         });
       }
     },
@@ -224,92 +181,53 @@ export default {
     websocketclose(e) {
       //关闭
       console.log("断开连接", e);
-      this.initWebSocket();
-    },
-    getGitlabProjectsByPrivateToken() {
-      this.step1SubmitButtonLoading = true;
-      this.projects = [];
-      this.token = "";
-      this.branchs = [];
-      this.projectValue = "";
-      getProjectList(this.gitlab_url, this.private_token, this.desc)
-        .then(res => {
-          this.step1SubmitButtonLoading = false;
-          this.token = res.token;
-          this.branchs = [];
-          for (let key in res.result) {
-            this.projects.push({
-              projectName: key,
-              projectId: res.result[key]
-            });
-          }
-          this.step_active = 1;
-          this.tabActiveName = "two";
-          console.log(this.projects);
-          this.$notify({
-            title: "成功",
-            message: "验证通过 请进行下一步操作",
-            type: "success"
-          });
-        })
-        .catch(err => {
-          this.step1SubmitButtonLoading = false;
-          console.log(err);
-          this.$notify.error({
-            title: "错误",
-            message: err.message
-          });
-        });
     },
     getBranchByProjectId(value) {
+      if (!value) {
+        return false;
+      }
       this.branchs = [];
       this.branchValue = "";
-      let projectObj = {};
-      projectObj = this.projects.find(item => {
-        //遍历list的数据
-        return item.projectId === value; //筛选出匹配数据
-      });
-      console.log(projectObj.projectId); //获取list里面的name
-      this.checkedProjectObj = projectObj;
 
       // getBranchList;
       if (!this.token) {
         return false;
       }
       this.branchs = [];
-      getBranchList(this.token, projectObj.projectId)
-        .then(res => {
+      getBranchList(this.token, this.projectValue)
+        .then((res) => {
           this.branchs = res.result;
-          this.step_active = 2;
-          this.tabActiveName = "three";
+          this.step_active = 1;
+          this.tabActiveName = "one";
           this.$notify({
             title: "成功",
             message: "获取分支成功 请进行下一步操作",
-            type: "success"
+            type: "success",
           });
         })
-        .catch(err => {
+        .catch((err) => {
           this.$notify.error({
             title: "错误",
-            message: err.message
+            message: err.message,
           });
         });
     },
     pullBranch() {
-      let project_id = this.checkedProjectObj.projectId;
+      this.initWebSocket();
+      let project_id = this.projectValue;
       this.percentage = 0;
       askPullBranch(this.token, project_id, this.branchValue)
-        .then(res => {
+        .then((res) => {
           console.log(res);
-          this.step_active = 3;
-          this.tabActiveName = "four";
+          this.step_active = 1;
+          this.tabActiveName = "two";
           this.$notify({
             title: "成功",
             message: "pull请求已经成功, 请等待完成",
-            type: "success"
+            type: "success",
           });
           //发起websocket请求 获取分支pull状态
-          var sleep = function(time) {
+          var sleep = function (time) {
             var startTime = new Date().getTime() + parseInt(time, 10);
             while (new Date().getTime() < startTime) {
               // pass
@@ -319,14 +237,14 @@ export default {
           let actions = {
             token: this.token,
             project_id: project_id,
-            branch_name: this.branchValue
+            branch_name: this.branchValue,
           };
           this.websocketsend(JSON.stringify(actions));
         })
-        .catch(err => {
+        .catch((err) => {
           this.$notify.error({
             title: "错误",
-            message: err.message
+            message: err.message,
           });
         });
     },
@@ -347,14 +265,14 @@ export default {
     },
     skip2createTestplan() {
       this.$router.push({
-        path: "/casetestplan/create",
+        path: "/toolsweb/casetestplan/create",
         query: {
           gitlab_url: this.gitlab_url,
-          gitlab_project: this.checkedProjectObj.projectName,
-          gitlab_branch: this.branchValue
-        }
+          gitlab_project: this.projectName,
+          gitlab_branch: this.branchValue,
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>

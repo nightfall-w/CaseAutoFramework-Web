@@ -8,10 +8,18 @@
  -->
 <template>
   <div>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="接口列表"
+    >
+    </el-page-header>
+    <br />
+    <br />
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column fixed prop="name" label="接口名称" width="200">
       </el-table-column>
-      <el-table-column prop="desc" label="接口描述" width="500">
+      <el-table-column prop="desc" label="接口描述" width="350">
       </el-table-column>
       <el-table-column label="协议" width="100">
         <template slot-scope="scope">
@@ -29,25 +37,26 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column prop="addr" label="地址" width="600"> </el-table-column>
-      <el-table-column fixed="right" label="操作" width="100">
+      <el-table-column prop="addr" label="地址" width="700"> </el-table-column>
+      <el-table-column fixed="right" label="操作" width="150">
         <template slot-scope="scope">
           <el-button
             @click="handleEdit(scope.$index, scope.row)"
             type="text"
-            size="small"
+            size="medium"
             >编辑</el-button
           >
           <el-button
             @click="handleDelete(scope.$index, scope.row)"
             type="text"
-            size="small"
+            size="medium"
+            style="color: orangered"
             >删除</el-button
           >
         </template>
       </el-table-column>
     </el-table>
-    <el-row style="margin-top:30px" type="flex" justify="end">
+    <el-row style="margin-top: 30px" type="flex" justify="end">
       <el-pagination
         background
         layout="total, sizes, prev, pager, next"
@@ -70,7 +79,7 @@ export default {
     let currentProjectID = sessionStorage.getItem("currentProjectID");
     if (currentProjectID) {
       this.currentProjectID = currentProjectID;
-      listInterface(currentProjectID, 0, this.defaultPageSize).then(res => {
+      listInterface(currentProjectID, 0, this.defaultPageSize).then((res) => {
         this.totalItems = res.count;
         this.tableData = res.results;
       });
@@ -78,21 +87,24 @@ export default {
   },
   computed: {
     getProtocol() {
-      return function(value) {
+      return function (value) {
         if (value.indexOf("https://") == 0) {
           return "HTTPS";
         } else {
           return "HTTP";
         }
       };
-    }
+    },
   },
   methods: {
+    goBack() {
+      this.$router.push("/toolsweb/interface/list");
+    },
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.defaultPageSize = val;
       listInterface(this.currentProjectID, 0, this.defaultPageSize).then(
-        res => {
+        (res) => {
           this.tableData = res.results;
           this.totalItems = res.count;
         }
@@ -104,7 +116,7 @@ export default {
         this.currentProjectID,
         (val - 1) * this.defaultPageSize,
         this.defaultPageSize
-      ).then(res => {
+      ).then((res) => {
         this.tableData = res.results;
         this.totalItems = res.count;
       });
@@ -113,8 +125,8 @@ export default {
       this.$router.push({
         path: "edit",
         query: {
-          itemId: row.id
-        }
+          itemId: row.id,
+        },
       });
     },
     handleDelete(index, row) {
@@ -122,42 +134,42 @@ export default {
       this.$confirm("此操作将永久删除该接口, 是否继续?", "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
-        type: "warning"
+        type: "warning",
       })
         .then(() => {
           console.log(row.id);
           deleteInterface(row.id)
-            .then(res => {
+            .then((res) => {
               console.log(res);
               this.tableData.splice(index, 1);
               this.$message({
                 type: "success",
-                message: "删除成功!"
+                message: "删除成功!",
               });
             })
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
               this.$message({
                 type: "error",
-                message: "删除失败!"
+                message: "删除失败!",
               });
             });
         })
         .catch(() => {
           this.$message({
             type: "info",
-            message: "已取消删除"
+            message: "已取消删除",
           });
         });
-    }
+    },
   },
   data() {
     return {
       defaultPageSize: 10,
       currentPage: 1,
       totalItems: 0,
-      tableData: Array()
+      tableData: Array(),
     };
-  }
+  },
 };
 </script>

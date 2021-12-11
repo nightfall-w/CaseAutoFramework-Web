@@ -57,7 +57,7 @@ export default function axios(option) {
               localStorage.removeItem("token");
               localStorage.removeItem("userID");
               localStorage.removeItem("userName");
-              this.$router.push("/login");
+              this.$router.push("/toolsweb/login");
               err.message = "未授权的访问";
               break;
           }

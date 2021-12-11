@@ -1,8 +1,16 @@
 import axios from "./axios";
 
+export function debugApi(data) {
+  return axios({
+    url: "/cap/api/interfaceTest/",
+    method: "post",
+    data: data
+  })
+}
+
 export function createInterface(data) {
   return axios({
-    url: "/api/interface/",
+    url: "/cap/api/interface/",
     method: "post",
     data: data
   });
@@ -10,7 +18,7 @@ export function createInterface(data) {
 
 export function updateInterface(id, data) {
   return axios({
-    url: "/api/interface/"+id+"/",
+    url: "/cap/api/interface/" + id + "/",
     method: "put",
     data: data
   });
@@ -18,7 +26,7 @@ export function updateInterface(id, data) {
 
 export function listInterface(projectId, offset, limit) {
   return axios({
-    url: "/api/interface/",
+    url: "/cap/api/interface/",
     method: "get",
     params: {
       projectId: projectId,
@@ -30,14 +38,14 @@ export function listInterface(projectId, offset, limit) {
 
 export function deleteInterface(id) {
   return axios({
-    url: "/api/interface/"+id+"/",
+    url: "/cap/api/interface/" + id + "/",
     method: "delete",
-    });
+  });
 }
 
-export function getInterfaceDeatil(interfaceId){
+export function getInterfaceDeatil(interfaceId) {
   return axios({
-    url: "/api/interface/"+interfaceId+"/",
+    url: "/cap/api/interface/" + interfaceId + "/",
     method: "get",
   })
 }

@@ -8,10 +8,19 @@
  -->
 <template>
   <div>
-    <el-row style="margin-top: 30px" type="flex" justify="center">
-      <h3>编辑项目</h3>
-    </el-row>
-    <detail :fatherProject="project" :fatherEnvDict="env_dict"></detail>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="项目编辑"
+    >
+    </el-page-header>
+    <br />
+    <br />
+    <detail
+      v-if="this.env_dict.lenght != 0 && this.project.name != ''"
+      :fatherProject="project"
+      :fatherEnvDict="env_dict"
+    ></detail>
   </div>
 </template>
 
@@ -25,16 +34,16 @@ export default {
       project: {
         id: null,
         name: "",
-        desc: ""
+        desc: "",
       },
-      env_dict: []
+      env_dict: [],
     };
   },
   components: {
-    Detail
+    Detail,
   },
   created() {
-    getProjectDetail(this.$route.query.itemId).then(res => {
+    getProjectDetail(this.$route.query.itemId).then((res) => {
       console.log(res);
       this.project.id = res.id;
       this.project.name = res.name;
@@ -44,18 +53,28 @@ export default {
         if (this.required_fields.indexOf(this.item) < 0) {
           this.env_dict.push({
             key: this.item,
-            value: res.env_variable[this.item]
+            value: res.env_variable[this.item],
           });
         } else {
           this.env_dict.push({
             key: this.item,
             value: res.env_variable[this.item],
-            required: true
+            required: true,
           });
         }
       }
-      console.log(this.env_dict);
+      if (this.env_dict.length === 0) {
+        this.env_dict.push({
+          key: "",
+          value: "",
+        });
+      }
     });
-  }
+  },
+  methods: {
+    goBack() {
+      this.$router.push("/toolsweb/project/index");
+    },
+  },
 };
 </script>

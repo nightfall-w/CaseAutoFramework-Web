@@ -11,42 +11,37 @@
           />
         </a>
       </div>
-      <el-menu router :default-active="$route.path">
+      <el-menu router :unique-opened="true" :default-active="$route.path">
         <el-submenu index="1">
           <template slot="title">
             <i class="el-icon-s-grid"></i>项目管理
           </template>
-          <el-menu-item index="/project/index">项目列表</el-menu-item>
-          <el-menu-item index="/project/create">项目创建</el-menu-item>
+          <el-menu-item index="/toolsweb/project/index">项目列表</el-menu-item>
+          <el-menu-item index="/toolsweb/project/create">项目创建</el-menu-item>
         </el-submenu>
         <el-submenu index="2">
           <template slot="title">
             <i class="el-icon-s-unfold"></i>接口管理
           </template>
-          <el-menu-item index="/interface/create">接口创建</el-menu-item>
-          <el-menu-item index="/interface/list">接口列表</el-menu-item>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title">
-            <i class="el-icon-edit-outline"></i>case管理
-          </template>
-          <el-menu-item index="/case/create">case添加</el-menu-item>
-          <el-menu-item index="/case/list">case列表</el-menu-item>
+          <el-menu-item index="/toolsweb/interface/create"
+            >接口创建</el-menu-item
+          >
+          <el-menu-item index="/toolsweb/interface/list">接口列表</el-menu-item>
         </el-submenu>
         <el-submenu index="4">
           <template slot="title">
             <i class="el-icon-document"></i>测试计划
           </template>
-          <el-menu-item index="/casetestplan/list"
+          <el-menu-item index="/toolsweb/casetestplan/list"
             >case测试计划列表</el-menu-item
           >
-          <el-menu-item index="/casetestplan/create"
+          <el-menu-item index="/toolsweb/casetestplan/create"
             >case测试计划创建</el-menu-item
           >
-          <el-menu-item index="/apitestplan/list"
+          <el-menu-item index="/toolsweb/apitestplan/list"
             >接口测试计划列表</el-menu-item
           >
-          <el-menu-item index="/apitestplan/create"
+          <el-menu-item index="/toolsweb/apitestplan/create"
             >接口测试计划创建</el-menu-item
           >
         </el-submenu>
@@ -54,7 +49,7 @@
           <template slot="title">
             <i class="el-icon-s-data"></i>测试报告
           </template>
-          <el-menu-item index="/report/list">测试报告列表</el-menu-item>
+          <el-menu-item index="/toolsweb/report/list">DashBoard</el-menu-item>
         </el-submenu>
       </el-menu>
     </el-aside>
@@ -68,8 +63,8 @@
           color: #fff;
         "
       >
-        <i class="el-icon-s-grid" style="margin-right: 20px;"></i>
-        <span style="color: #fff; margin-right: 46%; font-size:18px">{{
+        <i class="el-icon-s-grid" style="margin-right: 20px"></i>
+        <span style="color: #fff; margin-right: 40%; font-size: 18px">{{
           currentProject
         }}</span>
 
@@ -94,8 +89,8 @@ export default {
   name: "container",
   data() {
     return {
-      currentUser: localStorage.getItem("userName"),
-      currentProject: sessionStorage.getItem("currentProjectName")
+      currentUser: localStorage.getItem("displayName"),
+      currentProject: sessionStorage.getItem("currentProjectName"),
     };
   },
   methods: {
@@ -103,15 +98,17 @@ export default {
       window.localStorage.removeItem("token");
       window.localStorage.removeItem("userID");
       window.localStorage.removeItem("userName");
+      window.localStorage.removeItem("displayName");
+      window.localStorage.removeItem("email");
       window.sessionStorage.removeItem("currentProjectID");
       window.sessionStorage.removeItem("currentProjectName");
-      this.$router.push("/login");
-    }
-  }
+      this.$router.push("/toolsweb/login");
+    },
+  },
 };
 </script>
 
-<style>
+<style scoped>
 @import "~assets/css/base.css";
 @import "~assets/css/normalize.css";
 

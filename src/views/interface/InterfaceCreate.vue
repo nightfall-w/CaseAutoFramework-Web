@@ -8,8 +8,17 @@
  -->
 <template>
   <div>
-    <el-row style="margin-top: 30px" type="flex" justify="center"> </el-row>
-    <detail :fatherRuleForm="ruleForm"></detail>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="接口创建"
+    >
+    </el-page-header>
+    <br />
+    <br />
+    <detail
+      :fatherRuleForm="ruleForm"
+    ></detail>
   </div>
 </template>
 
@@ -26,25 +35,28 @@ export default {
         headers: [],
         formData: [],
         urlencoded: [],
-        raw: "{}",
+        raw: {},
         params: [],
         asserts: [],
         desc: "",
-        parameters: "{}",
-        extract: []
-      }
+        parameters: {},
+        extract: [],
+      },
     };
   },
   components: {
-    Detail
+    Detail,
   },
   methods: {
+    goBack() {
+      this.$router.push("/toolsweb/interface/list");
+    },
     saveProject() {
       console.log(this.project);
     },
     updateProject() {
       console.log(this.project);
-    }
-  }
+    },
+  },
 };
 </script>

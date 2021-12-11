@@ -7,7 +7,7 @@
           type="text"
           v-model="loginForm.username"
           auto-complete="off"
-          placeholder="账号"
+          placeholder="ladp账号"
         ></el-input>
       </el-form-item>
 
@@ -16,7 +16,7 @@
           type="password"
           v-model="loginForm.password"
           auto-complete="off"
-          placeholder="密码"
+          placeholder="ldap密码"
         ></el-input>
       </el-form-item>
 
@@ -58,7 +58,9 @@ export default {
           this.$store.commit("ADD_COUNT", {
             token: userToken,
             userName: res.username,
-            userID: res.user_id
+            userID: res.user_id,
+            displayName: res.display_name,
+            email: res.email
           });
           this.$notify({
             title: "成功",

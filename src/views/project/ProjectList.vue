@@ -8,12 +8,25 @@
  -->
 <template>
   <div>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="项目列表"
+    >
+    </el-page-header>
+    <br />
+    <br />
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column width="60px" label="ID" prop="id"> </el-table-column>
       <el-table-column label="项目名称" prop="name"> </el-table-column>
-      <el-table-column width="500px" label="项目描述" prop="desc">
+      <el-table-column label="项目描述" prop="desc"> </el-table-column>
+      <el-table-column label="关联用例仓库">
+        <template slot-scope="scope" prop="bound_case_info">
+          <b style="color: dodgerblue">{{
+            scope.row.bound_case_info.case_project_name
+          }}</b>
+        </template>
       </el-table-column>
-      <el-table-column label="创建人" prop="create_by"> </el-table-column>
+      <el-table-column label="创建人" prop="user_info.first_name"> </el-table-column>
       <el-table-column label="创建时间" prop="create_date"> </el-table-column>
       <el-table-column align="right">
         <template slot="header" slot-scope="scope">
@@ -68,7 +81,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.$store.state)
+    console.log(this.$store.state);
     getProject(this.defaultPageSize, 0).then((res) => {
       this.tableData = res.results;
       this.totalItems = res.count;
@@ -85,6 +98,9 @@ export default {
     },
   },
   methods: {
+    goBack() {
+      this.$router.push("/toolsweb/project/index");
+    },
     switchProject(row) {
       this.$store.commit("SWAICH_PROJECT", {
         id: row.id,

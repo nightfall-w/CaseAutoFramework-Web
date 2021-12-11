@@ -17,9 +17,17 @@ import Vuex from "vuex";
 //引入拖拽排序插件
 import VueDND from "awe-dnd";
 import vcrontab from "vcrontab";
+import JsonViewer from 'vue-json-viewer'
+import echarts from 'echarts'
+import 'echarts/theme/macarons'
+import ElementUI from 'element-ui'
+import 'element-ui/lib/theme-chalk/index.css';
 
+Vue.prototype.$echarts = echarts
+Vue.use(ElementUI);
+Vue.use(JsonViewer);
 Vue.use(vcrontab);
-Vue.use(VueDND)
+Vue.use(VueDND);
 Vue.use(Vuex);
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
@@ -50,9 +58,13 @@ var store = new Vuex.Store({
       localStorage.setItem("token", userinfo.token);
       localStorage.setItem("userID", userinfo.userID);
       localStorage.setItem("userName", userinfo.userName);
+      localStorage.setItem("displayName", userinfo.displayName);
+      localStorage.setItem("email", userinfo.email);
       state.token = userinfo.token;
       state.userID = userinfo.userID;
       state.userName = userinfo.userName;
+      state.displayName = userinfo.displayName;
+      state.email = userinfo.email
       console.log(state)
     },
     [REMOVE_COUNT](state, token) {
@@ -80,17 +92,22 @@ router.beforeEach((to, from, next) => {
     if (store.state.token) {
       // 通过vuex state获取当前的token是否存在
       store.state.currentProjectID = sessionStorage.getItem("currentProjectID");
-      if (store.state.currentProjectID || to.path == "/project/index" || to.path == "/project/create") {
+      if (store.state.currentProjectID || to.path.split("/")[2] == "project" || to.path.split("/")[2] == "tools") {
         next();
       } else {
+        // next()
         next({
-          path: "/project/index",
+          path: "/toolsweb/project/index",
           query: { redirect: to.fullPath }
-        })
+        });
+        ElementUI.Message({
+          message: '请先创建或选择一个项目，点击使用',
+          type: 'warning'
+        });
       }
     } else {
       next({
-        path: "/login",
+        path: "/toolsweb/login",
         query: { redirect: to.fullPath } // 将跳转的路由path作为参数，登录成功后跳转到该路由
       });
     }

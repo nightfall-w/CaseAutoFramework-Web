@@ -24,12 +24,11 @@
         </el-form-item>
       </el-form>
     </div>
-    <p style="text-align: center; margin: 50px 0 20px; color: #67c23a">
+    <p style="text-align: center; margin: 30px 0 20px; color: #67c23a">
       <i class="el-icon-info"></i>从左侧接口列表选择并添加到右侧测试计划列表
     </p>
-    <div style="text-align: center">
+    <div class="content" style="text-align: center">
       <el-transfer
-        style="text-align: left; display: inline-block"
         target-order="push"
         v-model="value"
         filterable
@@ -38,27 +37,29 @@
         :button-texts="['到左边', '到右边']"
         :format="{
           noChecked: '${total}',
-          hasChecked: '${checked}/${total}'
+          hasChecked: '${checked}/${total}',
         }"
         @change="handleChange"
         :data="api_list"
       >
       </el-transfer>
     </div>
-    <p style="text-align: center; margin: 50px 0 50px">
-      <el-button
-        v-if="getPageUrlIsEdit != true"
-        type="primary"
-        @click="submitForm('testplanInfo')"
-        >立即创建</el-button
-      >
-      <el-button
-        v-else-if="getPageUrlIsEdit == true"
-        type="primary"
-        @click="updateForm('testplanInfo')"
-        >更新提交</el-button
-      >
-    </p>
+    <div class="footer">
+      <p style="text-align: center; margin: 10px 0 0 -55px">
+        <el-button
+          v-if="getPageUrlIsEdit != true"
+          type="primary"
+          @click="submitForm('testplanInfo')"
+          >立即创建</el-button
+        >
+        <el-button
+          v-else-if="getPageUrlIsEdit == true"
+          type="primary"
+          @click="updateForm('testplanInfo')"
+          >更新提交</el-button
+        >
+      </p>
+    </div>
   </div>
 </template>
 
@@ -68,11 +69,32 @@
   padding: 6px 5px;
 }
 .el-transfer-panel {
-  width: 600px;
+  text-align: left;
+  display: inline-block;
+  width: 38%;
   height: 500px;
 }
 .el-transfer-panel__list.is-filterable {
   height: 500px;
+}
+.content {
+  padding-top: 15px;
+  height: calc(100vh - 420px);
+  overflow-y: auto;
+  /* padding: 20px 0 0 20%; */
+  box-shadow: 0px 0px 10px rgba(142, 146, 146, 0.322);
+  border-radius: 15px;
+  background-color: rgba(219, 233, 248, 0.178);
+}
+.footer {
+  position: fixed;
+  bottom: 0px;
+  z-index: 999;
+  width: 88%;
+  height: 60px;
+  box-shadow: 0px 0px 10px rgba(142, 146, 146, 0.322);
+  border-radius: 15px;
+  background-color: rgba(238, 241, 241, 0.322);
 }
 </style>
 
@@ -80,18 +102,18 @@
 import {
   getApilist,
   createApiTestplan,
-  updateApiTestplan
+  updateApiTestplan,
 } from "network/testplan";
 
 export default {
   name: "apiTestplanDetail",
   props: {
     fatherTestplanInfo: {
-      type: Object
+      type: Object,
     },
     fatherValue: {
-      type: Array
-    }
+      type: Array,
+    },
   },
   data() {
     return {
@@ -104,15 +126,15 @@ export default {
           {
             required: true,
             message: "请输入接口测试计划名称",
-            trigger: "blur"
+            trigger: "blur",
           },
           {
             min: 3,
             max: 30,
             message: "长度在 3 到 30 个字符",
-            trigger: "blur"
-          }
-        ]
+            trigger: "blur",
+          },
+        ],
       },
       renderFunc(h, option) {
         return (
@@ -120,7 +142,7 @@ export default {
             {option.key} - {option.label}
           </span>
         );
-      }
+      },
     };
   },
   created() {
@@ -132,28 +154,28 @@ export default {
     },
     syncApilist() {
       getApilist(sessionStorage.getItem("currentProjectID"))
-        .then(res => {
+        .then((res) => {
           console.log(res);
           for (let i = 0; i < res.results.length; i++) {
             this.api_list.push({
               key: i,
               id: res.results[i].id,
-              label: `${res.results[i].name}（${res.results[i].addr}）`
+              label: `${res.results[i].name}（${res.results[i].addr}）`,
               // disabled: i % 4 === 0
             });
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
         });
     },
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.value.length === 0) {
             this.$notify.error({
               title: "错误",
-              message: "测试计划列表至少包含1个接口!"
+              message: "测试计划列表至少包含1个接口!",
             });
             return false;
           } else {
@@ -170,14 +192,17 @@ export default {
               sessionStorage.getItem("currentProjectID"),
               JSON.stringify(interfaceIds)
             )
-              .then(res => {
+              .then((res) => {
                 console.log(res);
                 this.$message({
                   message: "测试计划创建成功",
-                  type: "success"
+                  type: "success",
+                });
+                this.$router.push({
+                  path: "/toolsweb/apitestplan/list",
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err);
                 this.$message.error("很抱歉，创建失败");
               });
@@ -187,12 +212,12 @@ export default {
       });
     },
     updateForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate((valid) => {
         if (valid) {
           if (this.value.length === 0) {
             this.$notify.error({
               title: "错误",
-              message: "测试计划列表至少包含1个接口!"
+              message: "测试计划列表至少包含1个接口!",
             });
             return false;
           } else {
@@ -210,14 +235,17 @@ export default {
               sessionStorage.getItem("currentProjectID"),
               JSON.stringify(interfaceIds)
             )
-              .then(res => {
+              .then((res) => {
                 console.log(res);
                 this.$message({
                   message: "测试计划更新成功",
-                  type: "success"
+                  type: "success",
+                });
+                this.$router.push({
+                  path: "/toolsweb/apitestplan/list",
                 });
               })
-              .catch(err => {
+              .catch((err) => {
                 console.log(err);
                 this.$message.error("很抱歉，更新失败");
               });
@@ -225,12 +253,12 @@ export default {
           return false;
         }
       });
-    }
+    },
   },
   computed: {
     getPageUrlIsEdit() {
-      return this.$route.path == "/apitestplan/edit";
-    }
-  }
+      return this.$route.path == "/toolsweb/apitestplan/edit";
+    },
+  },
 };
 </script>

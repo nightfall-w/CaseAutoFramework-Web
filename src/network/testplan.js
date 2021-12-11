@@ -8,9 +8,9 @@
  */
 import axios from "./axios";
 
-export function createCaseTestplan(testplan_name, description, parallel, case_paths, project_id, gitlab_url, gitlab_project_name, branch_name, timer_enable, crontab) {
+export function createCaseTestplan(testplan_name, description, parallel, case_paths, project_id, gitlab_url, gitlab_project_name, branch_name, timer_enable, crontab, env_file) {
     return axios({
-        url: "/api/caseTestPlan/",
+        url: "/cap/api/caseTestPlan/",
         method: "post",
         data: {
             name: testplan_name,
@@ -23,13 +23,14 @@ export function createCaseTestplan(testplan_name, description, parallel, case_pa
             branch_name: branch_name,
             timer_enable: timer_enable,
             crontab: crontab,
+            env_file
         }
     });
 }
 
-export function updateCaseTestplan(testplan_id, testplan_name, description, parallel, case_paths, project_id, gitlab_url, gitlab_project_name, branch_name, timer_enable, crontab) {
+export function updateCaseTestplan(testplan_id, testplan_name, description, parallel, case_paths, project_id, gitlab_url, gitlab_project_name, branch_name, timer_enable, crontab, env_file) {
     return axios({
-        url: "/api/caseTestPlan/" + testplan_id + "/",
+        url: "/cap/api/caseTestPlan/" + testplan_id + "/",
         method: "put",
         data: {
             name: testplan_name,
@@ -42,13 +43,14 @@ export function updateCaseTestplan(testplan_id, testplan_name, description, para
             branch_name: branch_name,
             timer_enable: timer_enable,
             crontab: crontab,
+            env_file
         }
     });
 }
 
 export function getCaseTestplans(project_id, case_testplan_name, limit, offset) {
     return axios({
-        url: "/api/caseTestPlan/",
+        url: "/cap/api/caseTestPlan/",
         method: "get",
         params: {
             projectId: project_id,
@@ -61,14 +63,14 @@ export function getCaseTestplans(project_id, case_testplan_name, limit, offset) 
 
 export function deleteCaseTestplan(case_testplan_id) {
     return axios({
-        url: "/api/caseTestPlan/" + case_testplan_id + "/",
+        url: "/cap/api/caseTestPlan/" + case_testplan_id + "/",
         method: "delete",
     });
 }
 
 export function getCaseTestplanDetail(case_testplan_id, project_id) {
     return axios({
-        url: "/api/caseTestPlan/" + case_testplan_id + "/",
+        url: "/cap/api/caseTestPlan/" + case_testplan_id + "/",
         method: "get",
         params: { projectId: project_id }
     })
@@ -77,7 +79,7 @@ export function getCaseTestplanDetail(case_testplan_id, project_id) {
 
 export function runCaseTestplan(projectId, testPlanId) {
     return axios({
-        url: "/api/testPlan/runCaseTestPlan/",
+        url: "/cap/api/testPlan/runCaseTestPlan/",
         method: "post",
         data: {
             projectId: projectId,
@@ -88,7 +90,7 @@ export function runCaseTestplan(projectId, testPlanId) {
 
 export function getCaseTasksInfo(case_testplan_id, limit, offset) {
     return axios({
-        url: "/api/testPlan/caseTask/",
+        url: "/cap/api/testPlan/caseTask/",
         method: "get",
         params: {
             caseTestPlanUid: case_testplan_id,
@@ -100,7 +102,7 @@ export function getCaseTasksInfo(case_testplan_id, limit, offset) {
 
 export function getCaseJobsInfo(case_task_id) {
     return axios({
-        url: "/api/caseJob/",
+        url: "/cap/api/caseJob/",
         method: "get",
         params: {
             task_id: case_task_id,
@@ -108,9 +110,16 @@ export function getCaseJobsInfo(case_task_id) {
     })
 }
 
+export function readCaseJobsInfo(job_id) {
+    return axios({
+        url: "/cap/api/caseJob/" + job_id + "/",
+        method: "get"
+    })
+}
+
 export function getApilist(project_id) {
     return axios({
-        url: "/api/interface/",
+        url: "/cap/api/interface/",
         method: "get",
         params: {
             projectId: project_id,
@@ -120,7 +129,7 @@ export function getApilist(project_id) {
 
 export function createApiTestplan(name, description, projectId, interfaceIds) {
     return axios({
-        url: "/api/apiTestPlan/",
+        url: "/cap/api/apiTestPlan/",
         method: "post",
         data: {
             name: name,
@@ -133,7 +142,7 @@ export function createApiTestplan(name, description, projectId, interfaceIds) {
 
 export function updateApiTestplan(id, name, description, projectId, interfaceIds) {
     return axios({
-        url: "/api/apiTestPlan/" + id + "/",
+        url: "/cap/api/apiTestPlan/" + id + "/",
         method: "put",
         data: {
             name: name,
@@ -146,7 +155,7 @@ export function updateApiTestplan(id, name, description, projectId, interfaceIds
 
 export function getApiTestplans(project_id, api_testplan_name, limit, offset) {
     return axios({
-        url: "/api/apiTestPlan/",
+        url: "/cap/api/apiTestPlan/",
         method: "get",
         params: {
             projectId: project_id,
@@ -159,7 +168,7 @@ export function getApiTestplans(project_id, api_testplan_name, limit, offset) {
 
 export function readApiTestplan(id, projectId) {
     return axios({
-        url: "/api/apiTestPlan/" + id + "/",
+        url: "/cap/api/apiTestPlan/" + id + "/",
         method: "get",
         params: {
             projectId: projectId
@@ -169,14 +178,14 @@ export function readApiTestplan(id, projectId) {
 
 export function deleteApiTestplan(id) {
     return axios({
-        url: "/api/apiTestPlan/" + id + "/",
+        url: "/cap/api/apiTestPlan/" + id + "/",
         method: "delete",
     });
 }
 
 export function runApiTestplan(projectId, testPlanId) {
     return axios({
-        url: "/api/testPlan/runApiTestPlan/",
+        url: "/cap/api/testPlan/runApiTestPlan/",
         method: "post",
         data: {
             projectId: projectId,
@@ -187,7 +196,7 @@ export function runApiTestplan(projectId, testPlanId) {
 
 export function getApiTasksInfo(api_testplan_id, limit, offset) {
     return axios({
-        url: "/api/testPlan/apiTask/",
+        url: "/cap/api/testPlan/apiTask/",
         method: "get",
         params: {
             ApiTestPlanUid: api_testplan_id,
@@ -199,7 +208,7 @@ export function getApiTasksInfo(api_testplan_id, limit, offset) {
 
 export function getApiJobsInfo(api_task_id) {
     return axios({
-        url: "/api/apiJob/",
+        url: "/cap/api/apiJob/",
         method: "get",
         params: {
             task_id: api_task_id,

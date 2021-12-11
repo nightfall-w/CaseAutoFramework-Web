@@ -8,9 +8,17 @@
 -->
 <template>
   <div>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="case脚本任务"
+    >
+    </el-page-header>
+    <br />
+    <br />
     <el-table
       :data="tableData"
-      :row-key="record => record.id"
+      :row-key="(record) => record.id"
       :expand-row-keys="expands"
       @expand-change="expand_change"
       style="width: 100%"
@@ -32,7 +40,10 @@
                   <i
                     ><strong>{{ item.case_path }}</strong></i
                   >
-                  <i class="header-icon el-icon-info"></i>
+                  <span class="header-icon">
+                    <i class="el-icon-question"></i>
+                    <span>{{ item.state }}</span>
+                  </span>
                 </div>
                 <div v-if="item.state == 'RUNNING'" style="color: #409eff">
                   <i
@@ -41,7 +52,10 @@
                   <i
                     ><strong>{{ item.case_path }}</strong></i
                   >
-                  <i class="header-icon el-icon-info"></i>
+                  <span class="header-icon">
+                    <i class="el-icon-info"></i>
+                    <span>{{ item.state }}</span>
+                  </span>
                 </div>
                 <div v-if="item.state == 'FINISH'" style="color: #67c23a">
                   <i
@@ -50,7 +64,10 @@
                   <i
                     ><strong>{{ item.case_path }}</strong></i
                   >
-                  <i class="header-icon el-icon-info"></i>
+                  <span class="header-icon">
+                    <i class="el-icon-success"></i>
+                    <span>{{ item.state }}</span>
+                  </span>
                 </div>
                 <div v-if="item.state == 'FAILED'" style="color: #f56c6c">
                   <i
@@ -59,19 +76,37 @@
                   <i
                     ><strong>{{ item.case_path }}</strong></i
                   >
-                  <i class="header-icon el-icon-info"></i>
+                  <span class="header-icon">
+                    <i class="el-icon-error"></i>
+                    <span>{{ item.state }}</span>
+                  </span>
                 </div>
               </template>
               <el-form label-position="left" inline class="demo-table-expand">
-                <el-form-item label="执行状态">
-                  <span>{{ item.state }}</span>
-                </el-form-item>
                 <el-form-item label="执行结果">
-                  <span>{{ item.result }}</span>
+                  <el-button type="text" @click="showJobLog(item.id)"
+                    >点击查看日志</el-button
+                  >
+
+                  <el-dialog
+                    title="日志"
+                    :modal="true"
+                    :append-to-body="true"
+                    :visible.sync="dialogVisible"
+                    width="70%"
+                  >
+                    <div class="job-log">{{ job_log }}</div>
+                    <span slot="footer" class="dialog-footer">
+                      <el-button @click="dialogVisible = false"
+                        >关 闭</el-button
+                      >
+                    </span>
+                  </el-dialog>
                 </el-form-item>
                 <el-form-item v-if="item.report_path" label="报告地址">
                   <a
-                    :href="VUE_APP_SERVER_URL + item.report_path"
+                    class="link"
+                    :href="VUE_APP_SERVER_URL + '/cap' + item.report_path"
                     target="_blank"
                     >查看详细报告</a
                   >
@@ -81,10 +116,21 @@
           </el-collapse>
         </template>
       </el-table-column>
-      <el-table-column label="任务 ID" prop="id"> </el-table-column>
+      <el-table-column label="任务 ID" prop="case_task_uid"> </el-table-column>
       <el-table-column label="任务总job数" prop="case_job_number">
+        <template slot-scope="scope">
+          <span
+            ><b>{{ scope.row.case_job_number }}</b></span
+          >
+        </template>
       </el-table-column>
-      <el-table-column label="完成job数" prop="finish_num"> </el-table-column>
+      <el-table-column label="完成job数" prop="finish_num">
+        <template slot-scope="scope">
+          <span style="color: #67c23a"
+            ><b>{{ scope.row.finish_num }}</b></span
+          >
+        </template>
+      </el-table-column>
       <el-table-column label="进度" prop="percentage">
         <template slot-scope="scope">
           <el-progress
@@ -107,7 +153,9 @@
       <el-table-column label="总计用时/s" prop="used_time">
         <template slot-scope="scope">
           <i class="el-icon-time"></i>
-          <span style="margin-left: 10px">{{ scope.row.used_time }}</span>
+          <span style="margin-left: 10px">{{
+            formatUsedTime(scope.row.used_time)
+          }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -127,7 +175,11 @@
   </div>
 </template>
 
-<style>
+<style scoped>
+.header-icon {
+  position: absolute;
+  right: 10%;
+}
 .table-expand {
   font-size: 0;
 }
@@ -152,10 +204,28 @@
   margin-bottom: 0;
   width: 50%;
 }
+.job-log {
+  white-space: pre-line;
+  height: 500px;
+  overflow-y: scroll;
+  color: aliceblue;
+  font-size: 11px;
+  font-style: normal;
+  font-family: monospace;
+  background-color: rgba(15, 15, 15, 0.884);
+}
+.link {
+  text-decoration: none;
+  color: cornflowerblue;
+}
 </style>
 
 <script>
-import { getCaseTasksInfo, getCaseJobsInfo } from "network/testplan";
+import {
+  getCaseTasksInfo,
+  getCaseJobsInfo,
+  readCaseJobsInfo,
+} from "network/testplan";
 export default {
   data() {
     return {
@@ -167,7 +237,9 @@ export default {
       expands: [],
       job_list: [],
       activeNames: [],
-      ws_retry: 10
+      ws_retry: 10,
+      dialogVisible: false,
+      job_log: "",
     };
   },
   created() {
@@ -178,12 +250,12 @@ export default {
       this.defaultPageSize,
       0
     )
-      .then(res => {
+      .then((res) => {
         console.log(res);
         this.tableData = res.results;
         this.totalItems = res.count;
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   },
@@ -192,15 +264,27 @@ export default {
   },
   computed: {
     percentage() {
-      return function(finish_num, case_job_number) {
-        return ((finish_num / case_job_number) * 100).toFixed(2);
+      return function (finish_num, case_job_number) {
+        return parseInt(((finish_num / case_job_number) * 100).toFixed(2));
       };
-    }
+    },
+    formatUsedTime() {
+      return function (source_time) {
+        if (source_time) {
+          return Math.ceil(source_time * 10) / 10;
+        } else {
+          return null;
+        }
+      };
+    },
   },
   methods: {
+    goBack() {
+      this.$router.push("/toolsweb/casetestplan/list");
+    },
     initWebSocket() {
       //初始化weosocket
-      const wsuri = process.env.VUE_APP_SERVER_WS + "/ws/testplan/result/";
+      const wsuri = process.env.VUE_APP_SERVER_WS + "/cap/ws/testplan/result/";
       this.websock = new WebSocket(wsuri);
       this.websock.onmessage = this.websocketonmessage;
       this.websock.onopen = this.websocketonopen;
@@ -267,7 +351,7 @@ export default {
         this.$route.query.case_testplan_uid,
         this.defaultPageSize,
         0
-      ).then(res => {
+      ).then((res) => {
         this.tableData = res.results;
         this.totalItems = res.count;
         console.log(this.websock.readyState);
@@ -280,7 +364,7 @@ export default {
         this.$route.query.case_testplan_uid,
         this.defaultPageSize,
         (val - 1) * this.defaultPageSize
-      ).then(res => {
+      ).then((res) => {
         this.tableData = res.results;
         this.totalItems = res.count;
         this.websock.close();
@@ -298,11 +382,11 @@ export default {
         }
         // 调用case job接口数据渲染
         getCaseJobsInfo(row.id)
-          .then(res => {
+          .then((res) => {
             console.log(res);
             this.job_list = res.results;
           })
-          .catch(err => {
+          .catch((err) => {
             console.log(err);
           });
       } else {
@@ -311,6 +395,19 @@ export default {
         this.activeNames = [];
         this.job_list = [];
       }
+    },
+    showJobLog(item_id) {
+      console.log(item_id);
+      this.job_log = "";
+      readCaseJobsInfo(item_id)
+        .then((res) => {
+          this.job_log = res.log;
+        })
+        .catch((err) => {
+          console.log("获取job id" + item_id + "的log失败");
+          console.log(err);
+        });
+      this.dialogVisible = true;
     },
     handleChange(value) {
       // pass
@@ -323,10 +420,10 @@ export default {
         value: {
           case_test_plan_uid: this.$route.query.case_testplan_uid,
           limit: this.currentPage * this.defaultPageSize,
-          offset: (this.currentPage - 1) * this.defaultPageSize
-        }
+          offset: (this.currentPage - 1) * this.defaultPageSize,
+        },
       });
-    }
-  }
+    },
+  },
 };
 </script>

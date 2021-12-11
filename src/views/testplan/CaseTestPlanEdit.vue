@@ -8,12 +8,19 @@
 -->
 <template>
   <div>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="编辑case测试计划"
+    >
+    </el-page-header>
     <el-row style="margin-top: 30px" type="flex" justify="center"> </el-row>
     <detail
       :fatherCaseBaseInfo="caseBaseInfo"
       :fatherTestplanInfo="testPlanInfo"
       :fatherTimerEnable="timerEnable"
       :fatherCrontab="crontab"
+      :fatherEnvFile="envFile"
       v-if="this.cases != null"
       :fatherCases="cases"
     ></detail>
@@ -39,6 +46,7 @@ export default {
       cases: null,
       timerEnable: false,
       crontab: "",
+      envFile: "",
     };
   },
   components: {
@@ -59,10 +67,17 @@ export default {
         this.caseBaseInfo.分支名 = res.branch_name;
         this.timerEnable = res.timer_enable;
         this.crontab = res.crontab;
+        this.envFile = res.env_file;
+        console.log(this.cases);
       })
       .catch((err) => {
         console.log(err);
       });
+  },
+  methods: {
+    goBack() {
+      this.$router.push("/toolsweb/casetestplan/list");
+    },
   },
 };
 </script>

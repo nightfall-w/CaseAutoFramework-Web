@@ -8,55 +8,43 @@
  -->
 <template>
   <div>
-    <el-row style="margin-top:30px" type="flex" justify="center">
-      <h3>创建项目</h3>
-    </el-row>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="项目创建"
+    >
+    </el-page-header>
+    <br />
+    <br />
     <detail :fatherProject="project" :fatherEnvDict="env_dict"></detail>
   </div>
 </template>
 
 <script>
-  import Detail from 'content/project/detail'
-  export default {
-    data() {
-      return {
-        project: {
-          name: "",
-          desc: ""
-        },
-        env_dict: [
-        {
-          key: "host",
-          value: "",
-          required: true
-        },
-        {
-          key: "db_address",
-          value: "",
-          required: true
-        },
-        {
-          key: "db_port",
-          value: "",
-          required: true
-        },
-        {
-          key: "db_password",
-          value: "",
-          required: true
-        }]
-      };
-    },
-    components: {
-      Detail
-    },
-    methods: {
-      saveProject() {
-        console.log(this.project);
+import Detail from "content/project/detail";
+export default {
+  data() {
+    return {
+      project: {
+        name: "",
+        desc: "",
       },
-      updateProject() {
-        console.log(this.project)
-      }
-    }
-  };
+      env_dict: [
+        {
+          key: "",
+          value: "",
+          required: false,
+        },
+      ],
+    };
+  },
+  components: {
+    Detail,
+  },
+  methods: {
+    goBack() {
+      this.$router.push("/toolsweb/project/index");
+    },
+  },
+};
 </script>

@@ -8,6 +8,12 @@
 -->
 <template>
   <div>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="创建case测试计划"
+    >
+    </el-page-header>
     <el-row style="margin-top: 30px" type="flex" justify="center"> </el-row>
     <detail
       :fatherCaseBaseInfo="caseBaseInfo"
@@ -15,6 +21,7 @@
       :fatherTimerEnable="timerEnable"
       :fatherCrontab="crontab"
       :fatherCases="cases"
+      :fatherEnvFile="envFile"
     ></detail>
   </div>
 </template>
@@ -34,6 +41,7 @@ export default {
         description: "",
         parallel: false,
       },
+      envFile: "",
       cases: [],
       timerEnable: false,
       crontab: "",
@@ -41,6 +49,11 @@ export default {
   },
   components: {
     Detail,
+  },
+  methods: {
+    goBack() {
+      this.$router.push("/toolsweb/casetestplan/list");
+    },
   },
 };
 </script>

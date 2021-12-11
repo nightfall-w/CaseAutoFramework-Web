@@ -1,5 +1,11 @@
 <template>
   <div>
+    <el-page-header
+      style="line-height: 40px; color: silver"
+      @back="goBack"
+      content="接口测试计划创建"
+    >
+    </el-page-header>
     <el-row style="margin-top: 30px" type="flex" justify="center"> </el-row>
     <detail :fatherTestplanInfo="testplanInfo" :fatherValue="value"></detail>
   </div>
@@ -12,13 +18,18 @@ export default {
     return {
       testplanInfo: {
         name: "",
-        description: ""
+        description: "",
       },
-      value: []
+      value: [],
     };
   },
   components: {
-    Detail
-  }
+    Detail,
+  },
+  methods: {
+    goBack() {
+      this.$router.push("/toolsweb/apitestplan/list");
+    },
+  },
 };
 </script>

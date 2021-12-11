@@ -14,8 +14,8 @@ const Index = () => import("views/container");
 const ProjectList = () => import("views/project/ProjectList");
 const ProjectCreate = () => import("views/project/ProjectCreate");
 const ProjectEdit = () => import("views/project/ProjectEdit");
+const ProjectCase = () => import("views/project/CaseProjectBind");
 const CaseCreate = () => import("views/case/CaseCreate");
-const CaseList = () => import("views/case/CaseList");
 const InterfaceCreate = () => import("views/interface/InterfaceCreate");
 const InterfaceList = () => import("views/interface/InterfaceList");
 const InterfaceEdit = () => import("views/interface/InterfaceEdit");
@@ -34,7 +34,7 @@ Vue.use(VueRouter);
 
 const routes = [
   {
-    path: "/login",
+    path: "/toolsweb/login",
     name: "login",
     component: Login
   },
@@ -42,13 +42,13 @@ const routes = [
     path: "/",
     name: "home",
     component: Index,
-    redirect: "/project/index",
+    redirect: "/toolsweb/project/index",
     meta: {
       requireAuth: true // 表示此接口必须登录才能访问
     },
     children: [
       {
-        path: "/project/create",
+        path: "/toolsweb/project/create",
         name: "project-create",
         component: ProjectCreate,
         meta: {
@@ -56,7 +56,7 @@ const routes = [
         }
       },
       {
-        path: "/project/index",
+        path: "/toolsweb/project/index",
         name: "project-list",
         component: ProjectList,
         meta: {
@@ -64,7 +64,7 @@ const routes = [
         }
       },
       {
-        path: "/project/edit",
+        path: "/toolsweb/project/edit",
         name: "project-edit",
         component: ProjectEdit,
         meta: {
@@ -72,7 +72,15 @@ const routes = [
         }
       },
       {
-        path: "/case/create",
+        path: "/toolsweb/project/case",
+        name: "project-case",
+        component: ProjectCase,
+        meta: {
+          requireAuth: true
+        }
+      },
+      {
+        path: "/toolsweb/case/create",
         name: "case-create",
         component: CaseCreate,
         meta: {
@@ -80,15 +88,7 @@ const routes = [
         }
       },
       {
-        path: "/case/list",
-        name: "case-list",
-        component: CaseList,
-        meta: {
-          requireAuth: true
-        }
-      },
-      {
-        path: "/interface/list",
+        path: "/toolsweb/interface/list",
         name: "interface-list",
         component: InterfaceList,
         meta: {
@@ -96,7 +96,7 @@ const routes = [
         }
       },
       {
-        path: "/interface/edit",
+        path: "/toolsweb/interface/edit",
         name: "interface-edit",
         component: InterfaceEdit,
         meta: {
@@ -104,7 +104,7 @@ const routes = [
         }
       },
       {
-        path: "/interface/create",
+        path: "/toolsweb/interface/create",
         name: "interface-create",
         component: InterfaceCreate,
         meta: {
@@ -112,7 +112,7 @@ const routes = [
         }
       },
       {
-        path: "/report/list",
+        path: "/toolsweb/report/list",
         name: "report-list",
         component: ReportList,
         meta: {
@@ -120,7 +120,7 @@ const routes = [
         }
       },
       {
-        path: "/report/detail",
+        path: "/toolsweb/report/detail",
         name: "report-detail",
         component: ReportDetail,
         meta: {
@@ -128,7 +128,7 @@ const routes = [
         }
       },
       {
-        path: "/casetestplan/list",
+        path: "/toolsweb/casetestplan/list",
         name: "case-testplan-list",
         component: CaseTestPlanList,
         meta: {
@@ -136,7 +136,7 @@ const routes = [
         }
       },
       {
-        path: "/casetestplan/create",
+        path: "/toolsweb/casetestplan/create",
         name: "case-testplan-create",
         component: CaseTestPlanCreate,
         meta: {
@@ -144,7 +144,7 @@ const routes = [
         }
       },
       {
-        path: "/casetestplan/edit",
+        path: "/toolsweb/casetestplan/edit",
         name: "case-testplan-edit",
         component: CaseTestPlanEdit,
         meta: {
@@ -152,7 +152,7 @@ const routes = [
         }
       },
       {
-        path: "/casetestplan/task",
+        path: "/toolsweb/casetestplan/task",
         name: "case-testplan-task",
         component: CaseTaskList,
         meta: {
@@ -160,7 +160,7 @@ const routes = [
         }
       },
       {
-        path: "/apitestplan/list",
+        path: "/toolsweb/apitestplan/list",
         name: "api-testplan-list",
         component: ApiTestPlanList,
         meta: {
@@ -168,7 +168,7 @@ const routes = [
         }
       },
       {
-        path: "/apitestplan/create",
+        path: "/toolsweb/apitestplan/create",
         name: "api-testplan-create",
         component: ApiTestPlanCreate,
         meta: {
@@ -176,7 +176,7 @@ const routes = [
         }
       },
       {
-        path: "/apitestplan/edit",
+        path: "/toolsweb/apitestplan/edit",
         name: "api-testplan-edit",
         component: ApiTestPlanEdit,
         meta: {
@@ -184,19 +184,19 @@ const routes = [
         }
       },
       {
-        path: "/apitestplan/task",
+        path: "/toolsweb/apitestplan/task",
         name: "api-testplan-task",
         component: ApiTaskList,
         meta: {
           requireAuth: true
         }
-      },
+      }
     ]
   }
 ];
 
 const router = new VueRouter({
-  mode: "history",
+  mode: "hash",
   base: process.env.BASE_URL,
   routes
 });
