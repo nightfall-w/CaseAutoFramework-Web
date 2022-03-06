@@ -5,7 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve --mode development",
     "build": "vue-cli-service build --mode production",
-    "test": "vue-cli-service build --mode test",
+    "test": "vue-cli-service serve --mode test",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -41,6 +41,9 @@
     "vue-template-compiler": "^2.6.10"
   },
   "eslintConfig": {
-    "parser": "babel-eslint"
+    "parser": "babel-eslint",
+    "rules": {
+      "no-console": "off"
+    }
   }
 }

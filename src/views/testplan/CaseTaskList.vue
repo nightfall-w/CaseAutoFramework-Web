@@ -328,7 +328,7 @@ export default {
     websocketclose(e) {
       //关闭
       console.log("断开连接", e);
-      if (this.$route.path === "/casetestplan/task") {
+      if (this.$route.path === "/toolsweb/casetestplan/task") {
         this.ws_retry -= 1;
         if (this.ws_retry >= 0) {
           this.initWebSocket();

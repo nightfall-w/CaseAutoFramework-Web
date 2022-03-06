@@ -17,21 +17,21 @@
     <br />
     <br />
     <el-table :data="tableData" @row-click="handleSelect" style="width: 100%">
-      <el-table-column width="200px" label="测试计划名称" prop="name">
+      <el-table-column width="300px" label="测试计划名称" prop="name">
       </el-table-column>
       <el-table-column label="测试计划描述" prop="description">
       </el-table-column>
       <el-table-column
-        width="120px"
+        width="220px"
         label="运行中任务数"
         prop="running_task_number"
       >
       </el-table-column>
-      <el-table-column width="200px" label="创建人" prop="user_info.first_name">
+      <el-table-column width="250px" label="创建人" prop="user_info.first_name">
       </el-table-column>
-      <el-table-column width="200px" label="创建时间" prop="create_date_format">
+      <el-table-column width="250px" label="创建时间" prop="create_date_format">
       </el-table-column>
-      <el-table-column align="right">
+      <el-table-column align="right" width="400px">
         <template slot="header" slot-scope="scope">
           {{ (scope = "") }}
           <el-input v-model="search" size="mini" placeholder="输入计划名搜索" />

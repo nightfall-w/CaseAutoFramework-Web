@@ -92,7 +92,7 @@ router.beforeEach((to, from, next) => {
     if (store.state.token) {
       // 通过vuex state获取当前的token是否存在
       store.state.currentProjectID = sessionStorage.getItem("currentProjectID");
-      if (store.state.currentProjectID || to.path.split("/")[2] == "project" || to.path.split("/")[2] == "tools") {
+      if (store.state.currentProjectID || to.path.split("/")[2] == "project") {
         next();
       } else {
         // next()

@@ -108,7 +108,6 @@
                   ></json-viewer>
                 </el-descriptions-item>
                 <el-descriptions-item label="请求体">
-                  
                   <json-viewer
                     :value="getRequestBody(item.api_info)"
                     copyable
@@ -316,10 +315,12 @@ export default {
       this.websocketsend(this.package_ws_task_data());
     },
     websocketonerror() {
-      this.ws_retry -= 1;
-      //连接建立失败重连
-      if (this.ws_retry >= 0) {
-        this.initWebSocket();
+      if (this.$route.path === "/toolsweb/apitestplan/task") {
+        this.ws_retry -= 1;
+        console.log(this.ws_retry);
+        if (this.ws_retry >= 0) {
+          this.initWebSocket();
+        }
       }
     },
     websocketonmessage(e) {
@@ -350,8 +351,9 @@ export default {
     websocketclose(e) {
       //关闭
       console.log("断开连接", e);
-      if (this.$route.path === "/casetestplan/task") {
+      if (this.$route.path === "/toolsweb/apitestplan/task") {
         this.ws_retry -= 1;
+        console.log(this.ws_retry);
         if (this.ws_retry >= 0) {
           this.initWebSocket();
         }

@@ -9,12 +9,12 @@
 import originAxios from "axios";
 // import qs from "qs";
 
-export default function axios(option) {
+export default function axios(option, timeout=20000) {
   return new Promise((resolve, reject) => {
     // 1.创建axios的实例
     const instance = originAxios.create({
       baseURL: process.env.VUE_APP_SERVER_URL,
-      timeout: 10000
+      timeout: timeout
     });
 
     // 配置请求和响应拦截

@@ -64,6 +64,7 @@
           <el-progress
             style="margin-left: 35%"
             type="dashboard"
+            :status="progress_status"
             :width="200"
             :percentage="percentage"
             :color="colors"
@@ -109,6 +110,7 @@ export default {
       branchValue: "",
 
       percentage: 0,
+      progress_status: "",
       colors: [
         { color: "#f56c6c", percentage: 20 },
         { color: "#e6a23c", percentage: 40 },
@@ -131,7 +133,6 @@ export default {
         }
       })
       .catch((err) => {});
-    this.initWebSocket();
   },
   destroyed() {
     this.websock.close(); //离开路由之后断开websocket连接
@@ -154,7 +155,13 @@ export default {
     },
     websocketonerror() {
       //连接建立失败重连
-      this.initWebSocket();
+      if (this.$route.path === "/toolsweb/case/create") {
+        this.ws_retry -= 1;
+        console.log(this.ws_retry);
+        if (this.ws_retry >= 0) {
+          this.initWebSocket();
+        }
+      }
     },
     websocketonmessage(e) {
       //数据接收
@@ -172,6 +179,8 @@ export default {
           message: "拉取远程代码完成！",
           type: "success",
         });
+      } else if (redata.status === "FAILED") {
+        this.progress_status = "exception";
       }
     },
     websocketsend(Data) {
@@ -181,6 +190,13 @@ export default {
     websocketclose(e) {
       //关闭
       console.log("断开连接", e);
+      if (this.$route.path === "/toolsweb/case/create") {
+        this.ws_retry -= 1;
+        console.log(this.ws_retry);
+        if (this.ws_retry >= 0) {
+          this.initWebSocket();
+        }
+      }
     },
     getBranchByProjectId(value) {
       if (!value) {
@@ -216,6 +232,7 @@ export default {
       this.initWebSocket();
       let project_id = this.projectValue;
       this.percentage = 0;
+      this.progress_status = "";
       askPullBranch(this.token, project_id, this.branchValue)
         .then((res) => {
           console.log(res);
@@ -227,13 +244,6 @@ export default {
             type: "success",
           });
           //发起websocket请求 获取分支pull状态
-          var sleep = function (time) {
-            var startTime = new Date().getTime() + parseInt(time, 10);
-            while (new Date().getTime() < startTime) {
-              // pass
-            }
-          };
-          sleep(1000);
           let actions = {
             token: this.token,
             project_id: project_id,
